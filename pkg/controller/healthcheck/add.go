@@ -41,15 +41,14 @@ func RegisterHealthChecks(ctx context.Context, mgr manager.Manager, opts healthc
 		opts,
 		nil,
 		[]healthcheck.ConditionTypeToHealthCheck{
+			// The shoot ManagedResource IS the system component set this extension owns,
+			// so its health is the honest SystemComponentsHealthy signal. There are no
+			// seed-side resources yet, so no ObservabilityComponentsHealthy check: a check
+			// on a resource that is never created can only ever report False.
 			{
-				ConditionType: string(gardencorev1beta1.ShootObservabilityComponentsHealthy),
-				HealthCheck:   general.CheckManagedResource(constants.ManagedResourceNameFalcoSeed),
+				ConditionType: string(gardencorev1beta1.ShootSystemComponentsHealthy),
+				HealthCheck:   general.CheckManagedResource(constants.ManagedResourceNameFalco),
 			},
-			// SystemComponentsHealthy deliberately has no check yet. The only checker
-			// available here, NewShootDaemonSetHealthChecker, is fixed to kube-system,
-			// and the SOC collectors run in honey and pl. A namespace-aware checker is
-			// the follow-up; a wrong check that reports a healthy stack unhealthy is
-			// worse than no check.
 		},
 		sets.New[gardencorev1beta1.ConditionType](),
 	)

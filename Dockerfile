@@ -5,7 +5,7 @@
 ############# builder
 FROM golang:1.26.5 AS builder
 
-WORKDIR /go/src/github.com/gardener/gardener-extension-shoot-falco-service
+WORKDIR /go/src/github.com/gardener/gardener-extension-shoot-rtsecurity-service
 
 # Copy go mod and sum files
 COPY go.mod go.sum ./
@@ -20,20 +20,20 @@ RUN make install EFFECTIVE_VERSION=$EFFECTIVE_VERSION
 ############# base
 FROM gcr.io/distroless/static-debian12:nonroot AS base
 
-############# gardener-extension-shoot-falco-service
-FROM base AS gardener-extension-shoot-falco-service
+############# gardener-extension-shoot-rtsecurity-service
+FROM base AS gardener-extension-shoot-rtsecurity-service
 
 WORKDIR /
 COPY charts /charts
-COPY --from=builder /go/bin/gardener-extension-shoot-falco-service /gardener-extension-shoot-falco-service
-ENTRYPOINT ["/gardener-extension-shoot-falco-service"]
+COPY --from=builder /go/bin/gardener-extension-shoot-rtsecurity-service /gardener-extension-shoot-rtsecurity-service
+ENTRYPOINT ["/gardener-extension-shoot-rtsecurity-service"]
 
-############# gardener-extension-admission-shoot-falco-service
-FROM base AS gardener-extension-admission-shoot-falco-service
+############# gardener-extension-admission-shoot-rtsecurity-service
+FROM base AS gardener-extension-admission-shoot-rtsecurity-service
 
 WORKDIR /
-COPY --from=builder /go/bin/gardener-extension-admission-shoot-falco-service /gardener-extension-admission-shoot-falco-service
-ENTRYPOINT ["/gardener-extension-admission-shoot-falco-service"]
+COPY --from=builder /go/bin/gardener-extension-admission-shoot-rtsecurity-service /gardener-extension-admission-shoot-rtsecurity-service
+ENTRYPOINT ["/gardener-extension-admission-shoot-rtsecurity-service"]
 
 ############# falco-ops-builder
 FROM alpine:3.24.1 AS falco-ops-builder

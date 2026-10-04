@@ -52,7 +52,7 @@ jobs:
         with:
           context: .
           file: Dockerfile
-          target: gardener-extension-shoot-falco-service
+          target: gardener-extension-shoot-rtsecurity-service
           platforms: linux/amd64
           push: true
           build-args: |
@@ -74,14 +74,14 @@ jobs:
       - name: Chart version + sha
         id: v
         run: |
-          echo "chart=$(grep -E '^version:' charts/gardener-extension-shoot-falco-service/Chart.yaml | awk '{print $2}')" >> "$GITHUB_OUTPUT"
+          echo "chart=$(grep -E '^version:' charts/gardener-extension-shoot-rtsecurity-service/Chart.yaml | awk '{print $2}')" >> "$GITHUB_OUTPUT"
           echo "sha=${GITHUB_SHA::12}" >> "$GITHUB_OUTPUT"
       - name: Login
         run: echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io -u "${{ github.actor }}" --password-stdin
       - name: Package and push
         run: |
           set -euo pipefail
-          CHART=charts/gardener-extension-shoot-falco-service
+          CHART=charts/gardener-extension-shoot-rtsecurity-service
           # Two tags: the plain chart version (moves with main) and a sha-suffixed
           # prerelease that never moves. OCI tags cannot carry '+', so prerelease form.
           helm package "$CHART" --version "${{ steps.v.outputs.chart }}" -d /tmp/out

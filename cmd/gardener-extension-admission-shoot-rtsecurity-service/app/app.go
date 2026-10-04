@@ -99,7 +99,7 @@ func NewAdmissionCommand(ctx context.Context) *cobra.Command {
 	)
 
 	cmd := &cobra.Command{
-		Use: "admission webhooks of shoot-falco-service",
+		Use: "admission webhooks of shoot-rtsecurity-service",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			verflag.PrintAndExitIfRequested()
 

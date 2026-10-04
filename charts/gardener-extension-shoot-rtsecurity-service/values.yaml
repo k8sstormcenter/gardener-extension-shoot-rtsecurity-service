@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 ---
-serviceName: shoot-falco-service
+serviceName: shoot-rtsecurity-service
 
 # Resolved by the actuator at startup via getSeed(); the pod exits if it is wrong. Defaults
 # to the single-cluster landscape's seed so the chart renders with defaults (check-charts

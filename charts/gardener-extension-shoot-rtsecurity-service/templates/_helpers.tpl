@@ -31,5 +31,5 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{- define "leaderelectionid" -}}
-extension-shoot-falco-service-leader-election
+extension-shoot-rtsecurity-service-leader-election
 {{- end -}}

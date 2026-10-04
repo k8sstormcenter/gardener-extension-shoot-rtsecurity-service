@@ -8,8 +8,8 @@ ENSURE_GARDENER_MOD         := $(shell go get github.com/gardener/gardener@$$(go
 ENSURE_GARDENER_TOOLS_MOD   := $(shell go get github.com/gardener/gardener/hack/tools@$$(go list -m -f "{{.Version}}" github.com/gardener/gardener/hack/tools))
 GARDENER_HACK_DIR           := $(shell go list -m -f "{{.Dir}}" github.com/gardener/gardener)/hack
 EXTENSION_PREFIX            := gardener-extension
-NAME                        := shoot-falco-service
-ADMISSION_NAME              := admission-shoot-falco-service
+NAME                        := shoot-rtsecurity-service
+ADMISSION_NAME              := admission-shoot-rtsecurity-service
 OPS_NAME					:= falco-ops
 REGISTRY                    := europe-docker.pkg.dev/gardener-project/public/gardener
 IMAGE_PREFIX                := $(REGISTRY)/extensions
@@ -141,7 +141,7 @@ spell: $(GO_MISSPELL)
 
 .PHONY: generate-controller-registration
 generate-controller-registration:
-	@bash $(HACK_DIR)/generate-controller-registration.sh extension-shoot-falco charts/$(EXTENSION_PREFIX)-$(NAME) 0.0.1 example/ControllerRegistration.yaml
+	@bash $(HACK_DIR)/generate-controller-registration.sh extension-shoot-rtsecurity charts/$(EXTENSION_PREFIX)-$(NAME) 0.0.1 example/ControllerRegistration.yaml
 
 .PHONY: generate
 generate: $(CONTROLLER_GEN) $(CRD_REF_DOCS) $(EXTENSION_GEN) $(HELM) $(MOCKGEN) $(KUSTOMIZE) $(YQ) $(VGOPATH)
@@ -196,7 +196,7 @@ verify-extended: check-generate check format validate-imagevector generate-profi
 extension-up: export EXTENSION_VERSION = $(VERSION)
 extension-up: export SKAFFOLD_DEFAULT_REPO = registry.local.gardener.cloud:5001
 extension-up: export SKAFFOLD_PUSH = true
-extension-up: export LD_FLAGS = $(shell bash $(GARDENER_HACK_DIR)/get-build-ld-flags.sh k8s.io/component-base $(REPO_ROOT)/VERSION gardener-extension-shoot-falco-service)
+extension-up: export LD_FLAGS = $(shell bash $(GARDENER_HACK_DIR)/get-build-ld-flags.sh k8s.io/component-base $(REPO_ROOT)/VERSION gardener-extension-shoot-rtsecurity-service)
 extension-up: export EXTENSION_GARDENER_HACK_DIR = $(GARDENER_HACK_DIR)
 extension-up: $(SKAFFOLD) $(HELM) $(KUBECTL)
 	@docker build -t registry.local.gardener.cloud:5001/local-skaffold/$(OPS_NAME):latest -f Dockerfile --target $(OPS_NAME) .

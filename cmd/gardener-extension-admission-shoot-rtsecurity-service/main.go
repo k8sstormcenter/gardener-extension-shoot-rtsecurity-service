@@ -11,7 +11,7 @@ import (
 	runtimelog "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
 
-	"github.com/gardener/gardener-extension-shoot-falco-service/cmd/gardener-extension-admission-shoot-falco-service/app"
+	"github.com/gardener/gardener-extension-shoot-falco-service/cmd/gardener-extension-admission-shoot-rtsecurity-service/app"
 )
 
 func main() {

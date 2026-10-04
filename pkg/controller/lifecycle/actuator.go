@@ -259,17 +259,12 @@ func (a *actuator) createShootResources(ctx context.Context, log logr.Logger, re
 }
 
 func (a *actuator) createSeedResources(ctx context.Context, log logr.Logger, namespace string) error {
-	log.Info("Creating Falco seed resources for shoot " + namespace)
-	values := map[string]interface{}{}
-
-	renderer, err := chartrenderer.NewForConfig(a.config)
-	if err != nil {
-		return fmt.Errorf("could not create chart renderer: %w", err)
-	}
-
-	log.Info("Component is being applied", "component", constants.ExtensionType, "namespace", namespace)
-
-	return a.createManagedResource(ctx, log, namespace, constants.ManagedResourceNameFalcoSeed, "seed", renderer, constants.ManagedResourceNameFalcoChartSeed, namespace, values, nil)
+	// The SOC stack has no seed-side resources yet, and a class "seed" ManagedResource
+	// needs a seed-class gardener-resource-manager to reconcile it, which this landscape
+	// does not run. Creating it would leave an object nothing serves and a health check
+	// that can never pass. Remove one if an earlier version left it behind.
+	log.Info("no seed resources for this extension; ensuring none are left over", "namespace", namespace)
+	return managedresources.DeleteForSeed(ctx, a.client, namespace, constants.ManagedResourceNameFalcoSeed)
 }
 
 func (a *actuator) createManagedResource(ctx context.Context, log logr.Logger, namespace, name, class string, renderer chartrenderer.Interface, chartName, chartNamespace string, chartValues map[string]interface{}, injectedLabels map[string]string) error {

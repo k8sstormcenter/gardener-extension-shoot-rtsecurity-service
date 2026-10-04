@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-//go:generate sh -c "bash ${GARDENER_HACK_DIR}/generate-controller-registration.sh falco . $(cat ../../VERSION) ../../example/controller-registration.yaml Extension:falco"
+//go:generate sh -c "bash ${GARDENER_HACK_DIR}/generate-controller-registration.sh rtsecurity . $(cat ../../VERSION) ../../example/controller-registration.yaml Extension:rtsecurity"
 
 // Package chart enables go:generate support for generating the correct controller registration.
 package chart
