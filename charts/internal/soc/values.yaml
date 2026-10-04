@@ -1,0 +1,94 @@
+# Values contract for the SOC stack chart.
+#
+# Everything the skaffolds discovered by reading the live cluster is a VALUE here
+# instead. An extension renders a chart into a ManagedResource; it cannot run
+# kubectl, read a developer's home directory, or exec into a pod, so anything the
+# skaffold hooks did imperatively either moves into pkg/values (computed from the
+# Cluster/Extension objects) or stops being necessary at all.
+
+# Images. Pinned by the profile CRD in a real deployment; defaults exist so the
+# chart renders standalone for tests.
+images:
+  clickhouseOperator: ""
+  kubescapeOperator: ""
+  nodeAgent: ""
+  vector: ""
+  adaptiveExport: ""
+  dxDaemon: ""
+
+# Namespaces the stack occupies in the shoot. Kept as values because the shoot's
+# own policies may force different ones.
+namespaces:
+  clickhouse: clickhouse
+  honey: honey
+  pixie: pl
+
+# Replaces skaffold_adaptive_export.yaml before[2]: instead of patching the
+# operator's pl-cloud-config to append :443, AE is given the address directly.
+# The patch existed because AE inherited a ConfigMap it did not own; owning the
+# env removes the race rather than working around it.
+# Pixie is installed DECLARATIVELY, via the operator + Vizier CR
+# (k8s/operator/deployment/sbob and k8s/vizier/sbob kustomizations in the pixie fork).
+# The px binary is deliberately NOT shipped to the shoot: `px deploy` is a laptop
+# workflow that creates pl-cloud-config and pl-deploy-secrets as a side effect, and an
+# extension cannot run a CLI. Rendering those objects directly is both possible and
+# reproducible, so the CLI is not needed in-cluster at all. px stays a human tool for
+# `px auth` / `px run` from outside.
+#
+# clusterName MUST be set explicitly. edge4 left it at the operator default and the
+# cloud now carries six `default_<hash>` registrations, five of them dead, because every
+# reinstall registers a new one instead of reclaiming its own.
+#
+# cloudAddr MUST carry an explicit :443. Without it the AE cloud client crash-loops, and
+# the skaffold worked around this by patching the operator's ConfigMap after the fact;
+# giving AE the value directly removes the race instead of racing it.
+pixie:
+  cloudAddr: ""
+  clusterName: ""
+
+# Pixie credentials, and the two registry PATs.
+#
+# None of these may be read from a filesystem: the skaffolds took them from
+# ~/.pixie/keys.public.env, ~/.docker/config.json and
+# ~/.registry-pull/tanzeee/config.json, which exist on one laptop and nowhere else.
+# In a shoot they arrive as gardener NamedResourceReferences — the same mechanism the
+# upstream falco extension uses for credentials — resolved by the actuator and passed
+# through here. They are referenced by name so the secret never enters the extension's
+# providerConfig, which is part of the Shoot spec and therefore readable by anyone who
+# can read the Shoot.
+credentials:
+  # Pixie deploy key -> pl-deploy-secrets; API key is NOT needed in-cluster.
+  pixieDeployKeyRef: ""
+  # PAT 1: docker.io/entlein — the duckling/node-agent images. Was $HOME/.docker/config.json.
+  ducklingPullRef: ""
+  # PAT 2: docker.io/tanzeee — adaptive-export and dx-daemon. Was ~/.registry-pull/tanzeee/config.json.
+  tanzeeePullRef: ""
+
+
+# ClickHouse.
+#
+# mode: local for now — a ClickHouse per shoot, deliberately, because the stack is
+# alpha enough that being able to nuke the database and start over is worth more than
+# not duplicating it. THE CENTRAL ONE IS THE DESTINATION: the `forensic` cluster is
+# exactly that, a central ClickHouse, and shoots will ship to it instead of running
+# their own as soon as this extension works end to end. Keep `central` wired in the
+# chart from the start so that switch is a value change rather than a rewrite.
+#
+# Retention is set here rather than inherited: the 30-day defaults are wrong for a
+# small cluster, and the shipped DDL leaves 17 of 25 tables with no TTL at all —
+# including dc_snoop, which was 234 MiB of a 329 MiB database on a measured rig.
+clickhouse:
+  mode: local # local | central
+  retentionHours: 24
+  shards: 1
+  replicas: 1
+  # Used only when mode=central. Points at the forensic cluster's ClickHouse.
+  central:
+    dsn: ""
+
+# Kubescape rules are data, not code: soc owns default-rules.yaml and
+# rule-alert-binding.yaml and applies them with --server-side --force-conflicts
+# because helm's alertCRD.installDefault is false. Rendered here instead.
+kubescape:
+  rules: []
+  alertBindings: []

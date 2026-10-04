@@ -1,0 +1,4 @@
+apiVersion: v1
+name: soc
+version: 0.1.0
+description: SOC runtime-security stack rendered into a shoot by the rtsecurity extension.
