@@ -1,0 +1,65 @@
+# Fork image build.
+#
+# The upstream workflows (build.yaml, release.yaml) call gardener/cc-utils reusable
+# workflows that publish into gardener's own OCI/OCM registry, which a fork has no
+# credentials for. This one is self-contained: buildx -> ghcr.io under this org, using
+# GITHUB_TOKEN.
+#
+# The Dockerfile stage is still named ...-shoot-falco-service; the image is not. The
+# stage name is a build detail and renaming it is a separate change from renaming the
+# published artifact.
+name: image
+
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['**/*.md', '.claude/**']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Extra tag to publish alongside the commit sha and latest
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  extension:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Effective version
+        id: v
+        run: |
+          # VERSION file carries e.g. v0.97.0-dev; the published tags are the commit sha
+          # and latest, so a rebuild of the same sha is always identifiable.
+          echo "version=$(cat VERSION)" >> "$GITHUB_OUTPUT"
+          echo "sha=${GITHUB_SHA::12}" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push extension
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          target: gardener-extension-shoot-falco-service
+          platforms: linux/amd64
+          push: true
+          build-args: |
+            EFFECTIVE_VERSION=${{ steps.v.outputs.version }}
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/gardener-extension-shoot-rtsecurity-service:latest
+            ghcr.io/${{ github.repository_owner }}/gardener-extension-shoot-rtsecurity-service:${{ steps.v.outputs.sha }}
+            ${{ inputs.tag && format('ghcr.io/{0}/gardener-extension-shoot-rtsecurity-service:{1}', github.repository_owner, inputs.tag) || '' }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
