@@ -54,9 +54,10 @@ func (c *SOCConfig) Values() map[string]any {
 		}
 		m[key] = v
 	}
-	if c.Mode == ModeFull {
+	switch c.Mode {
+	case ModeFull:
 		set("clickhouse", "mode", "central")
-	} else if c.Mode == ModeSelfContained {
+	case ModeSelfContained:
 		set("clickhouse", "mode", "local")
 	}
 	if p := c.Pixie; p != nil {
