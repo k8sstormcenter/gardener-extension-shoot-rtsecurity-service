@@ -10,6 +10,10 @@
 # chart renders standalone for tests.
 images:
   clickhouseOperator: ""
+  # Digest-pinned upstream because :24.3 is a floating minor that repoints across
+  # 24.3.x and matches no published patch tag. Keep the digest form.
+  clickhouseKeeper: "clickhouse/clickhouse-keeper:24.3@sha256:163a91f5fec55376205437d9449dfe23d89ce8ef381e027b7fbbdbc872b0c2f0"
+  clickhouseServer: "clickhouse/clickhouse-server:24.8"
   kubescapeOperator: ""
   nodeAgent: ""
   vector: ""
@@ -93,6 +97,16 @@ clickhouse:
   retentionHours: 24
   shards: 1
   replicas: 1
+  storage: 5Gi
+  keeper:
+    replicas: 1
+    storage: 512Mi
+  # The altinity operator and its CRDs are NOT rendered by this chart. A CRD and a CR of
+  # that CRD in one ManagedResource is an ordering hazard: GRM applies the set without
+  # waiting for the CRD to be established, so the CR can be rejected on first pass. The
+  # operator therefore ships as its own, earlier ManagedResource. Until that exists this
+  # chart assumes it is present.
+  operatorPreinstalled: true
   # Used only when mode=central. Points at the forensic cluster's ClickHouse.
   central:
     dsn: ""
