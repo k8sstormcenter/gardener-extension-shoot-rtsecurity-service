@@ -118,6 +118,13 @@ clickhouse:
     dsn: ""
     httpEndpoint: ""
 
+# Collectors are opt-in per shoot. vector defaults OFF because k3s-2 still carries a
+# 162-day-old kubescape+vector install in honey from before this extension existed: a
+# ManagedResource with the same names would make GRM overwrite that DaemonSet and
+# ConfigMap, and delete them when the resource goes. Adopt, relocate or reset first.
+vector:
+  enabled: false
+
 # Kubescape rules are data, not code: soc owns default-rules.yaml and
 # rule-alert-binding.yaml and applies them with --server-side --force-conflicts
 # because helm's alertCRD.installDefault is false. Rendered here instead.

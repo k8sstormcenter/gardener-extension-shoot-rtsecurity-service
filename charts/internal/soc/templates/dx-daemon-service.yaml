@@ -1,3 +1,4 @@
+{{- if .Values.vector.enabled }}
 # Node-local Service for the dx-daemon findings receiver.
 #
 # WHY THIS EXISTS — the vector -> dx findings delivery used to target
@@ -36,3 +37,4 @@ spec:
       port: 9099
       targetPort: 9099
       protocol: TCP
+{{- end }}

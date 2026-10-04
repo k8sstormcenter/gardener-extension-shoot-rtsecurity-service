@@ -10,7 +10,7 @@ import (
 
 // InternalChart embeds the internal charts in embed.FS
 //
-//go:embed internal
+//go:embed all:internal
 var InternalChart embed.FS
 
 // InternalChartsPath is the path to the internal charts

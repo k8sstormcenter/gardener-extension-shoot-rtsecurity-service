@@ -1,3 +1,4 @@
+{{- if .Values.vector.enabled }}
 {{/*
 vector, rendered from vector/vector 0.58.0 with soc tree/vector-lab/values.yaml. soc pins
 "latest", which helm template rejects; 0.58.0 is what that resolved to on 2026-10-04.
@@ -312,3 +313,4 @@ spec:
       - hostPath:
           path: /sys
         name: sysfs
+{{- end }}
