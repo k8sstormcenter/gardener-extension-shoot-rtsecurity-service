@@ -5,9 +5,7 @@
 # credentials for. This one is self-contained: buildx -> ghcr.io under this org, using
 # GITHUB_TOKEN.
 #
-# The Dockerfile stage is still named ...-shoot-falco-service; the image is not. The
-# stage name is a build detail and renaming it is a separate change from renaming the
-# published artifact.
+# Dockerfile stage, binary and image share the shoot-rtsecurity-service name.
 name: image
 
 on:

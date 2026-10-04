@@ -40,7 +40,7 @@ import (
 	"github.com/gardener/gardener-extension-shoot-falco-service/pkg/utils"
 )
 
-const Name = "gardener-extension-shoot-falco-service"
+const Name = constants.GardenerExtensionServiceName
 
 // NewControllerManagerCommand creates a new command for running the Falco extension service controller
 func NewControllerManagerCommand(ctx context.Context) *cobra.Command {
