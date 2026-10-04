@@ -1,1 +1,157 @@
-{{/* dx-daemon — not yet ported from the skaffolds. */}}
+{{- if .Values.dx.enabled }}
+{{/*
+k8s/vizier/dx kustomize from the pixie fork, moved from honey into the pixie namespace:
+dx needs pl-cluster-secrets (jwt-signing-key, cluster-id — minted by the operator at
+first boot, so they cannot be rendered) and the skaffold mirrored them into honey with
+kubectl. Same namespace, direct secretKeyRefs, nothing to mirror. The refs are not
+optional: a dx without them runs and silently drops every hand-off.
+*/}}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dx-metastasis-ch
+  namespace: {{ .Values.namespaces.pixie }}
+type: Opaque
+stringData:
+  http-url: http://{{ .Values.clickhouse.ingest.user }}:{{ .Values.clickhouse.ingest.password }}@{{ include "soc.clickhouse.host" . }}:8123/?database=forensic_db
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dx-kpi
+  namespace: {{ .Values.namespaces.pixie }}
+data:
+  cluster: {{ .Values.pixie.clusterName | quote }}
+  oracle: ""
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: dx-daemon
+  namespace: {{ .Values.namespaces.pixie }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dx-daemon
+  namespace: {{ .Values.namespaces.pixie }}
+spec:
+  internalTrafficPolicy: Local
+  ports:
+  - name: findings
+    port: 9099
+    targetPort: 9099
+  selector:
+    app: dx-daemon
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: dx-daemon
+  name: dx-daemon
+  namespace: {{ .Values.namespaces.pixie }}
+spec:
+  selector:
+    matchLabels:
+      app: dx-daemon
+  template:
+    metadata:
+      labels:
+        app: dx-daemon
+    spec:
+      containers:
+      - env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: HOST_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: DX_RECEIVER_TLS
+          value: "1"
+        - name: AE_CONTROL_ADDR
+          value: https://adaptive-export-control.{{ .Values.namespaces.pixie }}.svc.cluster.local:9100
+        - name: PX_API_KEY
+          valueFrom:
+            secretKeyRef:
+              key: pixie-api-key
+              name: pl-adaptive-export-secrets
+        - name: PX_CLUSTER_ID
+          valueFrom:
+            secretKeyRef:
+              key: cluster-id
+              name: pl-cluster-secrets
+        - name: PX_CLOUD_ADDR
+          valueFrom:
+            configMapKeyRef:
+              key: PL_CLOUD_ADDR
+              name: pl-cloud-config
+        - name: DX_PPROF_ADDR
+          value: 127.0.0.1:6060
+        - name: DX_BENCH
+          value: pemdirect
+        - name: PL_JWT_SIGNING_KEY
+          valueFrom:
+            secretKeyRef:
+              key: jwt-signing-key
+              name: pl-cluster-secrets
+        - name: DX_VIZIER_DIRECT_ADDR
+          value: vizier-query-broker-svc.{{ .Values.namespaces.pixie }}.svc.cluster.local:50300
+        - name: PX_DISABLE_TLS
+          value: "1"
+        - name: DX_CLUSTER_MALIGNANT_HTTP
+          valueFrom:
+            secretKeyRef:
+              key: http-url
+              name: dx-metastasis-ch
+        - name: DX_PX_TIMEOUT_S
+          value: "90"
+        - name: DX_TELEMETRY_CACHE
+          value: "1"
+        - name: DX_WORKERS
+          value: "4"
+        - name: DX_FOREST_SCOPE
+          value: "1"
+        - name: DX_FOREST_PUSHDOWN
+          value: "1"
+        - name: DX_FOREST_PUSHDOWN_DEPTH
+          value: "4"
+        - name: DX_PRECORRELATE_GRAPH
+          value: "1"
+        - name: DX_NARROW_WINDOW_BEFORE_MS
+          value: "150"
+        - name: DX_NARROW_WINDOW_AFTER_MS
+          value: "150"
+        - name: DX_EVIDENCE_GRAPH_CH
+          value: {{ include "soc.clickhouse.httpURL" . }}
+        image: {{ .Values.images.dxDaemon }}
+        name: dx-daemon
+        ports:
+        - containerPort: 9099
+          hostPort: 9099
+          name: findings
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 9099
+            scheme: HTTPS
+          initialDelaySeconds: 3
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: "2"
+            memory: 3Gi
+          requests:
+            cpu: 50m
+            memory: 1Gi
+      imagePullSecrets:
+      - name: duckling-pull
+      serviceAccountName: dx-daemon
+      terminationGracePeriodSeconds: 35
+      tolerations:
+      - operator: Exists
+{{- end }}

@@ -1,0 +1,44 @@
+{{- if .Values.pixie.enabled }}
+{{/*
+What `px deploy --cluster_name <shoot> --vizier_version <v> --pem_memory_limit/request` writes,
+rendered directly. Copied from the live Vizier on rocky-1 (same cloud, Healthy).
+Do NOT set spec.registry: the operator then prefixes every image, OLM included, as
+<registry>/ghcr.io-k8sstormcenter-vizier-* and nothing pulls; the vizier image refs come
+from the cloud's artifact for the version. PL_CLOUD_ADDR without :443 crash-loops AE.
+*/}}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .Values.namespaces.pixie }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pl-cloud-config
+  namespace: {{ .Values.namespaces.pixie }}
+data:
+  PL_CLOUD_ADDR: {{ required "pixie.cloudAddr is required and must carry :443" .Values.pixie.cloudAddr | quote }}
+  PL_UPDATE_CLOUD_ADDR: {{ .Values.pixie.cloudAddr | quote }}
+  PL_CLUSTER_NAME: {{ required "pixie.clusterName must be derived from the Shoot by pkg/values" .Values.pixie.clusterName | quote }}
+---
+apiVersion: px.dev/v1alpha1
+kind: Vizier
+metadata:
+  name: pixie
+  namespace: {{ .Values.namespaces.pixie }}
+spec:
+  cloudAddr: {{ .Values.pixie.cloudAddr }}
+  clusterName: {{ .Values.pixie.clusterName }}
+  version: {{ .Values.pixie.vizierVersion }}
+  dataAccess: {{ .Values.pixie.dataAccess }}
+  pemMemoryLimit: {{ .Values.pixie.pemMemoryLimit }}
+  pemMemoryRequest: {{ .Values.pixie.pemMemoryRequest }}
+  {{- if .Values.credentials.pixieDeployKey }}
+  customDeployKeySecret: pl-deploy-secrets
+  {{- end }}
+  pod:
+    annotations: {vizier-name: pixie}
+    labels: {vizier-name: pixie}
+    resources: {}
+{{- end }}

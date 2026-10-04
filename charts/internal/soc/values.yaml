@@ -9,16 +9,18 @@
 # Images. Pinned by the profile CRD in a real deployment; defaults exist so the
 # chart renders standalone for tests.
 images:
-  clickhouseOperator: ""
+  clickhouseOperator: "altinity/clickhouse-operator:0.26.0"
+  pixieOperator: "gcr.io/pixie-oss/pixie-prod/operator-operator_image:0.1.7"
   # Digest-pinned upstream because :24.3 is a floating minor that repoints across
   # 24.3.x and matches no published patch tag. Keep the digest form.
   clickhouseKeeper: "clickhouse/clickhouse-keeper:24.3@sha256:163a91f5fec55376205437d9449dfe23d89ce8ef381e027b7fbbdbc872b0c2f0"
   clickhouseServer: "clickhouse/clickhouse-server:24.8"
-  kubescapeOperator: ""
-  nodeAgent: ""
+  kubescapeOperator: "quay.io/kubescape/operator:v0.2.162"
+  kubescapeStorage: "ghcr.io/k8sstormcenter/storage:rc-rogue23"
+  nodeAgent: "docker.io/entlein/duckling:v0.1.0-rogue66"
   vector: "timberio/vector:0.58.0-distroless-libc"
-  adaptiveExport: ""
-  dxDaemon: ""
+  adaptiveExport: "docker.io/tanzeee/adaptive-export:0.16.50-rc1"
+  dxDaemon: "docker.io/entlein/dx-daemon:0.5.0-keepset-rc23"
 
 # Namespaces the stack occupies in the shoot. Kept as values because the shoot's
 # own policies may force different ones.
@@ -26,6 +28,7 @@ namespaces:
   clickhouse: clickhouse
   honey: honey
   pixie: pl
+  pixieOperator: px-operator
 
 # Replaces skaffold_adaptive_export.yaml before[2]: instead of patching the
 # operator's pl-cloud-config to append :443, AE is given the address directly.
@@ -55,7 +58,12 @@ namespaces:
 # the skaffold worked around this by patching the operator's ConfigMap after the fact;
 # giving AE the value directly removes the race instead of racing it.
 pixie:
-  cloudAddr: ""
+  enabled: true
+  cloudAddr: "work.soc.k8sstormcenter.com:443"
+  vizierVersion: "0.14.19-pemdq1"   # the fork's PEM line (ships the :50305 direct-query listener)
+  dataAccess: Full
+  pemMemoryLimit: 4Gi
+  pemMemoryRequest: 2Gi
   # Set by pkg/values from the Shoot name. Left empty here on purpose: an empty value in
   # a rendered chart means the actuator did not populate it, which is a bug to surface
   # rather than a default to silently accept.
@@ -72,11 +80,12 @@ pixie:
 # providerConfig, which is part of the Shoot spec and therefore readable by anyone who
 # can read the Shoot.
 # Filled by pkg/values from the Shoot's spec.resources[] refs soc-pixie-deploy-key,
-# soc-pull-entlein and soc-pull-tanzeee (gardener mirrors each as ref-<name> into the shoot
+# soc-pixie-api-key, soc-pull-entlein and soc-pull-tanzeee (gardener mirrors each as ref-<name> into the shoot
 # namespace). Empty here on purpose: a value present in a rendered chart means the Shoot
 # declared it; absent means render without it.
 credentials:
-  pixieDeployKey: ""     # -> pl-deploy-secrets; the API key is NOT needed in-cluster
+  pixieDeployKey: ""     # -> pl-deploy-secrets; registers the vizier
+  pixieApiKey: ""        # -> pl-adaptive-export-secrets; AE and dx query the cloud API with it
   ducklingPullSecret: "" # PAT 1, docker.io/entlein — kubescape agent images; raw .dockerconfigjson
   tanzeeePullSecret: ""  # PAT 2, docker.io/tanzeee — adaptive-export and dx-daemon
 
@@ -107,7 +116,11 @@ clickhouse:
   # waiting for the CRD to be established, so the CR can be rejected on first pass. The
   # operator therefore ships as its own, earlier ManagedResource. Until that exists this
   # chart assumes it is present.
-  operatorPreinstalled: true
+  # The operator and its CRDs ride in this chart so the extension is self-sufficient on any
+  # shoot. CRD and CR in one ManagedResource can race on first apply (the CR is rejected
+  # until the CRD is Established); GRM retries each sync, so the resource reports
+  # ResourcesApplied=False briefly and then settles. Accepted over depending on terraform.
+  deployOperator: true
   # The writer identity vector and AE use. Defaults are soc's own tree/clickhouse-lab
   # values and are not secrets in soc either; override per shoot once they are.
   ingest:
@@ -115,8 +128,7 @@ clickhouse:
     password: changeme-ingest
   # Used only when mode=central. Points at the forensic cluster's ClickHouse.
   central:
-    dsn: ""
-    httpEndpoint: ""
+    host: ""
 
 # Collectors are opt-in per shoot. vector defaults OFF because k3s-2 still carries a
 # 162-day-old kubescape+vector install in honey from before this extension existed: a
@@ -129,5 +141,10 @@ vector:
 # rule-alert-binding.yaml and applies them with --server-side --force-conflicts
 # because helm's alertCRD.installDefault is false. Rendered here instead.
 kubescape:
-  rules: []
-  alertBindings: []
+  enabled: true
+
+adaptiveExport:
+  enabled: true
+
+dx:
+  enabled: true

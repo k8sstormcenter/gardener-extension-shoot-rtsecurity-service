@@ -25,7 +25,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: dx-daemon
-  namespace: {{ .Values.namespaces.honey }}
+  namespace: {{ .Values.namespaces.pixie }}
   labels:
     app: dx-daemon
 spec:

@@ -51,6 +51,7 @@ func (c *ConfigBuilder) BuildSOCValues(ctx context.Context, reconcileCtx *utils.
 // that credential rather than failing, because a cluster using a public mirror is valid.
 const (
 	RefPixieDeployKey = "soc-pixie-deploy-key"
+	RefPixieAPIKey    = "soc-pixie-api-key"
 	RefPullEntlein    = "soc-pull-entlein"
 	RefPullTanzeee    = "soc-pull-tanzeee"
 )
@@ -90,13 +91,16 @@ func (c *ConfigBuilder) credentialValues(ctx context.Context, reconcileCtx *util
 		}
 		out[key] = string(cfg)
 	}
-	s, err := c.referencedSecret(ctx, reconcileCtx, RefPixieDeployKey)
-	if err != nil {
-		return nil, err
-	}
-	if s != nil {
+	for ref, key := range map[string]string{RefPixieDeployKey: "pixieDeployKey", RefPixieAPIKey: "pixieApiKey"} {
+		s, err := c.referencedSecret(ctx, reconcileCtx, ref)
+		if err != nil {
+			return nil, err
+		}
+		if s == nil {
+			continue
+		}
 		for _, v := range s.Data {
-			out["pixieDeployKey"] = string(v)
+			out[key] = string(v)
 			break
 		}
 	}
