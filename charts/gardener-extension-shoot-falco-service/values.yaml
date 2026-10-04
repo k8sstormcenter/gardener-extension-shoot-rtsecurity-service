@@ -14,6 +14,14 @@ seedName: local
 # own service account rather than a kubeconfig gardenlet would otherwise provide.
 gardenKubeconfig:
   inCluster: true
+
+# Upstream sets automountServiceAccountToken: false and relies on gardener-resource-
+# manager's projected-token webhook to inject a token. That webhook is off in this
+# landscape, so with false the pod has no in-cluster credentials at all: controller-runtime
+# falls back to ~/.kube/config and exits in flag parsing before any controller starts. The
+# same mount also backs the tokenFile garden kubeconfig above.
+serviceAccount:
+  automountToken: true
 replicaCount: 2
 
 ignoreResources: false
