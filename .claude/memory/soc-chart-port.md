@@ -35,9 +35,13 @@ so the extension renders the operator plus the Vizier CR and the px binary never
 near the shoot. px stays a human tool for `px auth` / `px run` from outside.
 
 Two values that are not optional:
-- `clusterName` must be set explicitly. edge4 left it at the operator default and the
-  cloud accumulated six `default_<hash>` registrations, five of them dead, because each
-  reinstall registers a new one instead of reclaiming its own.
+- `clusterName` is derived from the Shoot name by `pkg/values`, not configured. The
+  actuator already reads it off the Cluster resource. Deriving it is what stops
+  registration sprawl at source — edge4 left it at the operator default and the pixie
+  cloud accumulated six `default_<hash>` registrations, five dead, because each reinstall
+  registered a new one. A derived name is stable across reinstalls of the same shoot.
+  (Shoot.Status.TechnicalID is the collision-safe variant if two projects ever reuse a
+  shoot name; the plain name is used because humans read it in the UI.)
 - `cloudAddr` must carry `:443` or the AE cloud client crash-loops.
 
 ## ClickHouse placement
