@@ -82,6 +82,11 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+        # Read in getSeed() at startup. An empty value is a hard failure, not a default.
+        - name: SEED_NAME
+          value: {{ required "seedName is required: the actuator resolves the Seed by name at startup and exits if it cannot" .Values.seedName | quote }}
+        - name: GARDEN_KUBECONFIG
+          value: /etc/garden/kubeconfig
         {{- if .Values.imageVectorOverwrite }}
         - name: IMAGEVECTOR_OVERWRITE
           value: /charts_overwrite/images_overwrite.yaml
@@ -93,6 +98,9 @@ spec:
         securityContext:
           allowPrivilegeEscalation: false
         volumeMounts:
+        - name: garden-kubeconfig
+          mountPath: /etc/garden
+          readOnly: true
         - name: extension-shoot-falco-service-config
           mountPath: /etc/extension-config
           readOnly: true
@@ -102,6 +110,12 @@ spec:
           readOnly: true
         {{ end }}
       volumes:
+      - name: garden-kubeconfig
+        configMap:
+          name: gardener-extension-{{ .Values.serviceName }}-garden-kubeconfig
+          items:
+          - key: kubeconfig
+            path: kubeconfig
       - name: extension-shoot-falco-service-config
         secret:
           secretName: extension-shoot-falco-service-config

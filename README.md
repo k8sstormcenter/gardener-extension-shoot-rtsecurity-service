@@ -27,7 +27,7 @@ This extension integrates Kubescape, Pixie and K8sstormcenter, the `soc suite`, 
 ### Prerequisites
 - A running Gardener landscape (see Gardener documentation)
 - Access to a shoot cluster
-- Extension enabled in the landscape configuration via [extension configuration](https://github.com/gardener/gardener-extension-shoot-falco-service/blob/main/docs/extension-configuration.md)
+- Extension enabled in the landscape configuration via [extension configuration](docs/extension-configuration.md)
 
 ### Installation
 Add the extension to your shoot manifest:
@@ -36,7 +36,7 @@ Add the extension to your shoot manifest:
     - type: shoot-rtsecurity-service
 ```
 
-For a full shoot extension section configuration, refer to the [configuration documentation](https://github.com/gardener/gardener-extension-shoot-falco-service/blob/main/docs/falco-configuration.md)
+For a full shoot extension section configuration, refer to the [configuration documentation](docs/falco-configuration.md)
 
 
 

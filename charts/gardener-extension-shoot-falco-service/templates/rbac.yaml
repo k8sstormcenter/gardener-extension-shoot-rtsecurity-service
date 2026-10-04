@@ -17,6 +17,26 @@ rules:
   - get
   - list
   - watch
+# Garden-side reads. In a gardenlet-managed landscape these come from a separate garden
+# kubeconfig with its own rights; here garden and seed are the same cluster, so the
+# extension's own ServiceAccount needs them. Without the seeds rule the actuator fails at
+# startup in getSeed() and the pod never becomes ready.
+- apiGroups:
+  - core.gardener.cloud
+  resources:
+  - seeds
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - falco.gardener.cloud
+  resources:
+  - falcoprofiles
+  verbs:
+  - get
+  - list
+  - watch
 - apiGroups:
   - resources.gardener.cloud
   resources:

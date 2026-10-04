@@ -4,6 +4,14 @@
 
 ---
 serviceName: shoot-falco-service
+
+# Resolved by the actuator at startup via getSeed(); the pod exits if it is wrong or empty.
+seedName: ""
+
+# garden == seed in this fork's landscape, so the extension talks to the garden with its
+# own service account rather than a kubeconfig gardenlet would otherwise provide.
+gardenKubeconfig:
+  inCluster: true
 replicaCount: 2
 
 ignoreResources: false
