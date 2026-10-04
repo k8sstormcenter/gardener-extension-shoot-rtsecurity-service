@@ -1,10 +1,10 @@
 # Memory Index
 
 ## Local Development
-- [Local Dev Environment](local-dev-environment.md) — Kubeconfig paths, deploy commands, shoot management for local Gardener
-- [Local Dev Troubleshooting](local-dev-troubleshooting.md) — Network policies, disk pressure, stuck machines, connectivity fixes
-- [E2E Testing with OpenSearch](e2e-testing-opensearch.md) — Full e2e test flow: shoot manifest, OpenSearch in-shoot, event verification
+- [Local Dev Environment](local-dev-environment.md) — kubeconfig paths, deploy commands, shoot management. Note the chart is baked into the extension image: any chart change needs a full `make extension-up`.
+- [Local Dev Troubleshooting](local-dev-troubleshooting.md) — secretRef-not-in-spec.resources, store reachability from the shoot, disk pressure, stuck machines
+- [E2E Testing the SOC stack](e2e-testing-clickhouse.md) — shoot manifest, ClickHouse in-shoot, event verification
 
 ## Extension Development
-- [Adding Falco Versions](adding-falco-versions.md) — How to add new Falco/falcosidekick versions: files, rules, classification
-- [Falco 0.44.0 Container Plugin Warning](falco-044-container-plugin-warning.md) — Benign 'cannot attach container_id' race condition in new plugin architecture
+- [Adding Component Versions](adding-component-versions.md) — kubescape chart, node-agent, vector, AE, dx, pixie pins: four files that must agree
+- [SOC Chart Port](soc-chart-port.md) — what the skaffolds did imperatively and where each piece goes

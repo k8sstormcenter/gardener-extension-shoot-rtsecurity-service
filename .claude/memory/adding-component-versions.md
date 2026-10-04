@@ -1,13 +1,20 @@
 ---
-name: adding-falco-versions
-description: "How to add a new Falco or falcosidekick version to the extension — which files to edit, how to fetch rules, classification meanings"
+name: adding-component-versions
+description: "How to add a SOC component version (kubescape chart, node-agent, vector, AE, dx, pixie) to the extension — which files to edit and what must agree"
 metadata: 
   node_type: memory
   type: reference
   originSessionId: 1dabdd3f-b2ee-4599-af9d-c4de6be5ce1e
 ---
 
-## Adding a New Falco Version
+## Adding a component version
+
+Our components are not falco's. The mechanism below is unchanged — four places that must
+agree — but the files and the component list are ours: the kubescape operator chart,
+node-agent, vector, adaptive-export, dx-daemon and the pixie vizier/operator pins.
+
+Pins come from the chart release you intend, NOT from whatever a cluster happens to run.
+edge4 and k3s-1 have sat on different PEM/AE lines, so "what edge4 runs" is not a target.
 
 ### Files to edit (all relative to repo root)
 

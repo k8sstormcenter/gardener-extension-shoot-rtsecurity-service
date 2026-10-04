@@ -1,11 +1,13 @@
 ---
 name: run-integration-tests
-description: Run Falco extension integration tests against a local Gardener development environment
+description: Run shoot-rtsecurity-service (SOC stack) extension integration tests against a local Gardener development environment
 ---
 
 # Run Integration Tests
 
-Run the integration tests for the Falco shoot extension against a local Gardener dev environment.
+Run the integration tests for the shoot-rtsecurity-service extension — which deploys the
+SOC stack (kubescape node-agent, vector, pixie vizier/PEM, adaptive-export, dx-daemon,
+ClickHouse) — against a local Gardener dev environment.
 
 ## IMPORTANT: Read the official docs first
 

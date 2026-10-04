@@ -51,7 +51,13 @@ KUBECONFIG=$KUBECONFIG_VIRTUAL kubectl -n garden-local annotate shoot falco-test
 KUBECONFIG=$KUBECONFIG_VIRTUAL kubectl -n garden-local delete shoot falco-test
 ```
 
-### Extension reconcile fails: "custom webhook secretRef not found in resources"
+### Reconcile fails: "secretRef not found in resources"
+
+APPLIES TO US DIRECTLY: this fork passes the pixie deploy key and both registry PATs
+(docker.io/entlein for duckling/node-agent, docker.io/tanzeee for AE and dx-daemon) by
+reference rather than inline, because providerConfig is part of the Shoot spec and
+readable by anyone who can read the Shoot. Every one of those refs needs the
+spec.resources stanza below or reconcile dies at ~51%.
 
 **Symptom**: Shoot creation fails at ~51% with error "could not generate falco configuration: custom webhook secretRef opensearch-config not found in resources".
 

@@ -1,13 +1,15 @@
 ---
 name: local-dev-environment
-description: "How to set up and troubleshoot the local Gardener dev environment for the Falco extension, including kubeconfig paths, deployment commands, and common failures"
+description: "How to set up and troubleshoot the local Gardener dev environment for this extension, including kubeconfig paths, deployment commands, and common failures"
 metadata: 
   node_type: memory
   type: reference
   originSessionId: 1dabdd3f-b2ee-4599-af9d-c4de6be5ce1e
 ---
 
-## Local Gardener Dev Environment
+## Local Gardener dev environment
+
+Extension type is `shoot-rtsecurity-service` (the repo name); it deploys the SOC stack.
 
 ### Kubeconfig paths
 
@@ -23,7 +25,7 @@ KUBECONFIG=~/go/src/github.com/gardener/gardener/dev-setup/gardenlet/components/
 
 This builds the binary, packages the chart as OCI, pushes to `registry.local.gardener.cloud:5001`, and deploys via skaffold. The chart is baked into the extension image — any chart change requires a full `make extension-up`.
 
-### Applying FalcoProfile (required before creating shoots with Falco)
+### Applying the profile CR (required before any shoot opts in)
 
 ```bash
 KUBECONFIG=$KUBECONFIG_VIRTUAL kubectl apply -f crds/crd-falco-profile.yaml
