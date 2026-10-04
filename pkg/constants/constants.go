@@ -7,8 +7,11 @@ package constants
 import "time"
 
 const (
-	// ExtensionType is the name of the extension type.
-	ExtensionType = "shoot-falco-service"
+	// ExtensionType is the name of the extension type: what a Shoot's spec.extensions[].type
+	// must say, and what the lifecycle controller's predicate matches. Everything derived
+	// below — service name, ManagedResource names, finalizer, healthcheck registration —
+	// follows from it, so a shoot opting in under the old falco name is deliberately ignored.
+	ExtensionType = "shoot-rtsecurity-service"
 
 	// ServiceName is the name of the service.
 	ServiceName                  = ExtensionType

@@ -267,7 +267,7 @@ func (a *actuator) createSeedResources(ctx context.Context, log logr.Logger, nam
 		return fmt.Errorf("could not create chart renderer: %w", err)
 	}
 
-	log.Info("Component is being applied", "component", "shoot-falco-service", "namespace", namespace)
+	log.Info("Component is being applied", "component", constants.ExtensionType, "namespace", namespace)
 
 	return a.createManagedResource(ctx, log, namespace, constants.ManagedResourceNameFalcoSeed, "seed", renderer, constants.ManagedResourceNameFalcoChartSeed, namespace, values, nil)
 }
