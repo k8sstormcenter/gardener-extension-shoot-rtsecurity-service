@@ -19,7 +19,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 
 	"github.com/gardener/gardener-extension-shoot-falco-service/pkg/constants"
-	"github.com/gardener/gardener-extension-shoot-falco-service/pkg/controller/healthcheck/falcohealth"
 )
 
 var (
