@@ -10,6 +10,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
+	socv1alpha1 "github.com/gardener/gardener-extension-shoot-falco-service/pkg/apis/soc/v1alpha1"
 	"github.com/gardener/gardener-extension-shoot-falco-service/pkg/utils"
 )
 
@@ -31,17 +32,43 @@ func (c *ConfigBuilder) BuildSOCValues(ctx context.Context, reconcileCtx *utils.
 		return nil, fmt.Errorf("cannot derive a pixie cluster name: both ReconcileContext.ClusterName and Shoot are empty")
 	}
 
-	creds, err := c.credentialValues(ctx, reconcileCtx)
+	refs := defaultCredentialRefs
+	if reconcileCtx.SOCConfig != nil && reconcileCtx.SOCConfig.Credentials != nil {
+		refs = refs.override(reconcileCtx.SOCConfig.Credentials)
+	}
+	creds, err := c.credentialValues(ctx, reconcileCtx, refs)
 	if err != nil {
 		return nil, err
 	}
 
-	return map[string]any{
-		"pixie": map[string]any{
-			"clusterName": clusterName,
-		},
-		"credentials": creds,
-	}, nil
+	values := map[string]any{}
+	if reconcileCtx.SOCConfig != nil {
+		values = reconcileCtx.SOCConfig.Values()
+	}
+	pixie, _ := values["pixie"].(map[string]any)
+	if pixie == nil {
+		pixie = map[string]any{}
+	}
+	pixie["clusterName"] = clusterName
+	values["pixie"] = pixie
+	values["credentials"] = creds
+	return values, nil
+}
+
+type credentialRefs struct {
+	deployKey, apiKey, pullEntlein, pullTanzeee string
+}
+
+var defaultCredentialRefs = credentialRefs{RefPixieDeployKey, RefPixieAPIKey, RefPullEntlein, RefPullTanzeee}
+
+func (r credentialRefs) override(c *socv1alpha1.Credentials) credentialRefs {
+	pick := func(cur string, v *string) string {
+		if v != nil && *v != "" {
+			return *v
+		}
+		return cur
+	}
+	return credentialRefs{pick(r.deployKey, c.PixieDeployKey), pick(r.apiKey, c.PixieAPIKey), pick(r.pullEntlein, c.PullEntlein), pick(r.pullTanzeee, c.PullTanzeee)}
 }
 
 // Referenced-resource names a Shoot must use in spec.resources[] to hand this extension its
@@ -75,9 +102,9 @@ func (c *ConfigBuilder) referencedSecret(ctx context.Context, reconcileCtx *util
 // credentialValues fills values.credentials from the referenced Secrets. Pull secrets are
 // passed as the raw .dockerconfigjson so the chart writes kubernetes.io/dockerconfigjson
 // Secrets unchanged; the deploy key is the single data value whatever its key is called.
-func (c *ConfigBuilder) credentialValues(ctx context.Context, reconcileCtx *utils.ReconcileContext) (map[string]any, error) {
+func (c *ConfigBuilder) credentialValues(ctx context.Context, reconcileCtx *utils.ReconcileContext, refs credentialRefs) (map[string]any, error) {
 	out := map[string]any{}
-	for ref, key := range map[string]string{RefPullEntlein: "ducklingPullSecret", RefPullTanzeee: "tanzeeePullSecret"} {
+	for ref, key := range map[string]string{refs.pullEntlein: "ducklingPullSecret", refs.pullTanzeee: "tanzeeePullSecret"} {
 		s, err := c.referencedSecret(ctx, reconcileCtx, ref)
 		if err != nil {
 			return nil, err
@@ -91,7 +118,7 @@ func (c *ConfigBuilder) credentialValues(ctx context.Context, reconcileCtx *util
 		}
 		out[key] = string(cfg)
 	}
-	for ref, key := range map[string]string{RefPixieDeployKey: "pixieDeployKey", RefPixieAPIKey: "pixieApiKey"} {
+	for ref, key := range map[string]string{refs.deployKey: "pixieDeployKey", refs.apiKey: "pixieApiKey"} {
 		s, err := c.referencedSecret(ctx, reconcileCtx, ref)
 		if err != nil {
 			return nil, err

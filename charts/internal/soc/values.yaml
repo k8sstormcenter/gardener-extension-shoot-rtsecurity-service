@@ -19,8 +19,8 @@ images:
   kubescapeStorage: "ghcr.io/k8sstormcenter/storage:rc-rogue23"
   nodeAgent: "docker.io/entlein/duckling:v0.1.0-rogue66"
   vector: "timberio/vector:0.58.0-distroless-libc"
-  adaptiveExport: "docker.io/tanzeee/adaptive-export:0.16.50-rc1"
-  dxDaemon: "docker.io/entlein/dx-daemon:0.5.0-keepset-rc23"
+  adaptiveExport: "docker.io/tanzeee/adaptive-export:0.16.50-6dc818c"
+  dxDaemon: "docker.io/tanzeee/dx-daemon:0.6.0-shadow-rc99"
 
 # Namespaces the stack occupies in the shoot. Kept as values because the shoot's
 # own policies may force different ones.
@@ -142,6 +142,86 @@ vector:
 # because helm's alertCRD.installDefault is false. Rendered here instead.
 kubescape:
   enabled: true
+  # Signing posture of the node-agent, written as .policy.mode of the trust policy
+  # (node-agent-bundle-policy ConfigMap): default leaves the field out, which the agent
+  # treats as alert; alert | enforce set it. Enforce refuses unsigned/unverifiable artifacts.
+  mode: default
+  # Namespaces the sensor ignores entirely. Applied twice on purpose: as the operator's
+  # excludeNamespaces and as the NotIn selector of the alert binding; one list, one owner.
+  # The stack's own namespaces are in it so it does not alert on itself.
+  excludeNamespaces:
+    - kubescape
+    - kube-system
+    - kube-public
+    - kube-node-lease
+    - local-path-storage
+    - gmp-system
+    - gmp-public
+    - storm
+    - lightening
+    - cert-manager
+    - kube-flannel
+    - ingress-nginx
+    - honey
+    - clickhouse
+    - chain-loadgen
+    - pl
+    - olm
+    - px-operator
+    - tailscale-system
+    - traefik
+    - cilium-secrets
+    - external-dns
+  # Namespaces the alert binding leaves out. Narrower than excludeNamespaces on purpose:
+  # pixie's own namespaces (pl, px-operator) stay bound so their SBoBs are enforced.
+  bindingExcludeNamespaces:
+    - kube-system
+    - kube-public
+    - kube-node-lease
+    - kubeconfig
+    - kubescape
+    - kube-flannel
+    - ingress-nginx
+    - honey
+    - clickhouse
+    - local-path-storage
+    - gmp-system
+    - gmp-public
+    - storm
+    - lightening
+    - cert-manager
+  # Rules bound to every workload. The set is soc's default-rules.yaml; narrow it per shoot.
+  rules:
+    - "Unexpected process launched"
+    - "Unexpected process arguments"
+    - "Files Access Anomalies in container"
+    - "Syscalls Anomalies in container"
+    - "Linux Capabilities Anomalies in container"
+    - "DNS Anomalies in container"
+    - "Unexpected service account token access"
+    - "Workload uses Kubernetes API unexpectedly"
+    - "Process executed from malicious source"
+    - "Process tries to load a kernel module"
+    - "Drifted process executed"
+    - "Disallowed ssh connection"
+    - "Fileless execution detected"
+    - "Crypto miner launched"
+    - "Process executed from mount"
+    - "Crypto Mining Related Port Communication"
+    - "Crypto Mining Domain Communication"
+    - "Read Environment Variables from procfs"
+    - "eBPF Program Load"
+    - "Soft link created over sensitive file"
+    - "Unexpected Sensitive File Access"
+    - "Hard link created over sensitive file"
+    - "Exec to pod"
+    - "Port forward"
+    - "Unexpected Egress Network Traffic"
+    - "Unexpected Ingress Network Traffic"
+    - "Malicious Ptrace Usage"
+    - "Unexpected io_uring Operation Detected"
+    - "Kubelet TLS Exec Request Detected"
+    - "Signed profile tampered"
 
 adaptiveExport:
   enabled: true

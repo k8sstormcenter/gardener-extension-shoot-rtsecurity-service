@@ -37,6 +37,7 @@ import (
 	"github.com/gardener/gardener-extension-shoot-falco-service/charts"
 	"github.com/gardener/gardener-extension-shoot-falco-service/pkg/apis/config"
 	apisservice "github.com/gardener/gardener-extension-shoot-falco-service/pkg/apis/service"
+	socv1alpha1 "github.com/gardener/gardener-extension-shoot-falco-service/pkg/apis/soc/v1alpha1"
 	"github.com/gardener/gardener-extension-shoot-falco-service/pkg/constants"
 	"github.com/gardener/gardener-extension-shoot-falco-service/pkg/profile"
 	"github.com/gardener/gardener-extension-shoot-falco-service/pkg/secrets"
@@ -205,11 +206,17 @@ func (a *actuator) Reconcile(ctx context.Context, log logr.Logger, ex *extension
 			ClusterName: "garden",
 		}
 	}
-	falcoServiceConfig, err := a.extractFalcoServiceConfig(log, ex)
-	if err != nil {
-		return err
+	if ex.Spec.ProviderConfig != nil && socv1alpha1.IsSOCConfig(ex.Spec.ProviderConfig.Raw) {
+		reconcileCtx.SOCConfig, err = socv1alpha1.Decode(ex.Spec.ProviderConfig.Raw)
+		if err != nil {
+			return err
+		}
+	} else {
+		reconcileCtx.FalcoServiceConfig, err = a.extractFalcoServiceConfig(log, ex)
+		if err != nil {
+			return err
+		}
 	}
-	reconcileCtx.FalcoServiceConfig = falcoServiceConfig
 	reconcileCtx.Namespace = namespace
 	reconcileCtx.IsSeedDeployment = isSeedDeployment(ex)
 	reconcileCtx.IsShootDeployment = isShootDeployment(ex)

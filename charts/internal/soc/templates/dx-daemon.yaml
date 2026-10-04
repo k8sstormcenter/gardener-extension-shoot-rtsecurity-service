@@ -31,6 +31,77 @@ metadata:
   name: dx-daemon
   namespace: {{ .Values.namespaces.pixie }}
 ---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: dx-daemon-kssync
+  namespace: {{ .Values.namespaces.pixie }}
+rules:
+- apiGroups:
+  - coordination.k8s.io
+  resourceNames:
+  - dx-kssync
+  resources:
+  - leases
+  verbs:
+  - get
+  - update
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: dx-daemon-kubescape-reader
+rules:
+- apiGroups:
+  - spdx.softwarecomposition.kubescape.io
+  resources:
+  - containerprofiles
+  - rogueartifacts
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - ""
+  resourceNames:
+  - node-agent-bundle-policy
+  resources:
+  - configmaps
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: dx-daemon-kssync
+  namespace: {{ .Values.namespaces.pixie }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: dx-daemon-kssync
+subjects:
+- kind: ServiceAccount
+  name: dx-daemon
+  namespace: {{ .Values.namespaces.pixie }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: dx-daemon-kubescape-reader
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: dx-daemon-kubescape-reader
+subjects:
+- kind: ServiceAccount
+  name: dx-daemon
+  namespace: {{ .Values.namespaces.pixie }}
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -71,6 +142,12 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.hostIP
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: DX_CAPTURE_POLICY
+          value: adaptive_base
         - name: DX_RECEIVER_TLS
           value: "1"
         - name: AE_CONTROL_ADDR
@@ -90,8 +167,6 @@ spec:
             configMapKeyRef:
               key: PL_CLOUD_ADDR
               name: pl-cloud-config
-        - name: DX_PPROF_ADDR
-          value: 127.0.0.1:6060
         - name: DX_BENCH
           value: pemdirect
         - name: PL_JWT_SIGNING_KEY
@@ -116,10 +191,6 @@ spec:
           value: "4"
         - name: DX_FOREST_SCOPE
           value: "1"
-        - name: DX_FOREST_PUSHDOWN
-          value: "1"
-        - name: DX_FOREST_PUSHDOWN_DEPTH
-          value: "4"
         - name: DX_PRECORRELATE_GRAPH
           value: "1"
         - name: DX_NARROW_WINDOW_BEFORE_MS
@@ -149,7 +220,7 @@ spec:
             cpu: 50m
             memory: 1Gi
       imagePullSecrets:
-      - name: duckling-pull
+      - name: adaptive-export-pull
       serviceAccountName: dx-daemon
       terminationGracePeriodSeconds: 35
       tolerations:

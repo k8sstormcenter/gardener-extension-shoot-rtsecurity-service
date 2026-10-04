@@ -8,6 +8,7 @@ import (
 	extensionsv1alpha1 "github.com/gardener/gardener/pkg/apis/extensions/v1alpha1"
 
 	apisservice "github.com/gardener/gardener-extension-shoot-falco-service/pkg/apis/service"
+	socv1alpha1 "github.com/gardener/gardener-extension-shoot-falco-service/pkg/apis/soc/v1alpha1"
 )
 
 type ReconcileContext struct {
@@ -17,6 +18,7 @@ type ReconcileContext struct {
 	ResourceSection         []gardenerv1beta1.NamedResourceReference
 	ClusterIdentity         *string
 	FalcoServiceConfig      *apisservice.FalcoServiceConfig
+	SOCConfig               *socv1alpha1.SOCConfig
 	ShootTechnicalId        string
 	SeedIngressDomain       string
 	ClusterName             string

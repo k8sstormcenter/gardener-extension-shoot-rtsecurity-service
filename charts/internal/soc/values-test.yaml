@@ -1,0 +1,6 @@
+# check-charts.sh renders with defaults plus this file. The two required values are
+# per-shoot by design and have no sane default.
+pixie:
+  clusterName: check-charts
+credentials:
+  pixieApiKey: check-charts

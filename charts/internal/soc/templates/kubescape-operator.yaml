@@ -940,6 +940,9 @@ data:
   trust-policy.json: |
     {
       "policy": {
+{{- if ne .Values.kubescape.mode "default" }}
+        "mode": {{ .Values.kubescape.mode | quote }},
+{{- end }}
         "classes": {
           "admission": {
             "signers": [
@@ -1037,7 +1040,7 @@ data:
         "networkStreamingInterval": "2m",
         "maxSniffingTimePerContainer": "24h",
         "bundleTrustPolicyPath": "/etc/bundle/trust-policy.json",
-        "excludeNamespaces": "kubescape,kube-system,kube-public,kube-node-lease,local-path-storage,gmp-system,gmp-public,storm,lightening,cert-manager,kube-flannel,ingress-nginx,{{ .Values.namespaces.honey }},clickhouse,chain-loadgen,pl,olm,px-operator,tailscale-system,traefik,cilium-secrets,external-dns",
+        "excludeNamespaces": {{ join "," .Values.kubescape.excludeNamespaces | quote }},
         "excludeLabels":null,
         "exporters": {
           "alertManagerExporterUrls":[],
@@ -1081,7 +1084,7 @@ metadata:
 data:
   config.json: |
     {
-      "excludeNamespaces": "kubescape,kube-system,kube-public,kube-node-lease,local-path-storage,gmp-system,gmp-public,storm,lightening,cert-manager,kube-flannel,ingress-nginx,{{ .Values.namespaces.honey }},clickhouse,chain-loadgen,pl,olm,px-operator,tailscale-system,traefik,cilium-secrets,external-dns",
+      "excludeNamespaces": {{ join "," .Values.kubescape.excludeNamespaces | quote }},
       "namespace": "{{ .Values.namespaces.honey }}",
       "triggersecurityframework": true,
       "podScanGuardTime": "1h",
