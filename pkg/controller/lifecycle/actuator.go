@@ -233,7 +233,7 @@ func (a *actuator) createShootResources(ctx context.Context, log logr.Logger, re
 	if err != nil {
 		return fmt.Errorf("could not create chart renderer for rendering manged resource chart for shoot: %w", err)
 	}
-	values, err := a.configBuilder.BuildSOCValues(reconcileCtx)
+	values, err := a.configBuilder.BuildSOCValues(ctx, reconcileCtx)
 	if err != nil {
 		return fmt.Errorf("could not generate SOC configuration: %w", err)
 	}

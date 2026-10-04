@@ -71,13 +71,14 @@ pixie:
 # through here. They are referenced by name so the secret never enters the extension's
 # providerConfig, which is part of the Shoot spec and therefore readable by anyone who
 # can read the Shoot.
+# Filled by pkg/values from the Shoot's spec.resources[] refs soc-pixie-deploy-key,
+# soc-pull-entlein and soc-pull-tanzeee (gardener mirrors each as ref-<name> into the shoot
+# namespace). Empty here on purpose: a value present in a rendered chart means the Shoot
+# declared it; absent means render without it.
 credentials:
-  # Pixie deploy key -> pl-deploy-secrets; API key is NOT needed in-cluster.
-  pixieDeployKeyRef: ""
-  # PAT 1: docker.io/entlein — the duckling/node-agent images. Was $HOME/.docker/config.json.
-  ducklingPullRef: ""
-  # PAT 2: docker.io/tanzeee — adaptive-export and dx-daemon. Was ~/.registry-pull/tanzeee/config.json.
-  tanzeeePullRef: ""
+  pixieDeployKey: ""     # -> pl-deploy-secrets; the API key is NOT needed in-cluster
+  ducklingPullSecret: "" # PAT 1, docker.io/entlein — kubescape agent images; raw .dockerconfigjson
+  tanzeeePullSecret: ""  # PAT 2, docker.io/tanzeee — adaptive-export and dx-daemon
 
 
 # ClickHouse.
