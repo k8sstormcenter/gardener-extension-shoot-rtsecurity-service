@@ -19,7 +19,6 @@ import (
 	extensionsv1alpha1helper "github.com/gardener/gardener/pkg/api/extensions/v1alpha1/helper"
 	gardenerv1beta1 "github.com/gardener/gardener/pkg/apis/core/v1beta1"
 	extensionsv1alpha1 "github.com/gardener/gardener/pkg/apis/extensions/v1alpha1"
-	"github.com/gardener/gardener/pkg/chartrenderer"
 	"github.com/gardener/gardener/pkg/client/kubernetes"
 	"github.com/gardener/gardener/pkg/extensions"
 	managedresources "github.com/gardener/gardener/pkg/utils/managedresources"
@@ -265,19 +264,6 @@ func (a *actuator) createSeedResources(ctx context.Context, log logr.Logger, nam
 	// that can never pass. Remove one if an earlier version left it behind.
 	log.Info("no seed resources for this extension; ensuring none are left over", "namespace", namespace)
 	return managedresources.DeleteForSeed(ctx, a.client, namespace, constants.ManagedResourceNameFalcoSeed)
-}
-
-func (a *actuator) createManagedResource(ctx context.Context, log logr.Logger, namespace, name, class string, renderer chartrenderer.Interface, chartName, chartNamespace string, chartValues map[string]interface{}, injectedLabels map[string]string) error {
-	chartPath := filepath.Join(charts.InternalChartsPath, chartName)
-	log.Info("Rendering chart", "chart", chartName, "chart path", chartPath)
-	chart, err := renderer.RenderEmbeddedFS(charts.InternalChart, chartPath, chartName, chartNamespace, chartValues)
-	if err != nil {
-		return err
-	}
-	data := map[string][]byte{"config.yaml": chart.Manifest()}
-	keepObjects := false
-	forceOverwriteAnnotations := false
-	return managedresources.Create(ctx, a.client, namespace, name, nil, false, class, data, &keepObjects, injectedLabels, &forceOverwriteAnnotations)
 }
 
 // Delete the Extension resource.
