@@ -47,7 +47,7 @@ func shootWithFalco(name, namespace string) *gardencorev1beta1.Shoot {
 			},
 			Extensions: []gardencorev1beta1.Extension{
 				{
-					Type: "shoot-falco-service",
+					Type: "shoot-rtsecurity-service",
 					ProviderConfig: &runtime.RawExtension{
 						Raw: []byte(`{"apiVersion":"falco.extensions.gardener.cloud/v1alpha1","kind":"FalcoServiceConfig","falcoVersion":"0.99.0","autoUpdate":true}`),
 					},
@@ -527,7 +527,7 @@ var _ = Describe("Reconciler", func() {
 
 func findFalcoExtension(shoot *gardencorev1beta1.Shoot) *gardencorev1beta1.Extension {
 	for i := range shoot.Spec.Extensions {
-		if shoot.Spec.Extensions[i].Type == "shoot-falco-service" {
+		if shoot.Spec.Extensions[i].Type == "shoot-rtsecurity-service" {
 			return &shoot.Spec.Extensions[i]
 		}
 	}

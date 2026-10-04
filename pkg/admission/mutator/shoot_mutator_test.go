@@ -323,7 +323,7 @@ var (
 		Spec: gardencorev1beta1.ShootSpec{
 			Extensions: []gardencorev1beta1.Extension{
 				{
-					Type:     "shoot-falco-service",
+					Type:     "shoot-rtsecurity-service",
 					Disabled: boolValue(false),
 				},
 			},
@@ -334,7 +334,7 @@ var (
 		Spec: gardencorev1beta1.ShootSpec{
 			Extensions: []gardencorev1beta1.Extension{
 				{
-					Type:           "shoot-falco-service",
+					Type:           "shoot-rtsecurity-service",
 					Disabled:       boolValue(false),
 					ProviderConfig: &runtime.RawExtension{},
 				},
@@ -358,7 +358,7 @@ func TestExtensionIsDisabled(t *testing.T) {
 	exampleShoot := &gardencorev1beta1.Shoot{
 		Spec: gardencorev1beta1.ShootSpec{
 			Extensions: []gardencorev1beta1.Extension{
-				{Type: "shoot-falco-service", Disabled: &disabledSet},
+				{Type: "shoot-rtsecurity-service", Disabled: &disabledSet},
 			},
 		},
 	}

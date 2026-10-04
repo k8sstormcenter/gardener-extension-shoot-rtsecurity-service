@@ -35,7 +35,7 @@ var (
 	exampleShootValidation = &core.Shoot{
 		Spec: core.ShootSpec{
 			Extensions: []core.Extension{
-				{Type: "shoot-falco-service", Disabled: boolValue(true)},
+				{Type: "shoot-rtsecurity-service", Disabled: boolValue(true)},
 			},
 		},
 	}
@@ -43,7 +43,7 @@ var (
 	exampleShootValidation2 = &core.Shoot{
 		Spec: core.ShootSpec{
 			Extensions: []core.Extension{
-				{Type: "shoot-falco-service"},
+				{Type: "shoot-rtsecurity-service"},
 			},
 		},
 	}
@@ -52,7 +52,7 @@ var (
 		Spec: core.ShootSpec{
 			Extensions: []core.Extension{
 				{
-					Type:           "shoot-falco-service",
+					Type:           "shoot-rtsecurity-service",
 					Disabled:       boolValue(false),
 					ProviderConfig: &runtime.RawExtension{},
 				},
@@ -73,7 +73,7 @@ var (
 		Spec: core.ShootSpec{
 			Extensions: []core.Extension{
 				{
-					Type:           "shoot-falco-service",
+					Type:           "shoot-rtsecurity-service",
 					Disabled:       boolValue(false),
 					ProviderConfig: &runtime.RawExtension{},
 				},
@@ -101,7 +101,7 @@ var (
 		Spec: core.SeedSpec{
 			Extensions: []core.Extension{
 				{
-					Type:           "shoot-falco-service",
+					Type:           "shoot-rtsecurity-service",
 					Disabled:       boolValue(false),
 					ProviderConfig: &runtime.RawExtension{},
 				},
@@ -1034,7 +1034,7 @@ var _ = Describe("Test validator", Label("falcovalues"), func() {
 
 		err = f(falcoExtensionIllegal7)
 		Expect(err).To(Not(BeNil()), "Illegal extension is not detected as such")
-		Expect(err.Error()).To(ContainSubstring("failed to decode shoot-falco-service provider config"), "Illegal extension is not detected as such ")
+		Expect(err.Error()).To(ContainSubstring("failed to decode shoot-rtsecurity-service provider config"), "Illegal extension is not detected as such ")
 
 		err = f(falcoExtensionIllegalWrongCustomRule1)
 		Expect(err).To(Not(BeNil()), "Illegal extension is not detected as such")
