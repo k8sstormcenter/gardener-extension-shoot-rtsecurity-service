@@ -16,7 +16,7 @@ images:
   clickhouseServer: "clickhouse/clickhouse-server:24.8"
   kubescapeOperator: ""
   nodeAgent: ""
-  vector: ""
+  vector: "timberio/vector:0.58.0-distroless-libc"
   adaptiveExport: ""
   dxDaemon: ""
 
@@ -108,9 +108,15 @@ clickhouse:
   # operator therefore ships as its own, earlier ManagedResource. Until that exists this
   # chart assumes it is present.
   operatorPreinstalled: true
+  # The writer identity vector and AE use. Defaults are soc's own tree/clickhouse-lab
+  # values and are not secrets in soc either; override per shoot once they are.
+  ingest:
+    user: ingest_writer
+    password: changeme-ingest
   # Used only when mode=central. Points at the forensic cluster's ClickHouse.
   central:
     dsn: ""
+    httpEndpoint: ""
 
 # Kubescape rules are data, not code: soc owns default-rules.yaml and
 # rule-alert-binding.yaml and applies them with --server-side --force-conflicts
