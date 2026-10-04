@@ -38,6 +38,12 @@ const (
 	// FalcoChartname is the name of the Falco Helm chart to be deployed in shoot clusters
 	FalcoChartname = "falco"
 
+	// SOCChartname is the chart this fork renders: the SOC runtime-security stack
+	// (ClickHouse, kubescape node-agent, vector, pixie vizier/PEM, adaptive-export,
+	// dx-daemon) rather than falco. The falco chart is left in place for reference while
+	// the port is incomplete.
+	SOCChartname = "soc"
+
 	FalcoServerCaKey  = "server-ca.key"
 	FalcoServerCaCert = "server-ca.cert"
 	FalcoClientCaKey  = "client-ca.key"

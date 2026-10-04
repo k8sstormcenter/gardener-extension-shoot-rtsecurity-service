@@ -228,16 +228,16 @@ func (a *actuator) Reconcile(ctx context.Context, log logr.Logger, ex *extension
 
 func (a *actuator) createShootResources(ctx context.Context, log logr.Logger, reconcileCtx *utils.ReconcileContext) error {
 
-	log.Info("creating Falco resources for shoot " + reconcileCtx.Namespace)
+	log.Info("creating SOC resources for shoot " + reconcileCtx.Namespace)
 	renderer, err := util.NewChartRendererForShoot(reconcileCtx.TargetClusterK8sVersion)
 	if err != nil {
 		return fmt.Errorf("could not create chart renderer for rendering manged resource chart for shoot: %w", err)
 	}
-	values, err := a.configBuilder.BuildFalcoValues(ctx, log, reconcileCtx)
+	values, err := a.configBuilder.BuildSOCValues(reconcileCtx)
 	if err != nil {
-		return fmt.Errorf("could not generate falco configuration: %w", err)
+		return fmt.Errorf("could not generate SOC configuration: %w", err)
 	}
-	release, err := renderer.RenderEmbeddedFS(charts.InternalChart, filepath.Join(charts.InternalChartsPath, constants.FalcoChartname), constants.FalcoChartname, metav1.NamespaceSystem, values)
+	release, err := renderer.RenderEmbeddedFS(charts.InternalChart, filepath.Join(charts.InternalChartsPath, constants.SOCChartname), constants.SOCChartname, metav1.NamespaceSystem, values)
 	if err != nil {
 		return fmt.Errorf("could not render chart for shoot: %w", err)
 	}
