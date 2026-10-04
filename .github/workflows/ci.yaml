@@ -1,0 +1,35 @@
+# The parts of upstream's `make verify` that are real checks, on a plain runner. The
+# cc-utils workflows this replaces needed gardener-internal OCM bundles and secrets that a
+# fork does not have; the hack scripts behind check/test come from the gardener go module,
+# so they need nothing of the sort.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - run: make check
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - run: make test
