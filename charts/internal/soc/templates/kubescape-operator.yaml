@@ -1427,8 +1427,9 @@ metadata:
   annotations:
     # Bound PVCs get storageClassName/volumeName filled in by the cluster; a re-apply of
     # this template is then an immutable-field change and fails the whole ManagedResource.
-    # GRM creates an Ignore-mode object once and never touches it again.
-    resources.gardener.cloud/mode: Ignore
+    # ignore=true: GRM creates the object once and never updates it (mode=Ignore would
+    # skip creation and orphan an existing one).
+    resources.gardener.cloud/ignore: "true"
   labels:
     helm.sh/chart: kubescape-operator-1.41.0-duckling46
     app.kubernetes.io/name: kubescape-operator
