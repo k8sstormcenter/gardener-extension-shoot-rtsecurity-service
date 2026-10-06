@@ -1,9 +1,9 @@
 {{- if .Values.pixie.enabled }}
 {{/*
-Pixie operator, rendered from the pixie fork's k8s/operator/deployment/base kustomize —
-the non-OLM path pixie itself ships. `px deploy` installs the same operator through OLM;
-OLM is not needed to run a Deployment, so it is not carried here.
-Regenerate: kubectl kustomize k8s/operator/deployment/base, substitute image + namespace.
+Pixie operator, rendered from pixie's own k8s/operator/deployment/base kustomize: the
+non-OLM path it ships. `px deploy` installs the same operator through OLM, which is not
+needed to run a Deployment and is therefore not carried here.
+Regenerate with `kubectl kustomize`, then substitute the image and namespace.
 */}}
 ---
 apiVersion: v1

@@ -53,15 +53,14 @@ KUBECONFIG=$KUBECONFIG_VIRTUAL kubectl -n garden-local delete shoot soc-test
 
 ### Reconcile fails: "secretRef not found in resources"
 
-APPLIES TO US DIRECTLY: this fork passes the pixie deploy key and both registry PATs
-(docker.io/entlein for duckling/node-agent, docker.io/tanzeee for AE and dx-daemon) by
-reference rather than inline, because providerConfig is part of the Shoot spec and
-readable by anyone who can read the Shoot. Every one of those refs needs the
-spec.resources stanza below or reconcile dies at ~51%.
+The extension passes the pixie credentials and both registry pull secrets by reference
+rather than inline, because providerConfig is part of the Shoot spec and readable by
+anyone who can read the Shoot. Each ref needs its spec.resources stanza or the reconcile
+fails partway through.
 
 **Symptom**: Shoot creation fails at ~51% with error "could not generate SOC configuration: resource "soc-pull-entlein" is declared but ref-soc-pull-entlein is not readable".
 
-**Root cause**: The Shoot manifest references `resourceSecretName: opensearch-config` in the destination but doesn't declare it in `spec.resources`.
+**Root cause**: the Shoot does not declare that credential in `spec.resources`, so gardener never mirrors it into the shoot namespace as `ref-<name>`.
 
 **Fix**: Add to the Shoot spec:
 ```yaml

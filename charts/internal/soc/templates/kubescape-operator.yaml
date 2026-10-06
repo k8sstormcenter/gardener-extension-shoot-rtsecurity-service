@@ -1,11 +1,11 @@
 {{- if .Values.kubescape.enabled }}
 {{/*
-Static render of kubescape-operator 1.41.0-duckling46 with soc's values (runtime detection
-only, offline, alertCRD.installDefault=false, cooldown off). The chart is rendered ahead
-of time rather than nested because the extension renders ONE chart into the shoot
-ManagedResource and GRM, not helm, owns the objects: helm hooks and lookup() would not run.
-Regenerate with helm template + the same values when the kubescape pin moves.
-Rules are soc's own (kubescape-rules.yaml), hence no upstream defaults here.
+Static render of the kubescape-operator chart: runtime detection only, no cloud backend,
+upstream default rules off, alert cooldown off. Rendered ahead of time rather than nested
+because the extension renders one chart into the shoot ManagedResource and GRM, not helm,
+owns the objects, so helm hooks and lookup() would never run.
+Regenerate with `helm template` and the same values when the pin moves. The rule set lives
+in kubescape-rules.yaml.
 */}}
 ---
 apiVersion: v1

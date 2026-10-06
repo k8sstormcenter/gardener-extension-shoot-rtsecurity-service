@@ -1,13 +1,11 @@
 # Values contract for the SOC stack chart.
 #
-# Everything the skaffolds discovered by reading the live cluster is a VALUE here
-# instead. An extension renders a chart into a ManagedResource; it cannot run
-# kubectl, read a developer's home directory, or exec into a pod, so anything the
-# skaffold hooks did imperatively either moves into pkg/values (computed from the
-# Cluster/Extension objects) or stops being necessary at all.
+# An extension renders a chart into a ManagedResource; it cannot run kubectl, read a
+# file from the operator's machine or exec into a pod. So anything that needs to be
+# discovered is either a value here or computed by pkg/values from the Cluster and
+# Extension objects.
 
-# Images. Pinned by the profile CRD in a real deployment; defaults exist so the
-# chart renders standalone for tests.
+# Images. Overridable per shoot through providerConfig.images.
 images:
   clickhouseOperator: "altinity/clickhouse-operator:0.26.0"
   pixieOperator: "gcr.io/pixie-oss/pixie-prod/operator-operator_image:0.1.7"
@@ -30,36 +28,23 @@ namespaces:
   pixie: pl
   pixieOperator: px-operator
 
-# Replaces skaffold_adaptive_export.yaml before[2]: instead of patching the
-# operator's pl-cloud-config to append :443, AE is given the address directly.
-# The patch existed because AE inherited a ConfigMap it did not own; owning the
-# env removes the race rather than working around it.
-# Pixie is installed DECLARATIVELY, via the operator + Vizier CR
-# (k8s/operator/deployment/sbob and k8s/vizier/sbob kustomizations in the pixie fork).
-# The px binary is deliberately NOT shipped to the shoot: `px deploy` is a laptop
-# workflow that creates pl-cloud-config and pl-deploy-secrets as a side effect, and an
-# extension cannot run a CLI. Rendering those objects directly is both possible and
-# reproducible, so the CLI is not needed in-cluster at all. px stays a human tool for
-# `px auth` / `px run` from outside.
+# Pixie is installed declaratively, as the operator plus a Vizier CR. The px CLI is not
+# shipped into the shoot: `px deploy` creates the cloud ConfigMap and the deploy-key
+# Secret as a side effect, and an extension cannot run a CLI. Rendering those objects
+# directly is reproducible, so the CLI stays a human tool used from outside.
 #
-# clusterName is DERIVED FROM THE SHOOT, not an operator knob. pkg/values sets it from
-# the Shoot name on the Cluster resource, which the actuator already reads. That is what
-# stops registration sprawl at source: a cluster left at the operator default registers a
-# new `default_<hash>` in the pixie cloud on every reinstall instead of reclaiming its own.
-# A derived name cannot be forgotten and is stable across reinstalls of the same shoot.
+# clusterName is derived from the Shoot, not configurable. A cluster left at the operator
+# default registers a new `default_<hash>` in the pixie cloud on every reinstall instead
+# of reclaiming its own; a derived name cannot be forgotten and is stable across
+# reinstalls of the same shoot. The cloud's namespace is flat, so two shoots with the
+# same name in different projects would collide; Shoot.Status.TechnicalID
+# (shoot--<project>--<name>) is already available to the actuator if that ever matters.
 #
-# Tradeoff worth knowing: the pixie cloud namespace is flat, so two shoots with the same
-# name in different projects would collide. Shoot.Status.TechnicalID
-# (shoot--<project>--<name>) is already read by the actuator and avoids that if it ever
-# matters; the plain shoot name is used because it is what a human recognises in the UI.
-#
-# cloudAddr MUST carry an explicit :443. Without it the AE cloud client crash-loops, and
-# the skaffold worked around this by patching the operator's ConfigMap after the fact;
-# giving AE the value directly removes the race instead of racing it.
+# cloudAddr MUST carry an explicit port. Without one the cloud client crash-loops.
 pixie:
   enabled: true
-  cloudAddr: "work.soc.k8sstormcenter.com:443"
-  vizierVersion: "0.14.19-pemdq1"   # the fork's PEM line (ships the :50305 direct-query listener)
+  cloudAddr: ""
+  vizierVersion: "0.14.19-pemdq1"   # must be a version whose PEM serves the direct-query listener
   dataAccess: Full
   pemMemoryLimit: 4Gi
   pemMemoryRequest: 2Gi
@@ -68,38 +53,30 @@ pixie:
   # rather than a default to silently accept.
   clusterName: ""
 
-# Pixie credentials, and the two registry PATs.
+# Pixie credentials and the registry pull secrets.
 #
-# None of these may be read from a filesystem: the skaffolds took them from
-# ~/.pixie/keys.public.env, ~/.docker/config.json and
-# ~/.registry-pull/tanzeee/config.json, which exist on one laptop and nowhere else.
-# In a shoot they arrive as gardener NamedResourceReferences, resolved by the actuator and
-# passed through here. They are referenced by name so the secret never enters the extension's
-# providerConfig, which is part of the Shoot spec and therefore readable by anyone who
-# can read the Shoot.
-# Filled by pkg/values from the Shoot's spec.resources[] refs soc-pixie-deploy-key,
-# soc-pixie-api-key, soc-pull-entlein and soc-pull-tanzeee (gardener mirrors each as ref-<name> into the shoot
-# namespace). Empty here on purpose: a value present in a rendered chart means the Shoot
-# declared it; absent means render without it.
+# These arrive as gardener NamedResourceReferences: the Shoot lists them in
+# spec.resources[], gardener mirrors each into the shoot namespace as ref-<name>, and
+# pkg/values resolves them there. Referenced by name, never inlined, because
+# providerConfig is part of the Shoot spec and readable by anyone who can read the Shoot.
+# Empty here on purpose: a value present in a rendered chart means the Shoot declared it,
+# absent means render without it.
 credentials:
-  pixieDeployKey: ""     # -> pl-deploy-secrets; registers the vizier
-  pixieApiKey: ""        # -> pl-adaptive-export-secrets; AE and dx query the cloud API with it
-  ducklingPullSecret: "" # PAT 1, docker.io/entlein — kubescape agent images; raw .dockerconfigjson
-  tanzeeePullSecret: ""  # PAT 2, docker.io/tanzeee — adaptive-export and dx-daemon
+  pixieDeployKey: ""     # registers the vizier with the cloud
+  pixieApiKey: ""        # adaptive-export and dx query the cloud API with it
+  ducklingPullSecret: "" # raw .dockerconfigjson for the node-agent images
+  tanzeeePullSecret: ""  # raw .dockerconfigjson for adaptive-export and dx-daemon
 
 
 # ClickHouse.
 #
-# mode: local for now — a ClickHouse per shoot, deliberately, because the stack is
-# alpha enough that being able to nuke the database and start over is worth more than
-# not duplicating it. THE CENTRAL ONE IS THE DESTINATION: the `forensic` cluster is
-# exactly that, a central ClickHouse, and shoots will ship to it instead of running
-# their own as soon as this extension works end to end. Keep `central` wired in the
-# chart from the start so that switch is a value change rather than a rewrite.
+# mode local is a ClickHouse per shoot: while the stack is this young, being able to drop
+# the database and start over is worth more than not duplicating it. A central ClickHouse
+# is the destination, so `central` stays wired from the start and the switch is a value
+# change rather than a rewrite.
 #
-# Retention is set here rather than inherited: the 30-day defaults are wrong for a
-# small cluster, and the shipped DDL leaves 17 of 25 tables with no TTL at all —
-# including dc_snoop, which was 234 MiB of a 329 MiB database on a measured rig.
+# Retention is set here rather than inherited: the upstream 30-day defaults are wrong for
+# a small cluster, and most tables in the shipped DDL carry no TTL at all.
 clickhouse:
   mode: local # local | central
   retentionHours: 24
@@ -109,22 +86,17 @@ clickhouse:
   keeper:
     replicas: 1
     storage: 512Mi
-  # The altinity operator and its CRDs are NOT rendered by this chart. A CRD and a CR of
-  # that CRD in one ManagedResource is an ordering hazard: GRM applies the set without
-  # waiting for the CRD to be established, so the CR can be rejected on first pass. The
-  # operator therefore ships as its own, earlier ManagedResource. Until that exists this
-  # chart assumes it is present.
-  # The operator and its CRDs ride in this chart so the extension is self-sufficient on any
-  # shoot. CRD and CR in one ManagedResource can race on first apply (the CR is rejected
-  # until the CRD is Established); GRM retries each sync, so the resource reports
-  # ResourcesApplied=False briefly and then settles. Accepted over depending on terraform.
+  # The operator and its CRDs ride in this chart so the extension is self-sufficient on
+  # any shoot. A CRD and a CR of it in one ManagedResource can race on first apply (the CR
+  # is rejected until the CRD is Established); GRM retries each sync, so the resource
+  # reports ResourcesApplied=False briefly and then settles.
   deployOperator: true
-  # The writer identity vector and AE use. Defaults are soc's own tree/clickhouse-lab
-  # values and are not secrets in soc either; override per shoot once they are.
+  # The writer identity vector and adaptive-export use. The default is a placeholder, not
+  # a secret: override it per shoot.
   ingest:
     user: ingest_writer
     password: changeme-ingest
-  # Used only when mode=central. Points at the forensic cluster's ClickHouse.
+  # Used only when mode=central.
   central:
     host: ""
 
@@ -134,9 +106,8 @@ clickhouse:
 vector:
   enabled: true
 
-# Kubescape rules are data, not code: soc owns default-rules.yaml and
-# rule-alert-binding.yaml and applies them with --server-side --force-conflicts
-# because helm's alertCRD.installDefault is false. Rendered here instead.
+# Kubescape rules are data, not code: the rule set and its binding are rendered from the
+# values below rather than taken from the upstream chart's defaults.
 kubescape:
   enabled: true
   # Storage class of the kubescape-storage PVC; empty = the cluster default.
@@ -172,7 +143,7 @@ kubescape:
     - cilium-secrets
     - external-dns
   # Namespaces the alert binding leaves out. Narrower than excludeNamespaces on purpose:
-  # pixie's own namespaces (pl, px-operator) stay bound so their SBoBs are enforced.
+  # pixie's own namespaces stay bound so their profiles are enforced.
   bindingExcludeNamespaces:
     - kube-system
     - kube-public
@@ -189,7 +160,7 @@ kubescape:
     - storm
     - lightening
     - cert-manager
-  # Rules bound to every workload. The set is soc's default-rules.yaml; narrow it per shoot.
+  # Rules bound to every workload; narrow the list per shoot.
   rules:
     - "Unexpected process launched"
     - "Unexpected process arguments"

@@ -1,10 +1,10 @@
 {{- if .Values.dx.enabled }}
 {{/*
-k8s/vizier/dx kustomize from the pixie fork, moved from honey into the pixie namespace:
-dx needs pl-cluster-secrets (jwt-signing-key, cluster-id — minted by the operator at
-first boot, so they cannot be rendered) and the skaffold mirrored them into honey with
-kubectl. Same namespace, direct secretKeyRefs, nothing to mirror. The refs are not
-optional: a dx without them runs and silently drops every hand-off.
+The dx kustomize, rendered into the pixie namespace rather than beside kubescape: dx
+needs the vizier's cluster secrets (jwt signing key, cluster id), which the operator mints
+at first boot and so cannot be rendered. Sharing the namespace turns a copy step into a
+direct secretKeyRef. The refs are not optional: a dx without them runs and silently drops
+every hand-off.
 
 The Service below is how vector reaches dx, so it must stay a DNS name with
 internalTrafficPolicy: Local: vector's http-sink uri is not VRL and cannot expand

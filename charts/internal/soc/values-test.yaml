@@ -1,6 +1,7 @@
-# check-charts.sh renders with defaults plus this file. The two required values are
-# per-shoot by design and have no sane default.
+# check-charts.sh renders with defaults plus this file. These values are per-shoot by
+# design and have no sane default.
 pixie:
   clusterName: check-charts
+  cloudAddr: cloud.example.com:443
 credentials:
   pixieApiKey: check-charts

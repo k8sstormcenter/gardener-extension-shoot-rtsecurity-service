@@ -1,10 +1,9 @@
 {{- if .Values.pixie.enabled }}
 {{/*
-What `px deploy --cluster_name <shoot> --vizier_version <v> --pem_memory_limit/request` writes,
-rendered directly.
-Do NOT set spec.registry: the operator then prefixes every image, OLM included, as
-<registry>/ghcr.io-k8sstormcenter-vizier-* and nothing pulls; the vizier image refs come
-from the cloud's artifact for the version. PL_CLOUD_ADDR without :443 crash-loops AE.
+What `px deploy` writes, rendered directly.
+Do NOT set spec.registry: the operator then prefixes every image reference with it and
+nothing pulls; the vizier image refs come from the cloud's artifact for the version.
+A cloud address without an explicit port crash-loops the cloud clients.
 */}}
 ---
 apiVersion: v1

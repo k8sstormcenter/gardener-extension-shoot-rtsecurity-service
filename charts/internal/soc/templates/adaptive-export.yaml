@@ -1,9 +1,9 @@
 {{- if .Values.adaptiveExport.enabled }}
 {{/*
-k8s/vizier/adaptive_export kustomize from the pixie fork, rendered. The skaffold hooks
-are gone on purpose: the Service selector is declared here (nothing pre-creates a wrong
-one on a shoot), :443 is in pixie.cloudAddr, the schema-drift drop is unnecessary on a
-ClickHouse that is created with the stack and nuked with it.
+The adaptive-export kustomize, rendered. Its deploy-time hooks are gone on purpose: the
+Service selector is declared here, so nothing can pre-create a wrong one; the port is part
+of pixie.cloudAddr; and the schema-drift repair is unnecessary on a ClickHouse created
+with the stack and dropped with it.
 */}}
 ---
 apiVersion: v1
