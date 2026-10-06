@@ -61,7 +61,6 @@ spec:
           pixieApiKey: ""
           pullEntlein: ""
           pullTanzeee: ""
-          arcGithubToken: ""
         images: {}                   # overrides keyed like values.images
 ```
 
@@ -92,8 +91,6 @@ spec:
       ...        # kubernetes.io/dockerconfigjson
     - name: soc-pull-tanzeee
       ...        # kubernetes.io/dockerconfigjson
-    - name: soc-arc-github-token
-      ...        # only when target.arc is enabled
 ```
 
 Gardener mirrors each referenced Secret into the shoot namespace as `ref-<name>`, which is

@@ -93,8 +93,9 @@ The binding is a label in the workload's pod template, so every pod carries it f
 creation and is judged from its first event. Nothing patches pods afterwards; a pod that
 starts unlabelled is ungoverned for as long as it takes to notice.
 
-For a runner scale set the label goes in `spec.template.metadata.labels`, which the
-controller copies verbatim onto each runner pod:
+The workload is installed from its own chart; this extension governs it, it does not ship
+it. For a runner scale set the label goes in the chart's `template.metadata.labels`, which
+the controller copies verbatim onto each runner pod:
 
 ```yaml
 apiVersion: actions.github.com/v1alpha1
@@ -137,29 +138,6 @@ should be thrown:
 
 So an ungoverned target is watched and not judged. The binding exclusion lifts by itself as
 soon as `profiles` are delivered, which is the same moment there is something to judge it by.
-
-## Running the workload in the shoot
-
-`target.arc` deploys the runner scale set and its controller, so the shoot has a live
-governed workload rather than only the control for one deployed elsewhere:
-
-```yaml
-target:
-  arc:
-    enabled: true
-    githubConfigUrl: https://github.com/<org>
-    maxRunners: 4
-```
-
-The forge token comes from the Shoot's `spec.resources[]` as `soc-arc-github-token`. The
-scale set is otherwise the upstream chart as CNCF renders it for container runners, with
-the profile binding added to the pod template, the sniffing window overridden per pod, and
-node placement dropped.
-
-Two things to know before turning it on. The controller's four custom resource definitions
-are about 3 MB of schema, which is why the ManagedResource data is compressed — without
-that the whole stack exceeds the 1 MiB a Secret holds. And the listener needs to reach the
-forge from inside the shoot: no egress, no runners.
 
 ## Learning windows
 
