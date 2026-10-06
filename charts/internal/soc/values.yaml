@@ -111,7 +111,7 @@ target:
   # The name every pod of the workload carries as kubescape.io/user-defined-profile, and
   # therefore the name of the one profile that governs all of them. For a runner scale set
   # this is the scale set name: its pods are owned by a per-job CR, so each job produces
-  # its own shadow profile and only this label gives them a single stable judge.
+  # its own learned profile and only this label gives them a single stable judge.
   profileName: ""
 
 # Signed-off profiles and rules, fetched from git by the actuator and rendered verbatim.
