@@ -1,8 +1,8 @@
 {{- if .Values.pixie.enabled }}
 {{/*
 Pixie operator, rendered from the pixie fork's k8s/operator/deployment/base kustomize —
-the non-OLM path pixie itself ships. rocky-1 got the same operator (0.1.7) through OLM via
-`px deploy`; OLM is not needed to run a Deployment, so it is not carried here.
+the non-OLM path pixie itself ships. `px deploy` installs the same operator through OLM;
+OLM is not needed to run a Deployment, so it is not carried here.
 Regenerate: kubectl kustomize k8s/operator/deployment/base, substitute image + namespace.
 */}}
 ---

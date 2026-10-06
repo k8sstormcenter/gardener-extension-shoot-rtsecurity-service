@@ -37,7 +37,7 @@ near the shoot. px stays a human tool for `px auth` / `px run` from outside.
 Two values that are not optional:
 - `clusterName` is derived from the Shoot name by `pkg/values`, not configured. The
   actuator already reads it off the Cluster resource. Deriving it is what stops
-  registration sprawl at source — edge4 left it at the operator default and the pixie
+  registration sprawl at source — a cluster left at the operator default makes the pixie
   cloud accumulated six `default_<hash>` registrations, five dead, because each reinstall
   registered a new one. A derived name is stable across reinstalls of the same shoot.
   (Shoot.Status.TechnicalID is the collision-safe variant if two projects ever reuse a

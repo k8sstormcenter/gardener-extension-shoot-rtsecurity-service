@@ -44,10 +44,9 @@ namespaces:
 #
 # clusterName is DERIVED FROM THE SHOOT, not an operator knob. pkg/values sets it from
 # the Shoot name on the Cluster resource, which the actuator already reads. That is what
-# stops the registration sprawl at source: edge4 left the name at the operator default
-# and the pixie cloud now carries six `default_<hash>` registrations, five of them dead,
-# because each reinstall registers a new one instead of reclaiming its own. A derived
-# name cannot be forgotten and is stable across reinstalls of the same shoot.
+# stops registration sprawl at source: a cluster left at the operator default registers a
+# new `default_<hash>` in the pixie cloud on every reinstall instead of reclaiming its own.
+# A derived name cannot be forgotten and is stable across reinstalls of the same shoot.
 #
 # Tradeoff worth knowing: the pixie cloud namespace is flat, so two shoots with the same
 # name in different projects would collide. Shoot.Status.TechnicalID
@@ -129,12 +128,11 @@ clickhouse:
   central:
     host: ""
 
-# Collectors are opt-in per shoot. vector defaults OFF because k3s-2 still carries a
-# 162-day-old kubescape+vector install in honey from before this extension existed: a
-# ManagedResource with the same names would make GRM overwrite that DaemonSet and
-# ConfigMap, and delete them when the resource goes. Adopt, relocate or reset first.
+# vector is the only path from the node-agent's stdout to ClickHouse: with it off, alerts
+# are produced and never stored, so the evidence tables stay empty. On a shoot that already
+# runs a vector outside this chart, turn it off rather than let GRM take the DaemonSet over.
 vector:
-  enabled: false
+  enabled: true
 
 # Kubescape rules are data, not code: soc owns default-rules.yaml and
 # rule-alert-binding.yaml and applies them with --server-side --force-conflicts

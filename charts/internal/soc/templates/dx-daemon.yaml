@@ -5,6 +5,11 @@ dx needs pl-cluster-secrets (jwt-signing-key, cluster-id — minted by the opera
 first boot, so they cannot be rendered) and the skaffold mirrored them into honey with
 kubectl. Same namespace, direct secretKeyRefs, nothing to mirror. The refs are not
 optional: a dx without them runs and silently drops every hand-off.
+
+The Service below is how vector reaches dx, so it must stay a DNS name with
+internalTrafficPolicy: Local: vector's http-sink uri is not VRL and cannot expand
+${HOST_IP} at runtime, so the literal string reaches the URL parser and every finding is
+dropped silently; Local keeps the hand-off on the node whose PEM dx queries.
 */}}
 ---
 apiVersion: v1
