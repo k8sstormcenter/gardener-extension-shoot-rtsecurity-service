@@ -34,16 +34,6 @@
   ],
   packageRules: [
     {
-      description: 'Group all Falco plugin updates together',
-      matchDatasources: [
-        'docker',
-      ],
-      groupName: 'falco-plugins',
-      matchPackageNames: [
-        '/^ghcr\\.io/falcosecurity/plugins/',
-      ],
-    },
-    {
       description: 'Group all non-Gardener Go dependencies together',
       matchManagers: [
         'gomod',

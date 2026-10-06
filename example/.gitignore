@@ -1,7 +1,0 @@
-*
-!extension/
-!extension/**
-!doc.go
-!.gitignore
-!00-config.yaml.tmpl
-!extension.yaml

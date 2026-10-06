@@ -9,8 +9,6 @@ ENSURE_GARDENER_TOOLS_MOD   := $(shell go get github.com/gardener/gardener/hack/
 GARDENER_HACK_DIR           := $(shell go list -m -f "{{.Dir}}" github.com/gardener/gardener)/hack
 EXTENSION_PREFIX            := gardener-extension
 NAME                        := shoot-rtsecurity-service
-ADMISSION_NAME              := admission-shoot-rtsecurity-service
-OPS_NAME					:= falco-ops
 REGISTRY                    := europe-docker.pkg.dev/gardener-project/public/gardener
 IMAGE_PREFIX                := $(REGISTRY)/extensions
 REPO_ROOT                   := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
@@ -59,31 +57,6 @@ start:
 			--leader-election=$(LEADER_ELECTION) \
 			--log-level=debug
 
-.PHONY: start-admission
-start-admission:
-	LEADER_ELECTION_NAMESPACE=garden go run \
-		-ldflags $(LD_FLAGS) \
-		./cmd/$(EXTENSION_PREFIX)-$(ADMISSION_NAME) \
-		--webhook-config-server-host=0.0.0.0 \
-		--webhook-config-server-port=$(WEBHOOK_CONFIG_PORT) \
-		--webhook-config-mode=$(WEBHOOK_CONFIG_MODE) \
-		--health-bind-address=:8082 \
-		--metrics-bind-address=:8083 \
-		--autonomous-shoot-cluster=false \
-        $(WEBHOOK_PARAM)
-
-.PHONY: start-admission-debug
-start-admission-debug:
-	LEADER_ELECTION_NAMESPACE=garden dlv debug \
-                --listen=:2345 \
-		./cmd/$(EXTENSION_PREFIX)-$(ADMISSION_NAME) \
-		-- --webhook-config-server-host=0.0.0.0 \
-		--webhook-config-server-port=$(WEBHOOK_CONFIG_PORT) \
-		--webhook-config-mode=$(WEBHOOK_CONFIG_MODE) \
-		--health-bind-address=:8082 \
-		--metrics-bind-address=:8083 \
-        $(WEBHOOK_PARAM)
-
 #################################################################
 # Rules related to binary build, Docker image build and release #
 #################################################################
@@ -100,8 +73,6 @@ docker-login:
 .PHONY: docker-images
 docker-images:
 	@docker build --build-arg EFFECTIVE_VERSION=$(EFFECTIVE_VERSION) -t $(IMAGE_PREFIX)/$(EXTENSION_PREFIX)-$(NAME):$(VERSION) -t $(IMAGE_PREFIX)/$(EXTENSION_PREFIX)-$(NAME):latest -f Dockerfile -m 6g --target $(EXTENSION_PREFIX)-$(NAME) .
-	@docker build --build-arg EFFECTIVE_VERSION=$(EFFECTIVE_VERSION) -t $(IMAGE_PREFIX)/$(ADMISSION_NAME):$(VERSION) -t $(IMAGE_PREFIX)/$(ADMISSION_NAME):latest -f Dockerfile -m 6g --target $(EXTENSION_PREFIX)-$(ADMISSION_NAME) .
-	@docker build -t $(REGISTRY)/$(OPS_NAME):$(VERSION) -t $(REGISTRY)/$(OPS_NAME):latest -f Dockerfile -m 6g --target $(OPS_NAME) .
 
 .PHONY: docker-push
 docker-push:
@@ -121,8 +92,7 @@ tidy:
 
 .PHONY: clean
 clean:
-	@$(shell find ./example -type f -name "controller-registration.yaml" -exec rm '{}' \;)
-	@bash $(GARDENER_HACK_DIR)/clean.sh ./cmd/... ./pkg/... ./imagevector/... ./falco/...
+	@bash $(GARDENER_HACK_DIR)/clean.sh ./cmd/... ./pkg/...
 
 .PHONY: check-generate
 check-generate:
@@ -130,7 +100,7 @@ check-generate:
 
 .PHONY: check
 check: $(GOIMPORTS) $(GOLANGCI_LINT) $(HELM) $(YQ)
-	@bash $(GARDENER_HACK_DIR)/check.sh --golangci-lint-config=./.golangci.yaml ./cmd/... ./pkg/...  ./imagevector/... ./falco/...
+	@bash $(GARDENER_HACK_DIR)/check.sh --golangci-lint-config=./.golangci.yaml ./cmd/... ./pkg/...
 	@bash $(GARDENER_HACK_DIR)/check-charts.sh ./charts
 
 $(GO_MISSPELL):  $(call tool_version_file,$(GO_MISSPELL),$(GO_MISSPELL_VERSION))
@@ -141,17 +111,17 @@ spell: $(GO_MISSPELL)
 
 .PHONY: generate-controller-registration
 generate-controller-registration:
-	@bash $(HACK_DIR)/generate-controller-registration.sh extension-shoot-rtsecurity charts/$(EXTENSION_PREFIX)-$(NAME) 0.0.1 example/ControllerRegistration.yaml
+	@mkdir -p example
+	@bash $(HACK_DIR)/generate-controller-registration.sh extension-shoot-rtsecurity charts/$(EXTENSION_PREFIX)-$(NAME) $(VERSION) example/ControllerRegistration.yaml
 
 .PHONY: generate
 generate: $(CONTROLLER_GEN) $(CRD_REF_DOCS) $(EXTENSION_GEN) $(HELM) $(MOCKGEN) $(KUSTOMIZE) $(YQ) $(VGOPATH)
-	@VGOPATH=$(VGOPATH) REPO_ROOT=$(REPO_ROOT) GARDENER_HACK_DIR=$(GARDENER_HACK_DIR) hack/update-codegen.sh
-	@VGOPATH=$(VGOPATH) REPO_ROOT=$(REPO_ROOT) GARDENER_HACK_DIR=$(GARDENER_HACK_DIR) bash $(GARDENER_HACK_DIR)/generate-sequential.sh ./charts/... ./cmd/... ./example/... ./pkg/...
+	@VGOPATH=$(VGOPATH) REPO_ROOT=$(REPO_ROOT) GARDENER_HACK_DIR=$(GARDENER_HACK_DIR) bash $(GARDENER_HACK_DIR)/generate-sequential.sh ./charts/... ./cmd/... ./pkg/...
 	@$(MAKE) format
 
 .PHONY: format
 format: $(GOIMPORTS) $(GOIMPORTSREVISER)
-	@bash $(GARDENER_HACK_DIR)/format.sh ./cmd ./pkg ./imagevector ./falco
+	@bash $(GARDENER_HACK_DIR)/format.sh ./cmd ./pkg
 
 .PHONY: sast
 sast: $(GOSEC)
@@ -163,7 +133,7 @@ sast-report: $(GOSEC)
 
 .PHONY: test
 test:
-	@SKIP_FETCH_TOOLS=1 bash $(GARDENER_HACK_DIR)/test.sh ./cmd/... ./pkg/... ./falco/... ./imagevector
+	@SKIP_FETCH_TOOLS=1 bash $(GARDENER_HACK_DIR)/test.sh ./cmd/... ./pkg/...
 
 .PHONY: test-cov
 test-cov:
@@ -173,23 +143,11 @@ test-cov:
 test-clean:
 	@bash $(GARDENER_HACK_DIR)/test-cover-clean.sh
 
-.PHONY: generate-profile
-generate-profile:
-	@$(HACK_DIR)/generate-falco-profile  imagevector/images.yaml falco/falcoversions.yaml falco/falcosidekickversions.yaml >falco/falco-profile.yaml
-
-.PHON: validate-imagevector
-validate-imagevector:
-	@$(HACK_DIR)/validate-imagevector.py imagevector/images.yaml
-
-.PHONY: validate-falco-rules
-validate-falco-rules:
-	$(HACK_DIR)/validate-falco-rules falco/falco-profile.yaml falco/rules
-
 .PHONY: verify
-verify: check format test sast validate-imagevector spell
+verify: check format test sast spell
 
 .PHONY: verify-extended
-verify-extended: check-generate check format validate-imagevector generate-profile test sast-report spell
+verify-extended: check-generate check format test sast-report spell
 #verify-extended: check-generate check format test test-cov test-clean
 
 .PHONY: extension-up
@@ -199,8 +157,6 @@ extension-up: export SKAFFOLD_PUSH = true
 extension-up: export LD_FLAGS = $(shell bash $(GARDENER_HACK_DIR)/get-build-ld-flags.sh k8s.io/component-base $(REPO_ROOT)/VERSION gardener-extension-shoot-rtsecurity-service)
 extension-up: export EXTENSION_GARDENER_HACK_DIR = $(GARDENER_HACK_DIR)
 extension-up: $(SKAFFOLD) $(HELM) $(KUBECTL)
-	@docker build -t registry.local.gardener.cloud:5001/local-skaffold/$(OPS_NAME):latest -f Dockerfile --target $(OPS_NAME) .
-	@docker push registry.local.gardener.cloud:5001/local-skaffold/$(OPS_NAME):latest
 	$(SKAFFOLD) run --cache-artifacts=true
 
 extension-debug-up: $(SKAFFOLD) $(HELM) $(KUBECTL)

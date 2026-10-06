@@ -74,9 +74,8 @@ pixie:
 # None of these may be read from a filesystem: the skaffolds took them from
 # ~/.pixie/keys.public.env, ~/.docker/config.json and
 # ~/.registry-pull/tanzeee/config.json, which exist on one laptop and nowhere else.
-# In a shoot they arrive as gardener NamedResourceReferences — the same mechanism the
-# upstream falco extension uses for credentials — resolved by the actuator and passed
-# through here. They are referenced by name so the secret never enters the extension's
+# In a shoot they arrive as gardener NamedResourceReferences, resolved by the actuator and
+# passed through here. They are referenced by name so the secret never enters the extension's
 # providerConfig, which is part of the Shoot spec and therefore readable by anyone who
 # can read the Shoot.
 # Filled by pkg/values from the Shoot's spec.resources[] refs soc-pixie-deploy-key,

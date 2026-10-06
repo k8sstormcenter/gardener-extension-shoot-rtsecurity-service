@@ -1,11 +1,11 @@
 # See the OWNERS docs at https://go.k8s.io/owners
 
 aliases:
-  gardener-extension-shoot-falco-service-reviewers:
+  gardener-extension-shoot-rtsecurity-service-reviewers:
   - marwinski
   - AleksandarSavchev
   - georgibaltiev
-  gardener-extension-shoot-falco-service-approvers:
+  gardener-extension-shoot-rtsecurity-service-approvers:
   - marwinski
   - AleksandarSavchev
   - georgibaltiev

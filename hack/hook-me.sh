@@ -6,4 +6,4 @@
 
 GARDENER_HACK_DIR=$(go list -m -f '{{.Dir}}' github.com/gardener/gardener)/hack
 
-bash $(GARDENER_HACK_DIR)/hook-me.sh gardener-extension-shoot-falco-service $@
+bash $(GARDENER_HACK_DIR)/hook-me.sh gardener-extension-shoot-rtsecurity-service $@

@@ -1,5 +1,3 @@
-// SPDX-FileCopyrightText: Contributors to the Gardener project
-//
 // SPDX-License-Identifier: Apache-2.0
 
 package cmd
@@ -14,10 +12,8 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/serializer"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 
-	apisconfig "github.com/gardener/gardener-extension-shoot-falco-service/pkg/apis/config"
-	"github.com/gardener/gardener-extension-shoot-falco-service/pkg/apis/config/v1alpha1"
-	"github.com/gardener/gardener-extension-shoot-falco-service/pkg/apis/config/validation"
-	controllerconfig "github.com/gardener/gardener-extension-shoot-falco-service/pkg/controller/config"
+	apisconfig "github.com/k8sstormcenter/gardener-extension-shoot-rtsecurity-service/pkg/apis/config"
+	controllerconfig "github.com/k8sstormcenter/gardener-extension-shoot-rtsecurity-service/pkg/controller/config"
 )
 
 var (
@@ -28,23 +24,24 @@ var (
 func init() {
 	scheme = runtime.NewScheme()
 	utilruntime.Must(apisconfig.AddToScheme(scheme))
-	utilruntime.Must(v1alpha1.AddToScheme(scheme))
 
-	decoder = serializer.NewCodecFactory(scheme).UniversalDecoder()
+	// Deserializer, not UniversalDecoder: the config has a single version, so there is no
+	// internal version to convert to and a converting decoder would fail to find one.
+	decoder = serializer.NewCodecFactory(scheme).UniversalDeserializer()
 }
 
-// ConfigOptions are command line options that can be set for config.ControllerConfiguration.
-type FalcoOptions struct {
+// ExtensionOptions are the command line options of the extension controller.
+type ExtensionOptions struct {
 	ConfigLocation string
-	config         *FalcoConfig
+	config         *ExtensionConfig
 }
 
-type FalcoConfig struct {
+type ExtensionConfig struct {
 	config apisconfig.Configuration
 }
 
 // Complete implements Completer.Complete.
-func (o *FalcoOptions) Complete() error {
+func (o *ExtensionOptions) Complete() error {
 	if o.ConfigLocation == "" {
 		return errors.New("config location is not set")
 	}
@@ -54,44 +51,36 @@ func (o *FalcoOptions) Complete() error {
 	}
 
 	config := apisconfig.Configuration{}
-	_, _, err = decoder.Decode(data, nil, &config)
-	if err != nil {
+	if _, _, err := decoder.Decode(data, nil, &config); err != nil {
 		return err
 	}
 
-	if errs := validation.ValidateConfiguration(&config); len(errs) > 0 {
-		return errs.ToAggregate()
-	}
-
-	o.config = &FalcoConfig{
-		config: config,
-	}
-
+	o.config = &ExtensionConfig{config: config}
 	return nil
 }
 
 // Completed returns the completed Config. Only call this if `Complete` was successful.
-func (c *FalcoOptions) Completed() *FalcoConfig {
-	return c.config
+func (o *ExtensionOptions) Completed() *ExtensionConfig {
+	return o.config
 }
 
 // AddFlags implements Flagger.AddFlags.
-func (c *FalcoOptions) AddFlags(fs *pflag.FlagSet) {
-	fs.StringVar(&c.ConfigLocation, "config-file", "", "path to the controller manager configuration file")
+func (o *ExtensionOptions) AddFlags(fs *pflag.FlagSet) {
+	fs.StringVar(&o.ConfigLocation, "config-file", "", "path to the controller manager configuration file")
 }
 
-// Apply sets the values of this Config in the given config.ControllerConfiguration.
-func (c *FalcoConfig) Apply(config *controllerconfig.Config) {
+// Apply sets the values of this Config in the given controller configuration.
+func (c *ExtensionConfig) Apply(config *controllerconfig.Config) {
 	config.Configuration = c.config
 }
 
 // Configuration returns the parsed configuration.
-func (c *FalcoConfig) Configuration() *apisconfig.Configuration {
+func (c *ExtensionConfig) Configuration() *apisconfig.Configuration {
 	return &c.config
 }
 
 // ApplyHealthCheckConfig applies the HealthCheckConfig to the config.
-func (c *FalcoConfig) ApplyHealthCheckConfig(config *healthcheckconfig.HealthCheckConfig) {
+func (c *ExtensionConfig) ApplyHealthCheckConfig(config *healthcheckconfig.HealthCheckConfig) {
 	if c.config.HealthCheckConfig != nil {
 		*config = *c.config.HealthCheckConfig
 	}

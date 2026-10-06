@@ -1,13 +1,9 @@
-// SPDX-FileCopyrightText: Contributors to the Gardener project
-//
 // SPDX-License-Identifier: Apache-2.0
 
 package lifecycle
 
 import (
 	"context"
-	_ "embed"
-	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -20,66 +16,27 @@ import (
 	gardenerv1beta1 "github.com/gardener/gardener/pkg/apis/core/v1beta1"
 	extensionsv1alpha1 "github.com/gardener/gardener/pkg/apis/extensions/v1alpha1"
 	"github.com/gardener/gardener/pkg/client/kubernetes"
-	"github.com/gardener/gardener/pkg/extensions"
 	managedresources "github.com/gardener/gardener/pkg/utils/managedresources"
 	"github.com/go-logr/logr"
-	corev1 "k8s.io/api/core/v1"
-	apierror "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/runtime/serializer"
 	"k8s.io/client-go/discovery"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/rest"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 
-	"github.com/gardener/gardener-extension-shoot-falco-service/charts"
-	"github.com/gardener/gardener-extension-shoot-falco-service/pkg/apis/config"
-	apisservice "github.com/gardener/gardener-extension-shoot-falco-service/pkg/apis/service"
-	socv1alpha1 "github.com/gardener/gardener-extension-shoot-falco-service/pkg/apis/soc/v1alpha1"
-	"github.com/gardener/gardener-extension-shoot-falco-service/pkg/constants"
-	"github.com/gardener/gardener-extension-shoot-falco-service/pkg/profile"
-	"github.com/gardener/gardener-extension-shoot-falco-service/pkg/secrets"
-	"github.com/gardener/gardener-extension-shoot-falco-service/pkg/utils"
-	"github.com/gardener/gardener-extension-shoot-falco-service/pkg/values"
+	"github.com/k8sstormcenter/gardener-extension-shoot-rtsecurity-service/charts"
+	"github.com/k8sstormcenter/gardener-extension-shoot-rtsecurity-service/pkg/apis/config"
+	socv1alpha1 "github.com/k8sstormcenter/gardener-extension-shoot-rtsecurity-service/pkg/apis/soc/v1alpha1"
+	"github.com/k8sstormcenter/gardener-extension-shoot-rtsecurity-service/pkg/constants"
+	"github.com/k8sstormcenter/gardener-extension-shoot-rtsecurity-service/pkg/utils"
+	"github.com/k8sstormcenter/gardener-extension-shoot-rtsecurity-service/pkg/values"
 )
 
 // NewActuator returns an actuator responsible for Extension resources.
-func NewActuator(mgr manager.Manager, config config.Configuration) (extension.Actuator, error) {
-	setConfigDefaults(config)
-	var tokenIssuer *secrets.TokenIssuer = nil
-	if config.Falco.CentralStorage != nil && config.Falco.CentralStorage.Enabled {
-		if config.Falco.CentralStorage.TokenIssuerPrivateKey == "" {
-			return nil, fmt.Errorf("token issuer private key is required")
-		}
-
-		if config.Falco.CentralStorage.URL == "" {
-			return nil, fmt.Errorf("central storage URL is required")
-		}
-
-		var err error
-		if tokenIssuer, err = secrets.NewTokenIssuer(
-			config.Falco.CentralStorage.TokenIssuerPrivateKey,
-			config.Falco.CentralStorage.TokenLifetime,
-		); err != nil {
-			return nil, err
-		}
-	}
-
-	var clusterIdentityTokenIssuer *secrets.TokenIssuer
-	if config.Falco.ClusterIdentityToken != nil && config.Falco.ClusterIdentityToken.TokenIssuerPrivateKey != "" {
-		var err error
-		if clusterIdentityTokenIssuer, err = secrets.NewTokenIssuer(
-			config.Falco.ClusterIdentityToken.TokenIssuerPrivateKey,
-			config.Falco.ClusterIdentityToken.TokenLifetime,
-		); err != nil {
-			return nil, fmt.Errorf("failed to create cluster identity token issuer: %w", err)
-		}
-	}
-
-	configBuilder := values.NewConfigBuilder(mgr.GetClient(), tokenIssuer, clusterIdentityTokenIssuer, &config, profile.FalcoProfileManagerInstance)
-
+func NewActuator(mgr manager.Manager, serviceConfig config.Configuration) (extension.Actuator, error) {
+	// A file path, not an in-cluster config: the garden is reached with the pod's own
+	// service-account token mounted as a kubeconfig (see the chart's tokenFile kubeconfig).
 	gardenRESTConfig, err := kubernetes.RESTConfigFromKubeconfigFile(os.Getenv("GARDEN_KUBECONFIG"), kubernetes.AuthTokenFile)
 	if err != nil {
 		return nil, err
@@ -93,7 +50,7 @@ func NewActuator(mgr manager.Manager, config config.Configuration) (extension.Ac
 	if err != nil {
 		return nil, err
 	}
-	seed, err := getSeed(context.TODO(), dynamicGardenCluster, os.Getenv("SEED_NAME"))
+	seed, err := utils.GetSeed(context.TODO(), dynamicGardenCluster, os.Getenv("SEED_NAME"))
 	if err != nil {
 		return nil, fmt.Errorf("cannot get seed: %v", err)
 	}
@@ -101,61 +58,19 @@ func NewActuator(mgr manager.Manager, config config.Configuration) (extension.Ac
 	return &actuator{
 		client:                 mgr.GetClient(),
 		config:                 mgr.GetConfig(),
-		decoder:                serializer.NewCodecFactory(mgr.GetScheme(), serializer.EnableStrict).UniversalDecoder(),
-		serviceConfig:          config,
-		configBuilder:          configBuilder,
-		tokenIssuer:            tokenIssuer,
-		falcoProfileManger:     profile.FalcoProfileManagerInstance,
+		serviceConfig:          serviceConfig,
+		configBuilder:          values.NewConfigBuilder(mgr.GetClient()),
 		gardenClient:           dynamicGardenCluster,
 		localClusterK8sVersion: localClusterK8sVersion,
 		seed:                   seed,
 	}, nil
 }
 
-func setConfigDefaults(config config.Configuration) {
-	if config.Falco.DefaultEventDestination == nil || *config.Falco.DefaultEventDestination == "" {
-		config.Falco.DefaultEventDestination = &constants.DefaultEventDestination
-	}
-
-	if config.Falco.CertificateLifetime == nil {
-		config.Falco.CertificateLifetime = &metav1.Duration{
-			Duration: constants.DefaultCertificateLifetime,
-		}
-	}
-
-	if config.Falco.CertificateRenewAfter == nil {
-		config.Falco.CertificateRenewAfter = &metav1.Duration{
-			Duration: constants.DefaultCertificateRenewAfter,
-		}
-	}
-
-	if config.Falco.CentralStorage != nil {
-		if config.Falco.CentralStorage.TokenLifetime == nil {
-			config.Falco.CentralStorage.TokenLifetime =
-				&metav1.Duration{
-					Duration: constants.DefaultTokenLifetime,
-				}
-		}
-	}
-
-	if config.Falco.ClusterIdentityToken != nil {
-		if config.Falco.ClusterIdentityToken.TokenLifetime == nil {
-			config.Falco.ClusterIdentityToken.TokenLifetime =
-				&metav1.Duration{
-					Duration: constants.DefaultClusterIdentityTokenLifetime,
-				}
-		}
-	}
-}
-
 type actuator struct {
 	client                 client.Client
 	config                 *rest.Config
-	decoder                runtime.Decoder
 	serviceConfig          config.Configuration
 	configBuilder          *values.ConfigBuilder
-	tokenIssuer            *secrets.TokenIssuer
-	falcoProfileManger     *profile.FalcoProfileManager
 	gardenClient           *dynamic.DynamicClient
 	localClusterK8sVersion string
 	seed                   *gardenerv1beta1.Seed
@@ -163,15 +78,13 @@ type actuator struct {
 
 // Reconcile the Extension resource.
 func (a *actuator) Reconcile(ctx context.Context, log logr.Logger, ex *extensionsv1alpha1.Extension) error {
-
 	var (
 		reconcileCtx *utils.ReconcileContext
 		err          error
 		namespace    = ex.GetNamespace()
 	)
 
-	extClass := extensionsv1alpha1helper.GetExtensionClassOrDefault(ex.Spec.Class)
-	switch extClass {
+	switch extensionsv1alpha1helper.GetExtensionClassOrDefault(ex.Spec.Class) {
 	case extensionsv1alpha1.ExtensionClassShoot:
 		shootCluster, err := controller.GetCluster(ctx, a.client, namespace)
 		if err != nil {
@@ -182,7 +95,7 @@ func (a *actuator) Reconcile(ctx context.Context, log logr.Logger, ex *extension
 		}
 		reconcileCtx = &utils.ReconcileContext{
 			TargetClusterK8sVersion: shootCluster.Shoot.Spec.Kubernetes.Version,
-			ResourceSection:         a.getClusterResourcesForShoot(shootCluster),
+			ResourceSection:         shootCluster.Shoot.Spec.Resources,
 			ClusterIdentity:         shootCluster.Shoot.Status.ClusterIdentity,
 			ShootTechnicalId:        shootCluster.Shoot.Status.TechnicalID,
 			ClusterName:             shootCluster.Shoot.Name,
@@ -193,27 +106,24 @@ func (a *actuator) Reconcile(ctx context.Context, log logr.Logger, ex *extension
 			reconcileCtx.SeedIngressDomain = shootCluster.Seed.Spec.Ingress.Domain
 		}
 	case extensionsv1alpha1.ExtensionClassSeed:
-		// Falco will be deployed on the local cluster, we have the version
+		// The stack is deployed onto the seed itself, whose version is known locally.
 		reconcileCtx = &utils.ReconcileContext{
 			TargetClusterK8sVersion: a.localClusterK8sVersion,
-			ResourceSection:         a.getClusterResourcesForSeed(),
+			ResourceSection:         a.seed.Spec.Resources,
 			ClusterIdentity:         a.seed.Status.ClusterIdentity,
 			ClusterName:             a.seed.Name,
 		}
 	case extensionsv1alpha1.ExtensionClassGarden:
-		// TODO
 		reconcileCtx = &utils.ReconcileContext{
-			ClusterName: "garden",
+			TargetClusterK8sVersion: a.localClusterK8sVersion,
+			ClusterName:             "garden",
 		}
+	default:
+		return fmt.Errorf("unsupported extension class %q", *ex.Spec.Class)
 	}
-	if ex.Spec.ProviderConfig != nil && socv1alpha1.IsSOCConfig(ex.Spec.ProviderConfig.Raw) {
-		reconcileCtx.SOCConfig, err = socv1alpha1.Decode(ex.Spec.ProviderConfig.Raw)
-		if err != nil {
-			return err
-		}
-	} else {
-		reconcileCtx.FalcoServiceConfig, err = a.extractFalcoServiceConfig(log, ex)
-		if err != nil {
+
+	if ex.Spec.ProviderConfig != nil {
+		if reconcileCtx.SOCConfig, err = socv1alpha1.Decode(ex.Spec.ProviderConfig.Raw); err != nil {
 			return err
 		}
 	}
@@ -225,78 +135,55 @@ func (a *actuator) Reconcile(ctx context.Context, log logr.Logger, ex *extension
 	if err := a.createShootResources(ctx, log, reconcileCtx); err != nil {
 		return err
 	}
-
-	if err := a.createSeedResources(ctx, log, namespace); err != nil {
-		return err
-	}
-	return nil
+	return a.createSeedResources(ctx, log, namespace)
 }
 
 func (a *actuator) createShootResources(ctx context.Context, log logr.Logger, reconcileCtx *utils.ReconcileContext) error {
-
 	log.Info("creating SOC resources for shoot " + reconcileCtx.Namespace)
 	renderer, err := util.NewChartRendererForShoot(reconcileCtx.TargetClusterK8sVersion)
 	if err != nil {
 		return fmt.Errorf("could not create chart renderer for rendering manged resource chart for shoot: %w", err)
 	}
-	values, err := a.configBuilder.BuildSOCValues(ctx, reconcileCtx)
+	chartValues, err := a.configBuilder.BuildSOCValues(ctx, reconcileCtx)
 	if err != nil {
 		return fmt.Errorf("could not generate SOC configuration: %w", err)
 	}
-	release, err := renderer.RenderEmbeddedFS(charts.InternalChart, filepath.Join(charts.InternalChartsPath, constants.SOCChartname), constants.SOCChartname, metav1.NamespaceSystem, values)
+	release, err := renderer.RenderEmbeddedFS(charts.InternalChart, filepath.Join(charts.InternalChartsPath, constants.SOCChartname), constants.SOCChartname, metav1.NamespaceSystem, chartValues)
 	if err != nil {
 		return fmt.Errorf("could not render chart for shoot: %w", err)
 	}
-	releaseManifest := release.Manifest()
 
-	data := map[string][]byte{"config.yaml": releaseManifest}
-	if reconcileCtx.IsShootDeployment {
-		if err := managedresources.CreateForShoot(ctx, a.client, reconcileCtx.Namespace, constants.ManagedResourceNameFalco, constants.ExtensionServiceName, false, data); err != nil {
-			return fmt.Errorf("could not create managed resource for shoot falco deployment %w", err)
+	data := map[string][]byte{"config.yaml": release.Manifest()}
+	switch {
+	case reconcileCtx.IsShootDeployment:
+		if err := managedresources.CreateForShoot(ctx, a.client, reconcileCtx.Namespace, constants.ManagedResourceNameShoot, constants.ExtensionServiceName, false, data); err != nil {
+			return fmt.Errorf("could not create managed resource for the shoot: %w", err)
 		}
-	} else if reconcileCtx.IsSeedDeployment {
-		// shoot resources must be provisioned in the same cluster (garden, seed)
-		if err := managedresources.CreateForSeed(ctx, a.client, reconcileCtx.Namespace, constants.ManagedResourceNameFalco, false, data); err != nil {
-			//		if err := managedresources.CreateForShoot(ctx, a.client, reconcileCtx.Namespace, constants.ManagedResourceNameFalco, constants.ExtensionServiceName, false, data); err != nil {
-			return fmt.Errorf("could not create managed resource for shoot falco deployment %w", err)
+	case reconcileCtx.IsSeedDeployment:
+		// Resources must be provisioned in the same cluster (garden, seed).
+		if err := managedresources.CreateForSeed(ctx, a.client, reconcileCtx.Namespace, constants.ManagedResourceNameShoot, false, data); err != nil {
+			return fmt.Errorf("could not create managed resource for the seed: %w", err)
 		}
 	}
 	return nil
 }
 
 func (a *actuator) createSeedResources(ctx context.Context, log logr.Logger, namespace string) error {
-	// The SOC stack has no seed-side resources yet, and a class "seed" ManagedResource
-	// needs a seed-class gardener-resource-manager to reconcile it, which this landscape
-	// does not run. Creating it would leave an object nothing serves and a health check
-	// that can never pass. Remove one if an earlier version left it behind.
+	// The SOC stack has no seed-side resources, and a class "seed" ManagedResource needs a
+	// seed-class gardener-resource-manager to reconcile it, which this landscape does not
+	// run. Creating it would leave an object nothing serves and a health check that can
+	// never pass. Remove one if an earlier version left it behind.
 	log.Info("no seed resources for this extension; ensuring none are left over", "namespace", namespace)
-	return managedresources.DeleteForSeed(ctx, a.client, namespace, constants.ManagedResourceNameFalcoSeed)
+	return managedresources.DeleteForSeed(ctx, a.client, namespace, constants.ManagedResourceNameSeed)
 }
 
 // Delete the Extension resource.
 func (a *actuator) Delete(ctx context.Context, log logr.Logger, ex *extensionsv1alpha1.Extension) error {
 	namespace := ex.GetNamespace()
-	var (
-		cluster *controller.Cluster
-		err     error
-	)
-
-	if isShootDeployment(ex) {
-		cluster, err = controller.GetCluster(ctx, a.client, namespace)
-		if err != nil {
-			return fmt.Errorf("failed to get cluster config for shoot for Falco exension delete operation: %w", err)
-		}
-		log.Info("Deleting falco resources for shoot " + cluster.Shoot.Name)
+	if err := a.deleteShootResources(ctx, log, namespace, ex); err != nil {
+		return fmt.Errorf("error deleting the SOC stack from %s: %w", namespace, err)
 	}
-	err = a.deleteShootResources(ctx, log, namespace, ex)
-	if err != nil {
-		return fmt.Errorf("error deleting Falco from shoot %s: %w", cluster.Shoot.Name, err)
-	}
-	err = a.deleteSeedResources(ctx, log, namespace)
-	if err != nil {
-		return fmt.Errorf("error deleting Falco seed resources for shoot %s: %w", cluster.Shoot.Name, err)
-	}
-	return nil
+	return a.createSeedResources(ctx, log, namespace)
 }
 
 // ForceDelete the Extension resource.
@@ -305,53 +192,24 @@ func (a *actuator) ForceDelete(ctx context.Context, log logr.Logger, ex *extensi
 }
 
 func (a *actuator) deleteShootResources(ctx context.Context, log logr.Logger, namespace string, ex *extensionsv1alpha1.Extension) error {
-	log.Info(fmt.Sprintf("Deleting managed resource %s/%s", namespace, constants.ManagedResourceNameFalco))
-	if isShootDeployment(ex) {
-		if err := managedresources.DeleteForShoot(ctx, a.client, namespace, constants.ManagedResourceNameFalco); err != nil {
+	log.Info(fmt.Sprintf("Deleting managed resource %s/%s", namespace, constants.ManagedResourceNameShoot))
+	switch {
+	case isShootDeployment(ex):
+		if err := managedresources.DeleteForShoot(ctx, a.client, namespace, constants.ManagedResourceNameShoot); err != nil {
 			return err
 		}
-	} else if isSeedDeployment(ex) {
-		if err := managedresources.DeleteForSeed(ctx, a.client, namespace, constants.ManagedResourceNameFalco); err != nil {
+	case isSeedDeployment(ex):
+		if err := managedresources.DeleteForSeed(ctx, a.client, namespace, constants.ManagedResourceNameShoot); err != nil {
 			return err
 		}
 	}
 	timeoutCtx, cancel := context.WithTimeout(ctx, 2*time.Minute)
 	defer cancel()
-	if err := managedresources.WaitUntilDeleted(timeoutCtx, a.client, namespace, constants.ManagedResourceNameFalco); err != nil {
+	if err := managedresources.WaitUntilDeleted(timeoutCtx, a.client, namespace, constants.ManagedResourceNameShoot); err != nil {
 		return err
 	}
-	log.Info(fmt.Sprintf("Successfully deleted managed resource  %s/%s", namespace, constants.ManagedResourceNameFalco))
+	log.Info(fmt.Sprintf("Successfully deleted managed resource %s/%s", namespace, constants.ManagedResourceNameShoot))
 	return nil
-}
-
-func (a *actuator) deleteSeedResources(ctx context.Context, log logr.Logger, namespace string) error {
-	certs := &corev1.Secret{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      constants.FalcoCertificatesSecretName,
-			Namespace: namespace,
-		},
-	}
-	err1 := a.client.Delete(ctx, certs)
-
-	// Check whether this is an error that we can ignore
-	kerr, ok := err1.(*apierror.StatusError)
-	if ok {
-		if kerr.ErrStatus.Code == 404 {
-			log.Info(fmt.Sprintf("Secret %s/%s not found, ignoring", namespace, constants.FalcoCertificatesSecretName))
-			err1 = nil
-		}
-	}
-	log.Info(fmt.Sprintf("Deleting managed resource %s/%s", namespace, constants.ManagedResourceNameFalco))
-
-	if err := managedresources.Delete(ctx, a.client, namespace, constants.ManagedResourceNameFalcoSeed, false); err != nil {
-		return err
-	}
-
-	timeoutCtx, cancel := context.WithTimeout(ctx, 2*time.Minute)
-	defer cancel()
-	err2 := managedresources.WaitUntilDeleted(timeoutCtx, a.client, namespace, constants.ManagedResourceNameFalcoSeed)
-
-	return errors.Join(err1, err2)
 }
 
 // Restore the Extension resource.
@@ -361,22 +219,11 @@ func (a *actuator) Restore(ctx context.Context, log logr.Logger, ex *extensionsv
 
 // Migrate the Extension resource.
 func (a *actuator) Migrate(ctx context.Context, log logr.Logger, ex *extensionsv1alpha1.Extension) error {
-	// Keep objects for shoot managed resources so that they are not deleted from the shoot during the migration
-	if err := managedresources.SetKeepObjects(ctx, a.client, ex.GetNamespace(), constants.ManagedResourceNameFalco, true); err != nil {
+	// Keep the objects so they are not deleted from the shoot during the migration.
+	if err := managedresources.SetKeepObjects(ctx, a.client, ex.GetNamespace(), constants.ManagedResourceNameShoot, true); err != nil {
 		return err
 	}
 	return a.Delete(ctx, log, ex)
-}
-
-func (a *actuator) extractFalcoServiceConfig(log logr.Logger, ex *extensionsv1alpha1.Extension) (*apisservice.FalcoServiceConfig, error) {
-	falcoServiceConfig := &apisservice.FalcoServiceConfig{}
-	if ex.Spec.ProviderConfig != nil {
-		log.Info("Extracting Falco service config", "providerConfig", string(ex.Spec.ProviderConfig.Raw[:]))
-		if _, _, err := a.decoder.Decode(ex.Spec.ProviderConfig.Raw, nil, falcoServiceConfig); err != nil {
-			return nil, fmt.Errorf("could not decode Falco service config: %w", err)
-		}
-	}
-	return falcoServiceConfig, nil
 }
 
 func isShootDeployment(ex *extensionsv1alpha1.Extension) bool {
@@ -398,19 +245,7 @@ func getLocalClusterK8sVersion(cfg *rest.Config) (string, error) {
 	}
 	v, err := discoveryClient.ServerVersion()
 	if err != nil {
-		return "", fmt.Errorf("cannot get kubernertes version of local cluster %v", err)
+		return "", fmt.Errorf("cannot get kubernetes version of local cluster %v", err)
 	}
 	return v.Major + "." + v.Minor, nil
-}
-
-func (a *actuator) getClusterResourcesForShoot(cluster *extensions.Cluster) []gardenerv1beta1.NamedResourceReference {
-	return cluster.Shoot.Spec.Resources
-}
-
-func (a *actuator) getClusterResourcesForSeed() []gardenerv1beta1.NamedResourceReference {
-	return a.seed.Spec.Resources
-}
-
-func getSeed(ctx context.Context, client *dynamic.DynamicClient, seedName string) (*gardenerv1beta1.Seed, error) {
-	return utils.GetSeed(ctx, client, seedName)
 }

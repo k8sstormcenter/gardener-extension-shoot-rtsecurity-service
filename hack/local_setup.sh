@@ -4,7 +4,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Brings up the full local Gardener dev environment and deploys the Falco extension.
+# Brings up the full local Gardener dev environment and deploys this extension.
 #
 # Prerequisites:
 #   - ../gardener checked out (sibling directory)
@@ -14,8 +14,7 @@
 # What it does:
 #   1. make kind-up         — creates the kind cluster + local registry + DNS/loopback setup
 #   2. make gardener-up     — deploys operator, garden, gardenlet/seed (all-in-one)
-#   3. Applies Falco CRDs and FalcoProfile to the virtual garden cluster
-#   4. make extension-up    — builds and deploys the Falco extension via skaffold
+#   3. make extension-up    — builds and deploys the extension via skaffold
 #
 # After this script, create a shoot with:
 #   kubectl --kubeconfig ../gardener/dev-setup/kubeconfigs/virtual-garden/kubeconfig \
@@ -49,18 +48,9 @@ echo ">>>>>>>>>>>>>>>>>>>> gardener-up"
 make gardener-up
 echo "<<<<<<<<<<<<<<<<<<<< gardener-up done"
 
-# Switch to virtual garden to apply Falco CRDs and profile
-export KUBECONFIG="${gardener_dir}/dev-setup/kubeconfigs/virtual-garden/kubeconfig"
-
 cd "${repo_root}"
 
-kubectl apply -f crds/clusterrole-falcoprofiles.yaml
-kubectl apply -f crds/clusterrolebinding-falcoprofiles.yaml
-kubectl apply -f crds/crd-falco-profile.yaml
-kubectl apply -f falco/falco-profile.yaml
-
-# Switch to runtime cluster for extension-up (skaffold needs to push to in-cluster registry)
-export KUBECONFIG="${gardener_dir}/dev-setup/kubeconfigs/runtime/kubeconfig"
+# extension-up pushes to the in-cluster registry, so stay on the runtime cluster.
 
 echo ">>>>>>>>>>>>>>>>>>>> extension-up"
 make extension-up

@@ -1,0 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+apiVersion: rtsecurity.extensions.config.gardener.cloud/v1alpha1
+kind: Configuration
+healthCheckConfig:
+  syncPeriod: 30s

@@ -1,6 +1,0 @@
-gardener:
-  virtualCluster:
-    enabled: true
-    serviceAccount: {}
-#     name: gardener-extension-admission-shoot-falco-service
-#     namespace: kube-system

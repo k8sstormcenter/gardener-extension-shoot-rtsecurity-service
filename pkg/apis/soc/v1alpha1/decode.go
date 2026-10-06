@@ -6,24 +6,18 @@ import (
 	"encoding/json"
 	"fmt"
 
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/yaml"
 )
 
-// IsSOCConfig reports whether raw providerConfig bytes declare this type, so the actuator can
-// keep decoding the upstream FalcoServiceConfig for everything else.
-func IsSOCConfig(raw []byte) bool {
-	var tm metav1.TypeMeta
-	if err := yaml.Unmarshal(raw, &tm); err != nil {
-		return false
-	}
-	return tm.APIVersion == GroupVersion && tm.Kind == Kind
-}
-
+// Decode parses an Extension's providerConfig. Unknown fields are rejected so a typo in a
+// Shoot fails the reconcile instead of being silently ignored.
 func Decode(raw []byte) (*SOCConfig, error) {
 	cfg := &SOCConfig{}
 	if err := yaml.UnmarshalStrict(raw, cfg); err != nil {
 		return nil, fmt.Errorf("providerConfig is not a valid %s: %w", Kind, err)
+	}
+	if cfg.APIVersion != GroupVersion || cfg.Kind != Kind {
+		return nil, fmt.Errorf("providerConfig must be %s %s, got %q %q", GroupVersion, Kind, cfg.APIVersion, cfg.Kind)
 	}
 	switch cfg.Mode {
 	case "", ModeSelfContained, ModeFull:

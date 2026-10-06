@@ -28,10 +28,7 @@ This builds the binary, packages the chart as OCI, pushes to `registry.local.gar
 ### Applying the profile CR (required before any shoot opts in)
 
 ```bash
-KUBECONFIG=$KUBECONFIG_VIRTUAL kubectl apply -f crds/crd-falco-profile.yaml
-KUBECONFIG=$KUBECONFIG_VIRTUAL kubectl apply -f crds/clusterrole-falcoprofiles.yaml
-KUBECONFIG=$KUBECONFIG_VIRTUAL kubectl apply -f crds/clusterrolebinding-falcoprofiles.yaml
-KUBECONFIG=$KUBECONFIG_VIRTUAL kubectl apply -f falco/falco-profile.yaml
+# No CRDs or profiles to pre-apply: the extension ships everything in its own chart.
 ```
 
 ### Triggering a shoot reconcile

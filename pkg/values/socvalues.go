@@ -10,9 +10,18 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	socv1alpha1 "github.com/gardener/gardener-extension-shoot-falco-service/pkg/apis/soc/v1alpha1"
-	"github.com/gardener/gardener-extension-shoot-falco-service/pkg/utils"
+	socv1alpha1 "github.com/k8sstormcenter/gardener-extension-shoot-rtsecurity-service/pkg/apis/soc/v1alpha1"
+	"github.com/k8sstormcenter/gardener-extension-shoot-rtsecurity-service/pkg/utils"
 )
+
+// ConfigBuilder turns a reconcile context into chart values.
+type ConfigBuilder struct {
+	client client.Client
+}
+
+func NewConfigBuilder(client client.Client) *ConfigBuilder {
+	return &ConfigBuilder{client: client}
+}
 
 // BuildSOCValues returns only the values that have to be computed per shoot. Everything
 // else comes from charts/internal/soc/values.yaml: helm merges the chart's own defaults

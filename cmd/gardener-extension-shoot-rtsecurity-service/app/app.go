@@ -14,13 +14,10 @@ import (
 	"github.com/gardener/gardener/extensions/pkg/controller/heartbeat"
 	heartbeatcmd "github.com/gardener/gardener/extensions/pkg/controller/heartbeat/cmd"
 	"github.com/gardener/gardener/extensions/pkg/util"
-	v1beta1constants "github.com/gardener/gardener/pkg/apis/core/v1beta1/constants"
 	"github.com/gardener/gardener/pkg/client/kubernetes"
 	"github.com/gardener/gardener/pkg/logger"
-	"github.com/go-logr/logr"
 	"github.com/spf13/cobra"
 	corev1 "k8s.io/api/core/v1"
-	"k8s.io/client-go/dynamic"
 	componentbaseconfig "k8s.io/component-base/config/v1alpha1"
 	"k8s.io/component-base/version"
 	"k8s.io/component-base/version/verflag"
@@ -29,20 +26,15 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 
-	"github.com/gardener/gardener-extension-shoot-falco-service/pkg/apis/config"
-	serviceinstall "github.com/gardener/gardener-extension-shoot-falco-service/pkg/apis/service/install"
-	"github.com/gardener/gardener-extension-shoot-falco-service/pkg/cmd"
-	"github.com/gardener/gardener-extension-shoot-falco-service/pkg/constants"
-	"github.com/gardener/gardener-extension-shoot-falco-service/pkg/controller/additional"
-	"github.com/gardener/gardener-extension-shoot-falco-service/pkg/controller/healthcheck"
-	"github.com/gardener/gardener-extension-shoot-falco-service/pkg/controller/lifecycle"
-	"github.com/gardener/gardener-extension-shoot-falco-service/pkg/profile"
-	"github.com/gardener/gardener-extension-shoot-falco-service/pkg/utils"
+	"github.com/k8sstormcenter/gardener-extension-shoot-rtsecurity-service/pkg/cmd"
+	"github.com/k8sstormcenter/gardener-extension-shoot-rtsecurity-service/pkg/constants"
+	"github.com/k8sstormcenter/gardener-extension-shoot-rtsecurity-service/pkg/controller/healthcheck"
+	"github.com/k8sstormcenter/gardener-extension-shoot-rtsecurity-service/pkg/controller/lifecycle"
 )
 
 const Name = constants.GardenerExtensionServiceName
 
-// NewControllerManagerCommand creates a new command for running the Falco extension service controller
+// NewControllerManagerCommand creates a new command for running the extension controller
 func NewControllerManagerCommand(ctx context.Context) *cobra.Command {
 	var (
 		restOpts = &controllercmd.RESTOptions{}
@@ -51,8 +43,7 @@ func NewControllerManagerCommand(ctx context.Context) *cobra.Command {
 			LeaderElectionID:        controllercmd.LeaderElectionNameID(constants.GardenerExtensionServiceName),
 			LeaderElectionNamespace: os.Getenv("LEADER_ELECTION_NAMESPACE"),
 		}
-		// Falco options
-		falcoCtrlOpts = &cmd.FalcoOptions{}
+		extensionCtrlOpts = &cmd.ExtensionOptions{}
 
 		reconcileOpts = &controllercmd.ReconcilerOptions{
 			IgnoreOperationAnnotation: true,
@@ -67,7 +58,7 @@ func NewControllerManagerCommand(ctx context.Context) *cobra.Command {
 		aggOption = controllercmd.NewOptionAggregator(
 			restOpts,
 			mgrOpts,
-			falcoCtrlOpts,
+			extensionCtrlOpts,
 			controllercmd.PrefixOption("heartbeat-", heartbeatCtrlOpts),
 			reconcileOpts,
 		)
@@ -125,11 +116,6 @@ func NewControllerManagerCommand(ctx context.Context) *cobra.Command {
 			if err != nil {
 				return fmt.Errorf("failed creating garden cluster object: %w", err)
 			}
-			dynamicGardenCluster, err := dynamic.NewForConfig(gardenRESTConfig)
-			if err != nil {
-				return fmt.Errorf("failed creating dynamic garden cluster object: %w", err)
-			}
-
 			log.Info("adding garden cluster to manager")
 			if err := mgr.Add(gardenCluster); err != nil {
 				return fmt.Errorf("failed adding garden cluster to manager: %w", err)
@@ -138,42 +124,13 @@ func NewControllerManagerCommand(ctx context.Context) *cobra.Command {
 				return fmt.Errorf("could not update manager scheme: %w", err)
 			}
 
-			if err := serviceinstall.AddToScheme(mgr.GetScheme()); err != nil {
-				return fmt.Errorf("could not update manager scheme: %w", err)
-			}
-			if err := falcoCtrlOpts.Complete(); err != nil {
+			if err := extensionCtrlOpts.Complete(); err != nil {
 				return err
 			}
-			falcoConfig := falcoCtrlOpts.Completed()
-			falcoConfig.Apply(&lifecycle.DefaultAddOptions.ServiceConfig)
-
-			profile.NewFalcoProfileManager(dynamicGardenCluster)
+			extensionCtrlOpts.Completed().Apply(&lifecycle.DefaultAddOptions.ServiceConfig)
 
 			if err := lifecycle.AddToManager(ctx, mgr); err != nil {
-				return fmt.Errorf("could not add falco extension controller to manager: %w", err)
-			}
-
-			var additionalConfig *config.AdditionalConfig
-			if lifecycle.DefaultAddOptions.ServiceConfig.Falco != nil {
-				additionalConfig = lifecycle.DefaultAddOptions.ServiceConfig.Falco.Additional
-			}
-
-			var seedIngressDomain string
-			seed, err := utils.GetSeed(context.TODO(), dynamicGardenCluster, os.Getenv("SEED_NAME"))
-			if err != nil {
-				return fmt.Errorf("could not get seed for additional resources controller: %w", err)
-			}
-			if seed.Spec.Ingress != nil {
-				seedIngressDomain = seed.Spec.Ingress.Domain
-			}
-
-			ingressWildcardCertName, err := getIngressWildcardCertificateName(ctx, mgr.GetClient(), log)
-			if err != nil {
-				return fmt.Errorf("could not get ingress wildcard certificate name: %w", err)
-			}
-
-			if err := additional.AddToManager(mgr, log, restOpts.Completed().Config, completedMgrOpts.LeaderElectionNamespace, additionalConfig, seedIngressDomain, ingressWildcardCertName); err != nil {
-				return fmt.Errorf("could not add additional seed resources controller: %w", err)
+				return fmt.Errorf("could not add the extension controller to manager: %w", err)
 			}
 
 			if err := healthcheck.AddToManager(ctx, mgr); err != nil {
@@ -195,22 +152,4 @@ func NewControllerManagerCommand(ctx context.Context) *cobra.Command {
 	aggOption.AddFlags(cmd.Flags())
 
 	return cmd
-}
-
-func getIngressWildcardCertificateName(ctx context.Context, c client.Client, log logr.Logger) (string, error) {
-	secretList := &corev1.SecretList{}
-	if err := c.List(ctx, secretList,
-		client.InNamespace(v1beta1constants.GardenNamespace),
-		client.MatchingLabels{v1beta1constants.GardenRole: v1beta1constants.GardenRoleControlPlaneWildcardCert},
-	); err != nil {
-		return "", fmt.Errorf("failed to list controlplane-cert secrets: %w", err)
-	}
-	if len(secretList.Items) == 0 {
-		log.Info("no controlplane-cert secret found in garden namespace")
-		return "", nil
-	}
-	if len(secretList.Items) > 1 {
-		log.Info("multiple controlplane-cert secrets found, using the first one")
-	}
-	return secretList.Items[0].Name, nil
 }

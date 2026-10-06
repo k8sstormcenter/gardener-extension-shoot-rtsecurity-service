@@ -1,121 +1,26 @@
-// SPDX-FileCopyrightText: Contributors to the Gardener project
-//
 // SPDX-License-Identifier: Apache-2.0
 
 package constants
-
-import "time"
 
 const (
 	// ExtensionType is the name of the extension type: what a Shoot's spec.extensions[].type
 	// must say, and what the lifecycle controller's predicate matches. Everything derived
 	// below — service name, ManagedResource names, finalizer, healthcheck registration —
-	// follows from it, so a shoot opting in under the old falco name is deliberately ignored.
+	// follows from it.
 	ExtensionType = "shoot-rtsecurity-service"
 
-	// ServiceName is the name of the service.
 	ServiceName                  = ExtensionType
 	ExtensionServiceName         = "extension-" + ServiceName
 	GardenerExtensionServiceName = "gardener-" + ExtensionServiceName
 
-	// ManagedResourceNamesControllerSeed is the name used to describe the managed seed resources for the controller.
-	ManagedResourceNameFalco = ExtensionServiceName + "-shoot"
+	// ManagedResourceNameShoot holds the SOC stack rendered into the shoot.
+	ManagedResourceNameShoot = ExtensionServiceName + "-shoot"
 
-	ManagedResourceNameFalcoSeed = ExtensionServiceName + "-seed"
+	// ManagedResourceNameSeed is only ever deleted: see actuator.createSeedResources.
+	ManagedResourceNameSeed = ExtensionServiceName + "-seed"
 
-	// Name of the chart deployed in control plane (seed)
-	ManagedResourceNameFalcoChartSeed = ExtensionServiceName + "-chart-seed"
-
-	// Prefix for additional operator-configured ManagedResources
-	AdditionalManagedResourcePrefix = "falco-additional-"
-
-	// Label to identify ManagedResources created by the additional resources controller
-	AdditionalManagedResourceLabel = "falco.gardener.cloud/additional-resource"
-
-	// Name of the Falco certificate secret file in shoot namespace
-	FalcoCertificatesSecretName = GardenerExtensionServiceName + "-certificates"
-
-	// NamespaceKubeSystem kube-system namespace
-	NamespaceKubeSystem = "kube-system"
-
-	// FalcoChartname is the name of the Falco Helm chart to be deployed in shoot clusters
-	FalcoChartname = "falco"
-
-	// SOCChartname is the chart this fork renders: the SOC runtime-security stack
+	// SOCChartname is the chart this extension renders: the SOC runtime-security stack
 	// (ClickHouse, kubescape node-agent, vector, pixie vizier/PEM, adaptive-export,
-	// dx-daemon) rather than falco. The falco chart is left in place for reference while
-	// the port is incomplete.
+	// dx-daemon).
 	SOCChartname = "soc"
-
-	FalcoServerCaKey  = "server-ca.key"
-	FalcoServerCaCert = "server-ca.cert"
-	FalcoClientCaKey  = "client-ca.key"
-	FalcoClientCaCert = "client-ca.crt"
-
-	FalcoServerKey  = "server.key"
-	FalcoServerCert = "server.crt"
-	FalcoClientKey  = "client.key"
-	FalcoClientCert = "client.crt"
-
-	FalcoEventDestinationStdout     = "stdout"
-	FalcoEventDestinationLogging    = "logging"
-	FalcoEventDestinationCentral    = "central"
-	FalcoEventDestinationCustom     = "custom"
-	FalcoEventDestinationOTLP       = "otlp"
-	FalcoEventDestinationOpenSearch = "opensearch"
-	FalcoEventDestinationSplunk     = "splunk"
-
-	DefaultCALifetime   = time.Hour * 24 * 365 * 2
-	DefaultCARenewAfter = DefaultCALifetime - 60*24*time.Hour
-
-	DefaultCertificateLifetime   = time.Hour * 24 * 180
-	DefaultCertificateRenewAfter = DefaultCertificateLifetime - 30*24*time.Hour
-
-	DefaultTokenLifetime = time.Hour * 24 * 21
-
-	DefaultClusterIdentityTokenLifetime = time.Hour * 24 * 21
-
-	FalcoRules           = "falco_rules.yaml"
-	FalcoIncubatingRules = "falco-incubating_rules.yaml"
-	FalcoSandboxRules    = "falco-sandbox_rules.yaml"
-	HeartbeatRule        = "heartbeat_rule.yaml"
-
-	CustomRulesMaxSize = 1048576 // 1 << 20 == 1MiB
-
-	NamespaceEnableAnnotation         = "falco.gardener.cloud/enabled"
-	NamespaceCentralLoggingAnnotation = "falco.gardener.cloud/central-logging"
-	SkipDefaultDestinationsAnnotation = "falco.gardener.cloud/skip-default-destinations"
-
-	// limit the number of rule files with custom rules per config map
-	MaxCustomRulesFilesPerConfigMap = 10
-
-	ConfigFalcoRules           = "falco-rules"
-	ConfigFalcoIncubatingRules = "falco-incubating-rules"
-	ConfigFalcoSandboxRules    = "falco-sandbox-rules"
-)
-
-var (
-	AlwaysEnabledNamespaces         = []string{"garden"}
-	CentralLoggingAllowedNamespaces = []string{"garden"}
-	AllowedDestinations             = []string{FalcoEventDestinationCentral, FalcoEventDestinationLogging, FalcoEventDestinationStdout, FalcoEventDestinationCustom, FalcoEventDestinationOTLP, FalcoEventDestinationOpenSearch, FalcoEventDestinationSplunk}
-	AllowedDestinationsSeed         = []string{FalcoEventDestinationCentral, FalcoEventDestinationStdout, FalcoEventDestinationCustom, FalcoEventDestinationOpenSearch, FalcoEventDestinationSplunk}
-
-	// Default Event logger if not specified in controller configuration
-	// (apis.Falco.DefaultEventDestination)
-	DefaultEventDestination string = "logging"
-
-	AllowedStandardRules = []string{
-		ConfigFalcoRules,
-		ConfigFalcoIncubatingRules,
-		ConfigFalcoSandboxRules,
-	}
-
-	DestinationOutputKeys = map[string]string{
-		FalcoEventDestinationLogging:    "loki",
-		FalcoEventDestinationOTLP:       "otlp",
-		FalcoEventDestinationCustom:     "webhook",
-		FalcoEventDestinationOpenSearch: "elasticsearch",
-		FalcoEventDestinationSplunk:     "splunk",
-		FalcoEventDestinationCentral:    "webhook",
-	}
 )

@@ -131,7 +131,7 @@ spec:
   resources:
   - globallyEnabled: false
     primary: true
-    type: falco
+    type: shoot-rtsecurity-service
     kind: Extension
     workerlessSupported: false
 EOM

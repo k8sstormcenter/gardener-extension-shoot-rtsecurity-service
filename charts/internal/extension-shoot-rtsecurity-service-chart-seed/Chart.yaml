@@ -1,9 +1,0 @@
-apiVersion: v1
-name: extension-shoot-rtsecurity-service-chart-seed
-version: 0.1.0
-# Seed-side resources for one shoot, rendered by the actuator with an EMPTY values map
-# (createSeedResources). The directory name is derived from constants.ExtensionType, so it
-# moves when the type does. falco shipped a falcosidekick token request and a
-# ScrapeConfig here; the SOC stack has nothing seed-side yet, and an empty render still
-# produces the ManagedResource the ObservabilityComponentsHealthy check requires.
-description: Seed-side resources for the SOC shoot extension (currently none).

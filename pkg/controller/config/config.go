@@ -5,7 +5,7 @@
 package config
 
 import (
-	"github.com/gardener/gardener-extension-shoot-falco-service/pkg/apis/config"
+	"github.com/k8sstormcenter/gardener-extension-shoot-rtsecurity-service/pkg/apis/config"
 )
 
 type Config struct {

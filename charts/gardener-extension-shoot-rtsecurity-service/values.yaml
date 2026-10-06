@@ -26,11 +26,11 @@ replicaCount: 2
 
 ignoreResources: false
 
-# PriorityClass to use for Falco extension deployment
+# PriorityClass of the extension controller itself.
 extensionPriorityClassName: gardener-system-900
 
 image:
-  repository: europe-docker.pkg.dev/gardener-project/public/gardener/extensions/shoot-falco-service
+  repository: ghcr.io/k8sstormcenter/gardener-extension-shoot-rtsecurity-service
   pullPolicy: IfNotPresent
 
 podLabels: {}
@@ -46,46 +46,3 @@ vpa:
       memory: 64Mi
   updatePolicy:
     updateMode: "InPlaceOrRecreate"
-
-falco:
-  # PriorityClass to use for Falco shoot deployment
-  priorityClassName: ""
-
-  # Lifetime of the CA certificates
-  certificateLifetime: "8760h"
-
-  # Renew CA certificates after this duration
-  certificateRenewAfter: "8000h"
-
-  centralStorage:
-    # Enable centralized storage
-    enabled: false
-
-    # Centralized storage URL
-    url: ""
-
-    # Token lifetime
-    tokenLifetime: "168h"
-
-    # Private key for token issuer
-    tokenIssuerPrivateKey: ""
-
-  # Cluster identity token configuration for global default destinations.
-  # When configured, enables the <<.ClusterIdentityToken>> template variable
-  # which is replaced with a per-shoot JWT at reconcile time.
-  # clusterIdentityToken:
-  #   tokenIssuerPrivateKey: ""
-  #   tokenLifetime: "168h"
-
-  # Global default destinations applied to all shoots unless opted out.
-  # Each entry has: name (unique identifier), falcosidekickOutput.key (output type),
-  # falcosidekickOutput.value (config map, supports <<.SeedIngressDomain>> and <<.ServiceAccountToken>> templates)
-  # globalDefaultDestinations:
-  # - name: "central-splunk"
-  #   falcosidekickOutput:
-  #     key: "splunk"
-  #     value:
-  #       host: "https://falco-splunk.<<.SeedIngressDomain>>"
-  #       token: "<<.ServiceAccountToken>>"
-  #       checkcert: true
-  globalDefaultDestinations: []

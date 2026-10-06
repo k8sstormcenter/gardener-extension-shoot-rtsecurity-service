@@ -22,9 +22,6 @@ credentials:
 images:
   nodeAgent: example/agent:1
 `)
-	if !IsSOCConfig(raw) {
-		t.Fatal("not recognised")
-	}
 	cfg, err := Decode(raw)
 	if err != nil {
 		t.Fatal(err)
@@ -62,7 +59,7 @@ func TestDecodeRejects(t *testing.T) {
 			t.Errorf("accepted %q", raw)
 		}
 	}
-	if IsSOCConfig([]byte("apiVersion: falco.extensions.gardener.cloud/v1alpha1\nkind: FalcoServiceConfig\n")) {
-		t.Error("falco config misdetected")
+	if _, err := Decode([]byte("apiVersion: other.gardener.cloud/v1alpha1\nkind: SomethingElse\n")); err == nil {
+		t.Error("accepted a providerConfig of another kind")
 	}
 }

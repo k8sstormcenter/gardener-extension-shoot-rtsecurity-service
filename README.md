@@ -36,7 +36,7 @@ Add the extension to your shoot manifest:
     - type: shoot-rtsecurity-service
 ```
 
-For a full shoot extension section configuration, refer to the [configuration documentation](docs/falco-configuration.md)
+For a full shoot extension section configuration, refer to the [configuration documentation](docs/extension-configuration.md)
 
 
 

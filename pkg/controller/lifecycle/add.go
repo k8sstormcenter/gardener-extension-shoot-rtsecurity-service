@@ -13,27 +13,27 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/controller"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 
-	"github.com/gardener/gardener-extension-shoot-falco-service/pkg/constants"
-	controllerconfig "github.com/gardener/gardener-extension-shoot-falco-service/pkg/controller/config"
+	"github.com/k8sstormcenter/gardener-extension-shoot-rtsecurity-service/pkg/constants"
+	controllerconfig "github.com/k8sstormcenter/gardener-extension-shoot-rtsecurity-service/pkg/controller/config"
 )
 
 const (
 	// Type is the type of Extension resource.
 	Type = constants.ExtensionType
 	// Name is the name of the lifecycle controller.
-	Name = "falco_lifecycle_controller"
-	// FinalizerSuffix is the finalizer suffix for the Falco extension.
+	Name = "rtsecurity_lifecycle_controller"
+	// FinalizerSuffix is the finalizer suffix for this extension.
 	FinalizerSuffix = constants.ExtensionType
 )
 
-// DefaultAddOptions contains configuration for the Falco extension
+// DefaultAddOptions contains configuration for the extension
 var DefaultAddOptions = AddOptions{}
 
-// AddOptions are options to apply when adding the policy filter controller to the manager.
+// AddOptions are options to apply when adding the controller to the manager.
 type AddOptions struct {
 	// ControllerOptions contains options for the controller.
 	ControllerOptions controller.Options
-	// ServiceConfig contains configuration for the Falco runtime
+	// ServiceConfig is the extension controller configuration
 	ServiceConfig controllerconfig.Config
 	// IgnoreOperationAnnotation specifies whether to ignore the operation annotation or not.
 	IgnoreOperationAnnotation bool
@@ -41,7 +41,7 @@ type AddOptions struct {
 	ExtensionClass extensionsv1alpha1.ExtensionClass
 }
 
-// AddToManager adds a Falco extension lifecycle controller to the given controller manager.
+// AddToManager adds the extension lifecycle controller to the given controller manager.
 func AddToManager(ctx context.Context, mgr manager.Manager) error {
 	var extensionClasses []extensionsv1alpha1.ExtensionClass
 	if DefaultAddOptions.ExtensionClass == extensionsv1alpha1.ExtensionClassGarden {

@@ -1,114 +1,53 @@
-// SPDX-FileCopyrightText: Contributors to the Gardener project
-//
 // SPDX-License-Identifier: Apache-2.0
 
+// Package config is the extension controller's own configuration, read from the file named
+// by --config-file. One version only, so there is no internal/external split and nothing
+// to convert; the type is hand-written for the same reason.
 package config
 
 import (
 	healthcheckconfigv1alpha1 "github.com/gardener/gardener/extensions/pkg/apis/config/v1alpha1"
-	gardencorev1 "github.com/gardener/gardener/pkg/apis/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+const GroupName = "rtsecurity.extensions.config.gardener.cloud"
 
-// Configuration contains information about the falco extension configuration
+var (
+	SchemeGroupVersion = schema.GroupVersion{Group: GroupName, Version: "v1alpha1"}
+	SchemeBuilder      = runtime.NewSchemeBuilder(addKnownTypes)
+	AddToScheme        = SchemeBuilder.AddToScheme
+)
+
+func addKnownTypes(scheme *runtime.Scheme) error {
+	scheme.AddKnownTypes(SchemeGroupVersion, &Configuration{})
+	metav1.AddToGroupVersion(scheme, SchemeGroupVersion)
+	return nil
+}
+
+// Configuration is the extension controller configuration.
 type Configuration struct {
-	metav1.TypeMeta
-
-	// Falco extension configuration
-	Falco *Falco
+	metav1.TypeMeta `json:",inline"`
 
 	// HealthCheckConfig is the config for the health check controller.
-	HealthCheckConfig *healthcheckconfigv1alpha1.HealthCheckConfig
+	HealthCheckConfig *healthcheckconfigv1alpha1.HealthCheckConfig `json:"healthCheckConfig,omitempty"`
 }
 
-// Falco extension configuration
-type Falco struct {
-	// PriorityClass to use for Falco shoot deployment
-	PriorityClassName *string
-
-	// Central storage configuration
-	CentralStorage *CentralStorageConfig
-
-	// Cluster identity token configuration for global default destinations
-	ClusterIdentityToken *ClusterIdentityTokenConfig
-
-	// Lifetime of the CA certificates
-	// (Falco - Falcosidekick communication)
-	CertificateLifetime *metav1.Duration
-
-	// Renew CA certificates after this duration
-	CertificateRenewAfter *metav1.Duration
-
-	// Default event logger
-	// possible values are: "none", "central", "logging", "webhook"
-	DefaultEventDestination *string
-
-	// Global default destinations applied to all shoots unless opted out
-	GlobalDefaultDestinations []GlobalDefaultDestination
-
-	// Additional resources to deploy on the seed
-	Additional *AdditionalConfig
+func (c *Configuration) DeepCopy() *Configuration {
+	if c == nil {
+		return nil
+	}
+	out := *c
+	if c.HealthCheckConfig != nil {
+		out.HealthCheckConfig = c.HealthCheckConfig.DeepCopy()
+	}
+	return &out
 }
 
-// GlobalDefaultDestination defines an operator-provided Falcosidekick output destination
-type GlobalDefaultDestination struct {
-	// Unique name for this destination
-	Name string
-	// Falcosidekick output configuration
-	FalcosidekickOutput FalcosidekickOutput
-}
-
-// FalcosidekickOutput holds the Falcosidekick output key and value configuration
-type FalcosidekickOutput struct {
-	// Falcosidekick output key (e.g., "splunk", "webhook", "elasticsearch")
-	Key string
-	// Configuration values for the output (may contain template variables)
-	Value *runtime.RawExtension
-}
-
-// Central storage configuration
-type CentralStorageConfig struct {
-	// Token lifetime
-	TokenLifetime *metav1.Duration
-
-	// Private key for token issuer
-	TokenIssuerPrivateKey string
-
-	// Ingestor URL
-	URL string
-
-	// Enabled ?
-	Enabled bool
-}
-
-// AdditionalConfig holds configuration for additional seed-level resources.
-type AdditionalConfig struct {
-	SeedManagedResources []AdditionalSeedManagedResource
-}
-
-// AdditionalSeedManagedResource describes a Helm chart to deploy as a ManagedResource on the seed.
-type AdditionalSeedManagedResource struct {
-	Name string
-	Helm HelmConfig
-}
-
-// HelmConfig specifies a Helm chart source and render values.
-// Exactly one of OCIRepository or Chart must be set.
-type HelmConfig struct {
-	OCIRepository *gardencorev1.OCIRepository
-	Chart         *string
-	Values        *runtime.RawExtension
-}
-
-// ClusterIdentityTokenConfig holds configuration for issuing per-shoot JWT tokens
-// used as template variable in global default destinations
-type ClusterIdentityTokenConfig struct {
-	// Private key (PEM-encoded RSA) for signing cluster identity tokens
-	TokenIssuerPrivateKey string
-
-	// Lifetime of the issued token
-	TokenLifetime *metav1.Duration
+func (c *Configuration) DeepCopyObject() runtime.Object {
+	if c == nil {
+		return nil
+	}
+	return c.DeepCopy()
 }

@@ -18,7 +18,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 
-	"github.com/gardener/gardener-extension-shoot-falco-service/pkg/constants"
+	"github.com/k8sstormcenter/gardener-extension-shoot-rtsecurity-service/pkg/constants"
 )
 
 var (
@@ -47,7 +47,7 @@ func RegisterHealthChecks(ctx context.Context, mgr manager.Manager, opts healthc
 			// on a resource that is never created can only ever report False.
 			{
 				ConditionType: string(gardencorev1beta1.ShootSystemComponentsHealthy),
-				HealthCheck:   general.CheckManagedResource(constants.ManagedResourceNameFalco),
+				HealthCheck:   general.CheckManagedResource(constants.ManagedResourceNameShoot),
 			},
 		},
 		sets.New[gardencorev1beta1.ConditionType](),
