@@ -228,3 +228,5 @@ adaptiveExport:
 
 dx:
   enabled: true
+  # Attack suite for the proof KPI; empty = the bundled redis suite (files/proof-suite.yaml).
+  proofSuite: ""

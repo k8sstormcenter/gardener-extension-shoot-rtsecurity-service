@@ -16,6 +16,17 @@ type: Opaque
 stringData:
   http-url: http://{{ .Values.clickhouse.ingest.user }}:{{ .Values.clickhouse.ingest.password }}@{{ include "soc.clickhouse.host" . }}:8123/?database=forensic_db
 ---
+# The attack suite dx scores its proof KPI against (bob example/redis/distros/attacks/
+# redis-oss.yaml). Without it dx runs with "proof KPI OFF".
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dx-proof-suite
+  namespace: {{ .Values.namespaces.pixie }}
+data:
+  suite.yaml: |
+{{ .Values.dx.proofSuite | default (.Files.Get "files/proof-suite.yaml") | indent 4 }}
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -150,6 +161,8 @@ spec:
           value: adaptive_base
         - name: DX_RECEIVER_TLS
           value: "1"
+        - name: DX_PROOF_SUITE
+          value: /etc/dx/proof/suite.yaml
         - name: AE_CONTROL_ADDR
           value: https://adaptive-export-control.{{ .Values.namespaces.pixie }}.svc.cluster.local:9100
         - name: PX_API_KEY
@@ -219,9 +232,17 @@ spec:
           requests:
             cpu: 50m
             memory: 1Gi
+        volumeMounts:
+        - name: proof-suite
+          mountPath: /etc/dx/proof
+          readOnly: true
       imagePullSecrets:
       - name: adaptive-export-pull
       serviceAccountName: dx-daemon
+      volumes:
+      - name: proof-suite
+        configMap:
+          name: dx-proof-suite
       terminationGracePeriodSeconds: 35
       tolerations:
       - operator: Exists
