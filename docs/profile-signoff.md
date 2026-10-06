@@ -82,6 +82,47 @@ target:
   profileName: cncf-c-ubuntu-2-8-x86
 ```
 
+`containers` and `initContainers` are not bookkeeping. The label is per **pod**, but a
+profile is resolved per **container**: a document that does not name a container leaves it
+unresolved, which is ungoverned, which is deny-all. Declaring them lets the chart refuse a
+delivered profile that would leave one out, rather than discovering it at the first burst.
+
+## Binding every pod at startup
+
+The binding is a label in the workload's pod template, so every pod carries it from
+creation and is judged from its first event. Nothing patches pods afterwards; a pod that
+starts unlabelled is ungoverned for as long as it takes to notice.
+
+For a runner scale set the label goes in `spec.template.metadata.labels`, which the
+controller copies verbatim onto each runner pod:
+
+```yaml
+apiVersion: actions.github.com/v1alpha1
+kind: AutoscalingRunnerSet
+spec:
+  template:
+    metadata:
+      labels:
+        kubescape.io/user-defined-profile: cncf-c-ubuntu-2-8-x86
+```
+
+Two conditions have to hold before those pods start, and both fail silently:
+
+1. **The profile exists in the pod's namespace.** The label resolves by name; if nothing
+   resolves, the pod is ungoverned and only a counter says so
+   (`user-defined-profile label set but no ContainerProfile resolved`). Deliver the profile
+   before the workload, and watch that counter.
+2. **The profile is authored, not learned.** A document still carrying the
+   `kubescape.io/status` annotation of a learned profile is refused as a user-defined
+   profile. Strip it when authoring.
+
+A pod with more than one container needs a **grouped** document — `spec.containers[]` and
+`spec.initContainers[]`, each named. A flat document applies one profile to every container
+in the pod, which for a runner beside a privileged sidecar means permitting the sidecar's
+behaviour for the runner too. A grouped document that omits a container deliberately leaves
+it unresolved rather than letting a sibling's profile cover it, so every container the pod
+runs must appear.
+
 While that workload has no signed-off profile, its namespace is kept out of the sensor.
 An ungoverned workload is treated as deny-all from its first event, so a scale set that
 bursts to hundreds of pods would otherwise emit an alert for every distinct exec in every

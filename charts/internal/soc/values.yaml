@@ -113,6 +113,12 @@ target:
   # this is the scale set name: its pods are owned by a per-job CR, so each job produces
   # its own learned profile and only this label gives them a single stable judge.
   profileName: ""
+  # Every container the workload's pods run, by name. The label is per POD but a profile is
+  # resolved per CONTAINER: a document that does not name a container leaves it unresolved,
+  # which is ungoverned, which is deny-all. Listing them here lets the chart refuse a
+  # delivered profile that would leave one out, instead of finding out at the first burst.
+  containers: []
+  initContainers: []
 
 # Signed-off profiles and rules, fetched from git by the actuator and rendered verbatim.
 # Filled in only when the Shoot's providerConfig names a repo, path and ref; the documents

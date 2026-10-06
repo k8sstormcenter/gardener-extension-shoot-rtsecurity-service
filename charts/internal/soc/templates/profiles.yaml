@@ -4,10 +4,37 @@ The signed-off profiles and rules, exactly as they are in git.
 Rendered verbatim on purpose: each document is evidence that a human reviewed in a pull
 request, so templating it here would mean the object running in the shoot is not the one
 that was signed off. Whatever the review approved is what GRM applies, including the
-kubescape.io/managed-by and signature annotations a governing profile needs.
+annotations and signatures a governing profile needs.
 Fetched by pkg/profiles at reconcile; absent from values until a Shoot asks for them.
+
+The checks below guard the two ways a delivered profile governs nothing while looking
+installed. Both fail the render rather than the cluster, because the symptom in the cluster
+is an alert storm from workloads that are silently deny-all.
 */}}
+{{- $t := .Values.target }}
 {{- range .Values.profiles.documents }}
+{{- if and $t.enabled $t.profileName }}
+{{- $doc := fromYaml .content }}
+{{- if and (not $doc.Error) (eq (dig "kind" "" $doc) "ContainerProfile") (eq (dig "metadata" "name" "" $doc) $t.profileName) }}
+{{- if dig "metadata" "annotations" "kubescape.io/status" "" $doc }}
+{{- fail (printf "%s: %s still carries the kubescape.io/status annotation of a learned profile. The sensor refuses such a document as a user-defined profile and every pod naming it stays ungoverned. Strip it when authoring the profile." .name $t.profileName) }}
+{{- end }}
+{{- $covered := concat (dig "spec" "containers" (list) $doc) (dig "spec" "initContainers" (list) $doc) | compact }}
+{{- $declared := concat $t.containers $t.initContainers }}
+{{- if gt (len $declared) 1 }}
+{{- if not $covered }}
+{{- fail (printf "%s: %s is a flat profile, but %s/%s runs %d containers. A flat document applies one profile to every container, so a privileged sidecar's behaviour would be permitted for the workload too. Author it with spec.containers and spec.initContainers naming each one." .name $t.profileName $t.namespace $t.profileName (len $declared)) }}
+{{- end }}
+{{- $names := list }}
+{{- range $covered }}{{ $names = append $names (dig "name" "" .) }}{{- end }}
+{{- range $declared }}
+{{- if not (has . $names) }}
+{{- fail (printf "%s: %s does not cover container %q. A container the document does not name is unresolved, which the sensor treats as deny-all. Covered: %v" $.name $t.profileName . $names) }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
 ---
 # {{ .name }}
 {{ .content }}
