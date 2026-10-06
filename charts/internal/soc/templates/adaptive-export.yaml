@@ -7,6 +7,16 @@ ClickHouse that is created with the stack and nuked with it.
 */}}
 ---
 apiVersion: v1
+kind: Secret
+metadata:
+  name: pl-adaptive-export-secrets
+  namespace: {{ .Values.namespaces.pixie }}
+type: Opaque
+stringData:
+  pixie-api-key: {{ required "credentials.pixieApiKey: AE and dx query the cloud with it (Shoot resource soc-pixie-api-key)" .Values.credentials.pixieApiKey | quote }}
+  clickhouse-dsn: {{ include "soc.clickhouse.nativeDSN" . | quote }}
+---
+apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: pl-adaptive-export-service-account
