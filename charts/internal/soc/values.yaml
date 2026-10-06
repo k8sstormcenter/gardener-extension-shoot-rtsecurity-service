@@ -142,6 +142,8 @@ vector:
 # because helm's alertCRD.installDefault is false. Rendered here instead.
 kubescape:
   enabled: true
+  # Storage class of the kubescape-storage PVC; empty = the cluster default.
+  storageClassName: local-path
   # Signing posture of the node-agent, written as .policy.mode of the trust policy
   # (node-agent-bundle-policy ConfigMap): default leaves the field out, which the agent
   # treats as alert; alert | enforce set it. Enforce refuses unsigned/unverifiable artifacts.
