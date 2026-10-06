@@ -13,17 +13,19 @@ http://{{ .Values.clickhouse.ingest.user }}:{{ .Values.clickhouse.ingest.passwor
 {{- end }}
 
 {{/*
-Namespaces the sensor ignores. The target's namespace is added while it has no signed-off
-profile: ungoverned workloads are deny-all, so leaving it in would alert on every exec of
-every pod it starts.
+Namespaces the sensor ignores entirely. The target's namespace is NOT one of them, even
+before it has a profile: an ignored namespace produces no profiles either, and the evidence
+from ungoverned runs is exactly what the signoff loop needs as input.
 */}}
 {{- define "soc.kubescape.excludeNamespaces" -}}
-{{- $ns := .Values.kubescape.excludeNamespaces -}}
-{{- if and .Values.target.enabled (not .Values.profiles.enabled) -}}
-{{- $ns = append $ns .Values.target.namespace -}}
-{{- end -}}
-{{- $ns | uniq | join "," -}}
+{{- .Values.kubescape.excludeNamespaces | uniq | join "," -}}
 {{- end }}
+{{/*
+Namespaces the alert binding leaves out. The target's is added while it has no signed-off
+profile: the rules would evaluate every one of its pods against nothing, and an ungoverned
+pod is deny-all, so a workload that bursts to hundreds of pods would alert on every exec.
+Watched but not judged, until there is something to judge it by.
+*/}}
 {{- define "soc.kubescape.bindingExcludeNamespaces" -}}
 {{- $ns := .Values.kubescape.bindingExcludeNamespaces -}}
 {{- if and .Values.target.enabled (not .Values.profiles.enabled) -}}

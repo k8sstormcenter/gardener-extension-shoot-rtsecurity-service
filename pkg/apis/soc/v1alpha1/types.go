@@ -89,10 +89,12 @@ type Profiles struct {
 }
 
 // Credentials names the Shoot's spec.resources[] entries to read instead of the defaults
-// soc-pixie-deploy-key, soc-pixie-api-key, soc-pull-entlein, soc-pull-tanzeee.
+// soc-pixie-deploy-key, soc-pixie-api-key, soc-pull-entlein, soc-pull-tanzeee,
+// soc-arc-github-token.
 type Credentials struct {
 	PixieDeployKey *string `json:"pixieDeployKey,omitempty"`
 	PixieAPIKey    *string `json:"pixieApiKey,omitempty"`
 	PullEntlein    *string `json:"pullEntlein,omitempty"`
 	PullTanzeee    *string `json:"pullTanzeee,omitempty"`
+	ArcGithubToken *string `json:"arcGithubToken,omitempty"`
 }

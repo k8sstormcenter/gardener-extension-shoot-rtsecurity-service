@@ -69,10 +69,10 @@ func (c *ConfigBuilder) BuildSOCValues(ctx context.Context, reconcileCtx *utils.
 }
 
 type credentialRefs struct {
-	deployKey, apiKey, pullEntlein, pullTanzeee string
+	deployKey, apiKey, pullEntlein, pullTanzeee, arcToken string
 }
 
-var defaultCredentialRefs = credentialRefs{RefPixieDeployKey, RefPixieAPIKey, RefPullEntlein, RefPullTanzeee}
+var defaultCredentialRefs = credentialRefs{RefPixieDeployKey, RefPixieAPIKey, RefPullEntlein, RefPullTanzeee, RefArcGithubToken}
 
 func (r credentialRefs) override(c *socv1alpha1.Credentials) credentialRefs {
 	pick := func(cur string, v *string) string {
@@ -81,7 +81,7 @@ func (r credentialRefs) override(c *socv1alpha1.Credentials) credentialRefs {
 		}
 		return cur
 	}
-	return credentialRefs{pick(r.deployKey, c.PixieDeployKey), pick(r.apiKey, c.PixieAPIKey), pick(r.pullEntlein, c.PullEntlein), pick(r.pullTanzeee, c.PullTanzeee)}
+	return credentialRefs{pick(r.deployKey, c.PixieDeployKey), pick(r.apiKey, c.PixieAPIKey), pick(r.pullEntlein, c.PullEntlein), pick(r.pullTanzeee, c.PullTanzeee), pick(r.arcToken, c.ArcGithubToken)}
 }
 
 // addProfiles fetches the signed-off profiles and rules and puts them in the values as
@@ -131,6 +131,7 @@ const (
 	RefPixieAPIKey    = "soc-pixie-api-key"
 	RefPullEntlein    = "soc-pull-entlein"
 	RefPullTanzeee    = "soc-pull-tanzeee"
+	RefArcGithubToken = "soc-arc-github-token"
 )
 
 // referencedSecret resolves one NamedResourceReference to the Secret gardener mirrored into
@@ -168,7 +169,7 @@ func (c *ConfigBuilder) credentialValues(ctx context.Context, reconcileCtx *util
 		}
 		out[key] = string(cfg)
 	}
-	for ref, key := range map[string]string{refs.deployKey: "pixieDeployKey", refs.apiKey: "pixieApiKey"} {
+	for ref, key := range map[string]string{refs.deployKey: "pixieDeployKey", refs.apiKey: "pixieApiKey", refs.arcToken: "arcGithubToken"} {
 		s, err := c.referencedSecret(ctx, reconcileCtx, ref)
 		if err != nil {
 			return nil, err

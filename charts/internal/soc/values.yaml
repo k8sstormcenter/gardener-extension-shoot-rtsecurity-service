@@ -13,6 +13,7 @@ images:
   # 24.3.x and matches no published patch tag. Keep the digest form.
   clickhouseKeeper: "clickhouse/clickhouse-keeper:24.3@sha256:163a91f5fec55376205437d9449dfe23d89ce8ef381e027b7fbbdbc872b0c2f0"
   clickhouseServer: "clickhouse/clickhouse-server:24.8"
+  arcController: "ghcr.io/actions/gha-runner-scale-set-controller:0.14.1"
   kubescapeOperator: "quay.io/kubescape/operator:v0.2.162"
   kubescapeStorage: "ghcr.io/k8sstormcenter/storage:rc-rogue23"
   nodeAgent: "docker.io/entlein/duckling:v0.1.0-rogue66"
@@ -64,6 +65,7 @@ pixie:
 credentials:
   pixieDeployKey: ""     # registers the vizier with the cloud
   pixieApiKey: ""        # adaptive-export and dx query the cloud API with it
+  arcGithubToken: ""     # registers the runner scale set with the forge
   ducklingPullSecret: "" # raw .dockerconfigjson for the node-agent images
   tanzeeePullSecret: ""  # raw .dockerconfigjson for adaptive-export and dx-daemon
 
@@ -117,8 +119,23 @@ target:
   # resolved per CONTAINER: a document that does not name a container leaves it unresolved,
   # which is ungoverned, which is deny-all. Listing them here lets the chart refuse a
   # delivered profile that would leave one out, instead of finding out at the first burst.
-  containers: []
-  initContainers: []
+  containers: [runner, dind]
+  initContainers: [chowner, init-dind-externals]
+  # The workload itself. Off by default: a scale set with no credentials registers nothing,
+  # and a shoot that only enforces a profile for runners deployed elsewhere needs none of it.
+  arc:
+    enabled: false
+    githubConfigUrl: ""        # https://github.com/<org>, /<org>/<repo> or /enterprises/<name>
+    minRunners: 0
+    maxRunners: 4              # not 200: a shoot is not CNCF's fleet, and every runner here
+                               # is evidence, not throughput
+    runnerImage: "ghcr.io/cncf/external-gha-runner:noble@sha256:072ec0c6b43e657d85db23adfc4f39b4737f2368bdfdacb6caa408d61fa372bd"
+    dindImage: "docker.io/library/docker:dind"
+    chownerImage: "docker.io/library/busybox:1.38.0"
+    workSizeLimit: 10Gi
+    resources:
+      limits: {cpu: 2, memory: 6Gi}
+      requests: {cpu: 500m, memory: 2Gi}
 
 # Signed-off profiles and rules, fetched from git by the actuator and rendered verbatim.
 # Filled in only when the Shoot's providerConfig names a repo, path and ref; the documents
@@ -167,6 +184,9 @@ kubescape:
     initialDelay: 15s
     updatePeriod: 30s
     maxSniffingTime: 10m
+    # Per-pod override for the target, whose pods live one job. The pod template carries it
+    # as kubescape.io/max-sniffing-time, which beats the cluster-wide window above.
+    runnerSniffingTime: 90s
   # Signing posture of the node-agent, written as .policy.mode of the trust policy
   # (node-agent-bundle-policy ConfigMap): default leaves the field out, which the agent
   # treats as alert; alert | enforce set it. Enforce refuses unsigned/unverifiable artifacts.

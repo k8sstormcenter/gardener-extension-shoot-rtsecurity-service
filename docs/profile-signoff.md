@@ -123,11 +123,43 @@ behaviour for the runner too. A grouped document that omits a container delibera
 it unresolved rather than letting a sibling's profile cover it, so every container the pod
 runs must appear.
 
-While that workload has no signed-off profile, its namespace is kept out of the sensor.
-An ungoverned workload is treated as deny-all from its first event, so a scale set that
-bursts to hundreds of pods would otherwise emit an alert for every distinct exec in every
-pod. The exclusion lifts by itself as soon as `profiles` are delivered, so the loop has
-one switch, not two.
+## Watched before it is judged
+
+Until the workload has a signed-off profile, the chart leaves its namespace out of the
+alert binding but **not** out of the sensor. The two are different switches and only one
+should be thrown:
+
+- Out of the **sensor** would mean no profiles are recorded there at all, which is the very
+  evidence the loop needs.
+- Out of the **alert binding** means the rules do not evaluate its pods. They would be
+  evaluated against nothing — an ungoverned pod is deny-all — so a workload that bursts to
+  hundreds of pods would otherwise alert on every distinct exec in every one of them.
+
+So an ungoverned target is watched and not judged. The binding exclusion lifts by itself as
+soon as `profiles` are delivered, which is the same moment there is something to judge it by.
+
+## Running the workload in the shoot
+
+`target.arc` deploys the runner scale set and its controller, so the shoot has a live
+governed workload rather than only the control for one deployed elsewhere:
+
+```yaml
+target:
+  arc:
+    enabled: true
+    githubConfigUrl: https://github.com/<org>
+    maxRunners: 4
+```
+
+The forge token comes from the Shoot's `spec.resources[]` as `soc-arc-github-token`. The
+scale set is otherwise the upstream chart as CNCF renders it for container runners, with
+the profile binding added to the pod template, the sniffing window overridden per pod, and
+node placement dropped.
+
+Two things to know before turning it on. The controller's four custom resource definitions
+are about 3 MB of schema, which is why the ManagedResource data is compressed — without
+that the whole stack exceeds the 1 MiB a Secret holds. And the listener needs to reach the
+forge from inside the shoot: no egress, no runners.
 
 ## Learning windows
 
