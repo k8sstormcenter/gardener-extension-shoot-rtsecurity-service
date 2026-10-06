@@ -26,6 +26,7 @@ type SOCConfig struct {
 	Pixie       *Pixie       `json:"pixie,omitempty"`
 	ClickHouse  *ClickHouse  `json:"clickhouse,omitempty"`
 	Detection   *Detection   `json:"detection,omitempty"`
+	Profiles    *Profiles    `json:"profiles,omitempty"`
 	Components  *Components  `json:"components,omitempty"`
 	Credentials *Credentials `json:"credentials,omitempty"`
 	// Image overrides keyed like values.images (pixieOperator, nodeAgent, ...).
@@ -63,6 +64,28 @@ type Components struct {
 	Vector         *bool `json:"vector,omitempty"`
 	AdaptiveExport *bool `json:"adaptiveExport,omitempty"`
 	Dx             *bool `json:"dx,omitempty"`
+}
+
+// Profiles points at the git location holding the signed-off profiles and rules for this
+// shoot. The actuator fetches them at reconcile and renders them into the same
+// ManagedResource as the rest of the stack, so the shoot has exactly one owner.
+//
+// Ref may be a branch, tag, commit or a pull-request head (refs/pull/<n>/head). Tracking a
+// PR head is the point: the shoot runs the proposed profiles while the change is still
+// under review, and merging the PR is what makes them permanent rather than what first
+// applies them.
+type Profiles struct {
+	// Repo is "<owner>/<name>" on GitHub.
+	Repo string `json:"repo,omitempty"`
+	// Ref defaults to the repository's default branch.
+	Ref string `json:"ref,omitempty"`
+	// Path is the directory in the repo to read, without a leading slash. Only *.yaml and
+	// *.yml directly inside it are read; subdirectories are ignored so that a per-shoot
+	// directory cannot silently pull in another shoot's profiles.
+	Path string `json:"path,omitempty"`
+	// TokenRef names the Shoot spec.resources[] entry holding a token for a private repo.
+	// A public repo needs none.
+	TokenRef *string `json:"tokenRef,omitempty"`
 }
 
 // Credentials names the Shoot's spec.resources[] entries to read instead of the defaults

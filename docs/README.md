@@ -10,6 +10,8 @@ extension itself runs only on the seed.
 
 - [Extension configuration](extension-configuration.md) — the operator's `--config-file`
   and the per-shoot `providerConfig`.
+- [Profile signoff](profile-signoff.md) — how a learned profile becomes a reviewed one, and
+  how a shoot runs the content of an open pull request.
 
 Enable it on a shoot:
 

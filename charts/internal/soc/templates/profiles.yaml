@@ -1,0 +1,15 @@
+{{- if .Values.profiles.enabled }}
+{{/*
+The signed-off profiles and rules, exactly as they are in git.
+Rendered verbatim on purpose: each document is evidence that a human reviewed in a pull
+request, so templating it here would mean the object running in the shoot is not the one
+that was signed off. Whatever the review approved is what GRM applies, including the
+kubescape.io/managed-by and signature annotations a governing profile needs.
+Fetched by pkg/profiles at reconcile; absent from values until a Shoot asks for them.
+*/}}
+{{- range .Values.profiles.documents }}
+---
+# {{ .name }}
+{{ .content }}
+{{- end }}
+{{- end }}

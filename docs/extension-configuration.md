@@ -46,6 +46,11 @@ spec:
           rules: []                  # bound rule names; empty = the SOC default set
           excludeNamespaces: []      # sensor ignore list
           bindingExcludeNamespaces: []
+        profiles:                    # signed-off profiles and rules, see profile-signoff.md
+          repo: k8sstormcenter/bob
+          ref: refs/pull/412/head    # any ref; a PR head runs the proposal under review
+          path: profiles/my-shoot
+          tokenRef: ""               # only for a private repo
         components:
           kubescape: true
           vector: false

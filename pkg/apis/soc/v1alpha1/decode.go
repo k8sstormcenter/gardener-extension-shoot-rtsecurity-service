@@ -93,6 +93,8 @@ func (c *SOCConfig) Values() map[string]any {
 			}
 		}
 	}
+	// Profiles are not copied here: BuildSOCValues has to fetch them, and a half-populated
+	// profiles section in the values would be indistinguishable from a fetch that failed.
 	if len(c.Images) > 0 {
 		imgs := map[string]any{}
 		for k, v := range c.Images {

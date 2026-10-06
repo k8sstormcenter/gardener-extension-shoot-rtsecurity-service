@@ -1034,13 +1034,13 @@ data:
         "enableEmbeddedSBOMs": false,
         "seccompServiceEnabled": true,
         "seccompProfileBackend": "crd",
-        "initialDelay": "10m",
-        "updateDataPeriod": "10000m",
+        "initialDelay": {{ .Values.kubescape.learn.initialDelay | quote }},
+        "updateDataPeriod": {{ .Values.kubescape.learn.updatePeriod | quote }},
         "nodeProfileInterval": "10m",
         "networkStreamingInterval": "2m",
-        "maxSniffingTimePerContainer": "24h",
+        "maxSniffingTimePerContainer": {{ .Values.kubescape.learn.maxSniffingTime | quote }},
         "bundleTrustPolicyPath": "/etc/bundle/trust-policy.json",
-        "excludeNamespaces": {{ join "," .Values.kubescape.excludeNamespaces | quote }},
+        "excludeNamespaces": {{ include "soc.kubescape.excludeNamespaces" . | quote }},
         "excludeLabels":null,
         "exporters": {
           "alertManagerExporterUrls":[],
@@ -1058,7 +1058,28 @@ data:
             "bypass": false
         },
         "scanFailureReporting": false,
-        "suggester": {"bobctlPath":"/usr/bin/bobctl","defaultBundle":"","delta":{"argsLiteralCap":3,"enabled":false,"expiry":"24h"},"enabled":false,"eventInterval":"10m","maxPerMinute":10,"mode":"whole","peers":{"crossNamespace":false,"enabled":false},"queueSize":64,"scope":"network","skipNamespaces":["kube-system","{{ .Values.namespaces.honey }}"],"timeout":"60s","workDir":"/tmp/suggester"}
+        "suggester": {
+            "enabled": {{ .Values.kubescape.suggester.enabled }},
+            "bobctlPath": "/usr/bin/bobctl",
+            "workDir": "/tmp/suggester",
+            "queueSize": 64,
+            "eventInterval": "10m",
+            "maxPerMinute": {{ .Values.kubescape.suggester.maxPerMinute }},
+            "timeout": {{ .Values.kubescape.suggester.timeout | quote }},
+            "mode": {{ .Values.kubescape.suggester.mode | quote }},
+            "scope": {{ .Values.kubescape.suggester.scope | quote }},
+            "defaultBundle": "",
+            "delta": {
+                "enabled": {{ .Values.kubescape.suggester.delta.enabled }},
+                "expiry": {{ .Values.kubescape.suggester.delta.expiry | quote }},
+                "argsLiteralCap": 3
+            },
+            "peers": {
+                "enabled": {{ .Values.kubescape.suggester.peers.enabled }},
+                "crossNamespace": {{ .Values.kubescape.suggester.peers.crossNamespace }}
+            },
+            "skipNamespaces": ["kube-system", {{ .Values.namespaces.honey | quote }}]
+        }
     }
 ---
 # Source: kubescape-operator/templates/operator/configmap.yaml
@@ -1084,7 +1105,7 @@ metadata:
 data:
   config.json: |
     {
-      "excludeNamespaces": {{ join "," .Values.kubescape.excludeNamespaces | quote }},
+      "excludeNamespaces": {{ include "soc.kubescape.excludeNamespaces" . | quote }},
       "namespace": "{{ .Values.namespaces.honey }}",
       "triggersecurityframework": true,
       "podScanGuardTime": "1h",

@@ -869,10 +869,7 @@ spec:
     matchExpressions:
       - key: kubernetes.io/metadata.name
         operator: NotIn
-        values:
-{{- range .Values.kubescape.bindingExcludeNamespaces }}
-        - {{ . | quote }}
-{{- end }}
+        values: {{ include "soc.kubescape.bindingExcludeNamespaces" . }}
   rules:
 {{- range .Values.kubescape.rules }}
     - ruleName: {{ . | quote }}

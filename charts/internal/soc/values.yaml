@@ -100,6 +100,27 @@ clickhouse:
   central:
     host: ""
 
+# The workload this stack is here to profile and govern. Naming it is what lets the chart
+# reason about it: until a signed-off profile for it exists, its namespace is kept out of
+# the sensor, because an ungoverned workload is treated as deny-all from its first event
+# and a scale set that bursts to hundreds of pods would emit an alert per distinct exec.
+# Once profiles arrive the exclusion lifts by itself, so the loop needs no second switch.
+target:
+  enabled: false
+  namespace: arc-systems
+  # The name every pod of the workload carries as kubescape.io/user-defined-profile, and
+  # therefore the name of the one profile that governs all of them. For a runner scale set
+  # this is the scale set name: its pods are owned by a per-job CR, so each job produces
+  # its own shadow profile and only this label gives them a single stable judge.
+  profileName: ""
+
+# Signed-off profiles and rules, fetched from git by the actuator and rendered verbatim.
+# Filled in only when the Shoot's providerConfig names a repo, path and ref; the documents
+# are whole YAML, not values, so nothing here describes their shape.
+profiles:
+  enabled: false
+  documents: []
+
 # vector is the only path from the node-agent's stdout to ClickHouse: with it off, alerts
 # are produced and never stored, so the evidence tables stay empty. On a shoot that already
 # runs a vector outside this chart, turn it off rather than let GRM take the DaemonSet over.
@@ -112,6 +133,34 @@ kubescape:
   enabled: true
   # Storage class of the kubescape-storage PVC; empty = the cluster default.
   storageClassName: local-path
+  # Suggester: the node-agent derives a candidate profile itself and writes it to the
+  # cluster as a ContainerProfile labelled kubescape.io/profile-role=suggestion. That is
+  # the input to the signoff loop, so it is on, and scope must be full: at scope network
+  # a request answers with peers only and never produces a whole candidate.
+  #
+  # The windows are sized for workloads that live minutes, not hours. initialDelay is how
+  # long before the first chunk is written and maxSniffingTime is the window whose end
+  # gates a suggestion, so the defaults (10m / 24h) mean a CI job that finishes in two
+  # minutes is never suggested from while it runs. A container that exits always flushes a
+  # complete profile regardless, so the small window buys a live candidate, not the
+  # evidence itself. Per-workload override: label the pod template
+  # kubescape.io/max-sniffing-time.
+  suggester:
+    enabled: true
+    scope: full
+    mode: whole
+    maxPerMinute: 60
+    timeout: 60s
+    delta:
+      enabled: true
+      expiry: 24h
+    peers:
+      enabled: true
+      crossNamespace: false
+  learn:
+    initialDelay: 15s
+    updatePeriod: 30s
+    maxSniffingTime: 10m
   # Signing posture of the node-agent, written as .policy.mode of the trust policy
   # (node-agent-bundle-policy ConfigMap): default leaves the field out, which the agent
   # treats as alert; alert | enforce set it. Enforce refuses unsigned/unverifiable artifacts.
