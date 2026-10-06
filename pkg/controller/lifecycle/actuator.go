@@ -153,7 +153,15 @@ func (a *actuator) createShootResources(ctx context.Context, log logr.Logger, re
 		return fmt.Errorf("could not render chart for shoot: %w", err)
 	}
 
-	data := map[string][]byte{"config.yaml": release.Manifest()}
+	// Compressed, not plain: a ManagedResource's data rides in a Secret, which Kubernetes
+	// caps at 1 MiB, and this chart's manifest passes that on its own once the CRDs of a
+	// workload controller are in it. GRM decompresses any key ending in .br.
+	registry := managedresources.NewRegistry(kubernetes.ShootScheme, kubernetes.ShootCodec, kubernetes.ShootSerializer)
+	registry.AddSerialized(constants.SOCChartname+".yaml", release.Manifest())
+	data, err := registry.SerializedObjects()
+	if err != nil {
+		return fmt.Errorf("could not serialize the rendered chart: %w", err)
+	}
 	switch {
 	case reconcileCtx.IsShootDeployment:
 		if err := managedresources.CreateForShoot(ctx, a.client, reconcileCtx.Namespace, constants.ManagedResourceNameShoot, constants.ExtensionServiceName, false, data); err != nil {
