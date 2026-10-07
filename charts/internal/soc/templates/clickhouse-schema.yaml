@@ -1,0 +1,197 @@
+{{- if .Values.clickhouse.deployOperator }}
+{{/*
+The kubescape ingest tables.
+They are not adaptive-export's: that operator creates the pixie tables at boot and
+deliberately does not touch these, so without this job the alerts table and
+kubescape_logs never exist, vector's sink has nowhere to write, and every view built on
+them stays empty while every component reports healthy. That is what an empty
+shadow_trace looks like.
+Idempotent (CREATE ... IF NOT EXISTS) and re-run on every reconcile, which is also how a
+retention change reaches tables that already exist.
+*/}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: soc-clickhouse-schema
+  namespace: {{ .Values.namespaces.clickhouse }}
+data:
+  schema.sql: |
+    -- Forensic SOC ClickHouse schema — KUBESCAPE side only.
+    -- ----------------------------------------------------------------------
+    -- This installer creates ONLY the kubescape ingest tables. The 12
+    -- pixie observation tables (http_events, dns_events, redis_events, …)
+    -- and the operator-owned forensic_db.adaptive_attribution table are
+    -- created by the adaptive_export operator at boot, via its embedded
+    -- DDL (see pixie/src/vizier/services/adaptive_export/internal/clickhouse/
+    -- {schema.sql, apply.go}).
+    --
+    -- Owner split:
+    --   soc/tree/clickhouse-lab (this file): forensic_db, alerts, kubescape_logs
+    --   adaptive_export operator (Apply at boot): 12 pixie tables + adaptive_attribution
+    --
+    -- The operator refuses to start if any pixie table was auto-created by
+    -- Pixie's retention plugin BEFORE the operator's Apply ran (would be
+    -- missing namespace + pod columns required by analyst JOINs against
+    -- adaptive_attribution). See clickhouse.VerifyPixieSchema.
+    --
+    -- Pixie type map (PixieTypeToClickHouseType, used by the operator):
+    --   TIME64NS → DateTime64(9), except event_time → DateTime64(3)
+    --   INT64 → Int64 | FLOAT64 → Float64 | STRING → String
+    --   BOOLEAN → UInt8 | UINT128 → String
+    
+    CREATE DATABASE IF NOT EXISTS forensic_db;
+    
+    -- Kubescape alerts (Vector kubescape_to_alerts sink).
+    CREATE TABLE IF NOT EXISTS forensic_db.alerts (
+        timestamp       DateTime64(9),
+        ingest_time     DateTime64(9) DEFAULT now64(9),
+        rule_id         LowCardinality(String),
+        alert_name      LowCardinality(String),
+        severity        UInt8,
+        unique_id       String,
+        cluster_name    LowCardinality(String),
+        namespace       LowCardinality(String),
+        pod_name        String,
+        container_name  LowCardinality(String),
+        container_id    String,
+        workload_name   LowCardinality(String),
+        workload_kind   LowCardinality(String),
+        image           LowCardinality(String),
+        infected_pid    UInt32,
+        process_name    LowCardinality(String),
+        process_cmdline String,
+        message         String,
+        raw_event       String
+    ) ENGINE = MergeTree()
+      PARTITION BY toYYYYMM(timestamp)
+      ORDER BY (timestamp, severity, namespace, rule_id)
+      TTL toDateTime(timestamp) + INTERVAL {{ .Values.clickhouse.retentionHours }} HOUR DELETE
+      SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1;
+    
+    -- Kubescape raw logs — columns match infer_flat.json exactly.
+    -- Vector kubescape_enrich sink writes here; the adaptive_export operator
+    -- polls this table (WHERE hostname='<this-node>' AND event_time>watermark)
+    -- and derives the workload anomaly_hash = sha256[:16] of (pid:comm:pod:ns).
+    -- The anomaly_hash column below is preserved DEFAULT '' for compat with
+    -- any existing Vector VRL transform that pre-computes it; the operator
+    -- itself does not depend on it being non-empty.
+    -- skip_unknown_fields=true on the Vector sink drops any extra fields.
+    CREATE TABLE IF NOT EXISTS forensic_db.kubescape_logs (
+        BaseRuntimeMetadata   String,
+        CloudMetadata         String,
+        RuleID                String,
+        RuntimeK8sDetails     String,
+        RuntimeProcessDetails String,
+        event                 String,
+        event_time            UInt64,   -- unix epoch NANOSECONDS (Vector kubescape_enrich emits ns)
+        hostname              String,
+        level                 String DEFAULT '',
+        message               String DEFAULT '',
+        msg                   String DEFAULT '',
+        processtree_depth     String DEFAULT '',
+        anomaly_hash          String DEFAULT ''
+    ) ENGINE = MergeTree()
+      ORDER BY (event_time, hostname)
+      -- event_time is unix-epoch NANOSECONDS; convert with fromUnixTimestamp64Nano
+      -- (plain toDateTime would read ns as seconds → year ~58e9 → broken partitions/TTL).
+      -- TTL must wrap in toDateTime(): fromUnixTimestamp64Nano returns DateTime64(9),
+      -- which ClickHouse rejects in a TTL expression (BAD_TTL_EXPRESSION). toYYYYMM
+      -- accepts DateTime64, so PARTITION BY needs no wrapper.
+      PARTITION BY toYYYYMM(fromUnixTimestamp64Nano(event_time))
+      TTL toDateTime(fromUnixTimestamp64Nano(event_time)) + INTERVAL {{ .Values.clickhouse.retentionHours }} HOUR DELETE
+      SETTINGS index_granularity = 8192;
+    
+    -- Governance tables. ks-sync (tree/ks-sync) also creates these IF NOT EXISTS on
+    -- its first CronJob run, but the dx views (dx/shadow_profiles, dx/profile_coverage,
+    -- dx/signatures) read them DIRECTLY and fail to compile on a fresh cluster until
+    -- the table exists. Create them at deploy so the views resolve before ks-sync fires
+    -- (and so a demo-dump restore can INSERT without pre-existing schema). DDL is kept
+    -- byte-identical to ks-sync.yaml — divergence breaks its inserts.
+    CREATE TABLE IF NOT EXISTS forensic_db.kubescape_profiles (
+        event_time      UInt64,
+        hostname        String,
+        ts              DateTime,
+        namespace       String,
+        name            String,
+        kind            String,
+        managed_by      String,
+        completion      String,
+        status          String,
+        signed          Int64,
+        signer_identity String,
+        signer_issuer   String,
+        -- content, not counts: the actual allowed paths/endpoints/syscalls so the
+        -- shadow_profiles view can show what a profile permits (see tree/ks-sync).
+        execs           String,
+        opens           String,
+        egress          String,
+        ingress         String,
+        syscalls        String,
+        capabilities    String
+    ) ENGINE = MergeTree ORDER BY (event_time, namespace, name);
+    
+    CREATE TABLE IF NOT EXISTS forensic_db.kubescape_rogueartifacts (
+        event_time     UInt64,
+        hostname       String,
+        ts             DateTime,
+        namespace      String,
+        name           String,
+        container_name String,
+        workload_name  String,
+        workload_kind  String,
+        pod_name       String,
+        rogue_phase    String
+    ) ENGINE = MergeTree ORDER BY (event_time, namespace, name);
+    
+    CREATE TABLE IF NOT EXISTS forensic_db.kubescape_trust (
+        event_time    UInt64,
+        hostname      String,
+        ts            DateTime,
+        class         String,
+        signer_key    String,
+        allowed_paths String
+    ) ENGINE = MergeTree ORDER BY (event_time, class, signer_key);
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: soc-clickhouse-schema
+  namespace: {{ .Values.namespaces.clickhouse }}
+spec:
+  backoffLimit: 30
+  template:
+    metadata:
+      labels: {app: soc-clickhouse-schema}
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: apply
+        image: {{ .Values.images.clickhouseServer | quote }}
+        command:
+        - /bin/sh
+        - -c
+        - |
+          set -e
+          # The CHI takes a while to accept connections, and a Job that fails here is
+          # retried by backoffLimit rather than leaving the schema half-applied.
+          until clickhouse-client --host "$CH_HOST" --user "$CH_USER" --password "$CH_PASSWORD" --query "SELECT 1" >/dev/null 2>&1; do
+            echo "waiting for $CH_HOST"; sleep 5
+          done
+          clickhouse-client --host "$CH_HOST" --user "$CH_USER" --password "$CH_PASSWORD" --multiquery < /schema/schema.sql
+          echo "schema applied"
+        env:
+        - name: CH_HOST
+          value: {{ include "soc.clickhouse.host" . | quote }}
+        - name: CH_USER
+          value: {{ .Values.clickhouse.ingest.user | quote }}
+        - name: CH_PASSWORD
+          value: {{ .Values.clickhouse.ingest.password | quote }}
+        volumeMounts:
+        - name: schema
+          mountPath: /schema
+      volumes:
+      - name: schema
+        configMap:
+          name: soc-clickhouse-schema
+{{- end }}
