@@ -37,7 +37,7 @@ data:
     sinks:\n  dx_daemon:\n    batch:\n      max_events: 1\n    buffer:\n      max_size:\
     \ 1073741824\n      type: disk\n      when_full: drop_newest\n    encoding:\n\
     \      codec: json\n    inputs:\n    - kubescape_enrich\n    method: post\n  \
-    \  tls:\n      verify_certificate: false\n    type: http\n    uri: https://dx-daemon.{{ .Values.namespaces.pixie }}.svc.cluster.local:9099/findings\n\
+    \  tls:\n      verify_certificate: false\n    type: http\n    uri: https://dx-daemon.{{ .Values.namespaces.honey }}.svc.cluster.local:9099/findings\n\
     \  kubescape_clickhouse:\n    auth:\n      password: {{ .Values.clickhouse.ingest.password }}\n      strategy:\
     \ basic\n      user: {{ .Values.clickhouse.ingest.user }}\n    batch:\n      max_bytes: 5000000\n   \
     \   timeout_secs: 2\n    database: forensic_db\n    date_time_best_effort: true\n\
