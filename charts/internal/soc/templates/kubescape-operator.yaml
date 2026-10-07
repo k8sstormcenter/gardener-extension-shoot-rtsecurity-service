@@ -661,11 +661,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: kubescape-critical
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: kubescape-critical
@@ -684,11 +684,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: node-agent
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: node-agent
@@ -702,11 +702,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: operator
@@ -725,11 +725,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -745,11 +745,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: cloud-secret
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: cloud-secret
@@ -771,11 +771,11 @@ metadata:
     
     "helm.sh/resource-policy": keep
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -783,8 +783,8 @@ metadata:
     kubescape.io/ignore: "true"
 type: kubernetes.io/tls
 data:
-  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURGakNDQWY2Z0F3SUJBZ0lSQVBseHJjK0FMYm4vemZsbXVZckppYWN3RFFZSktvWklodmNOQVFFTEJRQXcKRlRFVE1CRUdBMVVFQXhNS2MzUnZjbUZuWlMxallUQWVGdzB5TmpFd01EY3hNVEUwTWpWYUZ3MHlPREV3TURZeApNVEUwTWpWYU1CVXhFekFSQmdOVkJBTVRDbk4wYjNKaFoyVXRZMkV3Z2dFaU1BMEdDU3FHU0liM0RRRUJBUVVBCkE0SUJEd0F3Z2dFS0FvSUJBUUM5TTFMMTh6WHNVSjJwUHNBY1FOYUQvUDI2bVI0ZUtzT1ZOUlMrME43eGI2V3oKaWdnZmFTK0RoTEJzcXg0NURjajJKL1UvaWhUTm5YUE5sY3ljQ3BQUFFnaTlZZVp4QlUycDBTb0FGYWtiS284eAptelhMYytMNWRJVTJyQ2RURmhJUXRteXFJRjZJNmltb1U2WjZJS1dSZjlGTkFaRk5PMWZZaWViU3B1Z2s3MHYxClA0QnN0ekZ1SlUzL0NoYU9BL2xXVEcwaXpYVkttNTFPRXdzVWNFemN5NGZmWXpoeDc5M0d4RStkOGJ2TVh3MysKOUswOGlIeWtGbk91cGhwaXRQR1R2SUFVRFhVMURSdkJuM05kYm9MeGlpR0I5RlVyM2tZR0IzdzN6OWlOb1B1ZwprT2hRMVhDTE1TREkzclppd2lIbGVnbmQ3L3RuMXlSb1o3MjVWWW9CQWdNQkFBR2pZVEJmTUE0R0ExVWREd0VCCi93UUVBd0lDcERBZEJnTlZIU1VFRmpBVUJnZ3JCZ0VGQlFjREFRWUlLd1lCQlFVSEF3SXdEd1lEVlIwVEFRSC8KQkFVd0F3RUIvekFkQmdOVkhRNEVGZ1FVTmhjWittQVpHY1FwRzZPalp6enlLVUg3MXgwd0RRWUpLb1pJaHZjTgpBUUVMQlFBRGdnRUJBRTg5YmQvOVdFdkFRM3VmcnZnSzRWckFqNG1IUmZkMVc2azZrbVhZd0xNOUI5OG1TeGtSCmVtS1Vnb3RFMS9nMkNITWllTTZHYjVFL3ZVSTE4cXNZeGl0NUJQNnFOVlllbmh3cUJDTkZkWlJtM1ZSWUFiMzIKZTF5SEFpRmJKUlhqY1VuQnNIZEZzQ1Ixc0RIeGduYzhUM2hDMDFLMVd3N3d0UE52QlZtVjRFWXU4TENrVVl6RQo2MXdTOURBRjAyL094MTNMRUZJV2hmVVNJWXk2ZXNqTzNvVlM1ck51ZkRTYWh0TERPUjZsVy8zNkFFZklhekZVCjdoaHRYdm50VllXaGJHa0xJS0dWK3Z0eG84NHZ0aTRVYWRSVmZLcGJkbzl2WVozdHc3QzBweER0QjFMK0lHUk4KRmNodGZ4aC94eElYcGJXUU1HUnJmeHFNT1F5NmZQZnhubGc9Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
-  tls.key: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFb2dJQkFBS0NBUUVBdlROUzlmTTE3RkNkcVQ3QUhFRFdnL3o5dXBrZUhpckRsVFVVdnREZThXK2xzNG9JCkgya3ZnNFN3YktzZU9RM0k5aWYxUDRvVXpaMXp6WlhNbkFxVHowSUl2V0htY1FWTnFkRXFBQldwR3lxUE1aczEKeTNQaStYU0ZOcXduVXhZU0VMWnNxaUJlaU9vcHFGT21laUNsa1gvUlRRR1JUVHRYMklubTBxYm9KTzlMOVQrQQpiTGN4YmlWTi93b1dqZ1A1Vmt4dElzMTFTcHVkVGhNTEZIQk0zTXVIMzJNNGNlL2R4c1JQbmZHN3pGOE4vdlN0ClBJaDhwQlp6cnFZYVlyVHhrN3lBRkExMU5RMGJ3Wjl6WFc2QzhZb2hnZlJWSzk1R0JnZDhOOC9ZamFEN29KRG8KVU5Wd2l6RWd5TjYyWXNJaDVYb0ozZS83Wjlja2FHZTl1VldLQVFJREFRQUJBb0lCQUFFdXBHcVFBZnEvaURTcQpCVFpIKzI4b3NnY3I5TUc0ZjY5YmZRMHlMZXB4U2FaRkN3YnpOODVKRW5jalhKVjdyaEZIcjZNZGdFTEdwSllZCnhRWUdsT1RiSTBYWHFrSnpoNGd6bStFVFFaSy9ZZFNzQlJxSDExZTZzQ2hteS9vYmJiSjRDVmJJeS81c0JDV2UKbkRBd0t3aXROVWdYWmVxSEgrWGsrckcvUkQwUzFQUEN2aDRJeHBQdFFwNnlmUGZFWWxtRHdnVlVuRzZ0TmR6ZwoxclIxazV1NzIxemZncjBBdVdqZkMyOVYxbFFhalRCc0lPR0k1MjdaTUZXZ3FWN2VGWVo1OXcxc3V6c2JSVTd6CnBvemMyS2RWTEF0cGVuaXNLME1YV3EvVG9zS09mUThSZ2NHMWZEL3pWWjZPVWtXbEhBNGJsSFV1VjRvQVRqSkMKMVEydFllY0NnWUVBenZ1d0MvWVRxZWRBdmlHQWVXdFcrdTd1K2VSYTVtcEdiWXQyeTdITnI0SVVxcHdBRHROTQpYZEVhZm9TT3dma2E0QkM2WWF3NTZQWjJ5OFdlODU2QTNmeFVHQ0JOZ3pLZXE3Unl6T2w2K05mdUFSVzB2cTJPCnBMa2cxelByRVZocjFxY0xiaUdiUHY3Zzl0dmNqMEpuUDdFeWRNNnd6Z250OVgvdXR5Um91czhDZ1lFQTZnR1EKeUErT05FRktIcjFHVG9UcXo1U2ZFYW8wTU94dkd4TWhDbCtsWXJWaUdJSkxWazlFaUFiaU02TEFCVzF4QWQrbQprY3FVblRYVXJmYklveWRSaHBUcHkydWFCcjJwNFdDb2JkNUt2UEFsYktPUFhpS2pjUUEvUGhDQjh5a3NvZmc2CjRZTW90dzdxMkdsemFibm5hdm9PVndHZVlCb3QwNWdmYnFub1lpOENnWUJ0MkN4SmJNSnF2SXNqVyt3dWc4U1oKVHd3TUdpQVRmL3I0VDdjdnlxQjVyL0wveCtKUCs5cmZQd1ZzZHpTN3hGTjY3ZVc3eUFiRGwyamNJM2lEbVc2UwpZRUxRdXZQbjJJbFVYbU0rVS9vcTdZMGxqanRwcGZtNWVYWHdQMkZVeHpRVHFucnFhM05VTHpkOFNwbjJmU3NHCkppZTh6YVFPOUQ0UXQyQWNXWG9yQ1FLQmdGSzJmUE9LTkF5YWExV1VONDYzZ3J3ZTMxOENGM0tYaitvMUI3Ky8KOFJpRDNvbWxQSFhrak9lNzd5YXJSMDVqMGNjRXc3N1NxVmNzV09HbzBtQ0JIRnNDdGVUMlFycFJQZ1B4QTNmYQpVL2FXdDlPL3VJUmduLzdvUkhKdXFWQkc1SVRYMWhBeUtTa1RkOFZJK01lTk01Um5rTHdHVVhITXJ4Z1V0RCtNCmhSeDNBb0dBUSt1QWJvR0c1cWZJL0M3akg2R2U5N05uQU1NRkFoVHhwYmFEQU1oZEN1Z0pxTVRzejdFS2F1cFcKSXJiVGdNMnRTaE0zMWl4ZE9ZckN2c21VazVLT002UitCbkkvbThnck9QNHp0RlJMOUo2dUE2Z3dGbTViRDhsbwp1eFhEZGUwVkwzd0ErK21GbGdUNEs2azdud3dRSWVqTVdyOVlXTmJ2SzliQVYxMWdxak09Ci0tLS0tRU5EIFJTQSBQUklWQVRFIEtFWS0tLS0tCg==
+  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURGVENDQWYyZ0F3SUJBZ0lRZGVuaEtRZlB6U2ZQRThBUWpLTjBFekFOQmdrcWhraUc5dzBCQVFzRkFEQVYKTVJNd0VRWURWUVFERXdwemRHOXlZV2RsTFdOaE1CNFhEVEkyTVRBd056RTBNREkwTUZvWERUSTRNVEF3TmpFMApNREkwTUZvd0ZURVRNQkVHQTFVRUF4TUtjM1J2Y21GblpTMWpZVENDQVNJd0RRWUpLb1pJaHZjTkFRRUJCUUFECmdnRVBBRENDQVFvQ2dnRUJBTHpiT3M4RHlnRzROeG5IRUQ4Wk5VMWVveVJ1WFFYMUxSbEVnZnFTczR1bStIYjYKbm5JQk4wSjFpZEJQM2RaQUZkeVZJMnlJN29FUmpKNWZnMkZ6S25sRlZmSkdyNnA3eERFQzNJVEViZXI0Q000QwpWMHZFZVF5d0lUcllzYWYwWkhlTTc4ZTdkVGlxME9NVXV0RlIyQXFoNEI1NWNROUYzYUxQSVUyUU5xcVFCSDlpCjFqWWp1dU9JTzNyMmdDZEF2NEpkb3lqYW9nVmtDQlV5aEhzaEQ2Zk9hOURRUlk5WFVid1VyVGZzR21rZzlkdFUKZFBDdXFzZzltYmVrQkJ5cEtCeXEzeHg1clZYbHhNQmpGSzhSa3FNZkxKOWVWalBWOU9pMHZOVzlyR3k0NzExNAorbzhvUGwyNkxVQ1hDbnRMODZwRHEvL2M2dlJpaWcwYU9yYVFtL2NDQXdFQUFhTmhNRjh3RGdZRFZSMFBBUUgvCkJBUURBZ0trTUIwR0ExVWRKUVFXTUJRR0NDc0dBUVVGQndNQkJnZ3JCZ0VGQlFjREFqQVBCZ05WSFJNQkFmOEUKQlRBREFRSC9NQjBHQTFVZERnUVdCQlRYY3Z1a3g3bm95NVJqZ3VBZU1SSmx2VDdCeHpBTkJna3Foa2lHOXcwQgpBUXNGQUFPQ0FRRUFsdjFHdHZMamRIYmhNN2cxMWRGeXEybVhvOU8xTkpiM1BGWHpBMFhuaGYzaU1uOEFET3lDCjJBclROamU2dFIzVFh4OElvczQyTmFEYXROM0o4UGpuUmpGYnpzZTB3NnNaRFJRN1ZXRy80bS9CU2lPV0ZGK04KL1pQYklSdldiUmhDVENUcGFJdUoxTm1QLzRnYm9SSG5FYWt0Zi9zQXFKVnJzVWlsNk00NmJIYU9VSnR0Y1lncQp5WGRZeG4rRHE3bHhzbXlhTVBBRGthZEM2THlXZXdrUkpXbkw4ZC9tUXl4MHc2aHo5Uk9GSHRzdVhJUXJlcTZtCitHWTg4V0I5SEZycnhNZDdPNmFGN1RPWndtNGtjUkxhYjY0dFdQMHEwVmFRYXJUWUNGaGtIY3BCMXhqcEs1clAKUWorZlI2eS9zSEI2QVM5YjhNNm5DOHQybU1JRHgyUEUzdz09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+  tls.key: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcFFJQkFBS0NBUUVBdk5zNnp3UEtBYmczR2NjUVB4azFUVjZqSkc1ZEJmVXRHVVNCK3BLemk2YjRkdnFlCmNnRTNRbldKMEUvZDFrQVYzSlVqYklqdWdSR01ubCtEWVhNcWVVVlY4a2F2cW52RU1RTGNoTVJ0NnZnSXpnSlgKUzhSNURMQWhPdGl4cC9Sa2Q0enZ4N3QxT0tyUTR4UzYwVkhZQ3FIZ0hubHhEMFhkb3M4aFRaQTJxcEFFZjJMVwpOaU82NDRnN2V2YUFKMEMvZ2wyaktOcWlCV1FJRlRLRWV5RVBwODVyME5CRmoxZFJ2QlN0Tit3YWFTRDEyMVIwCjhLNnF5RDJadDZRRUhLa29IS3JmSEhtdFZlWEV3R01VcnhHU294OHNuMTVXTTlYMDZMUzgxYjJzYkxqdlhYajYKanlnK1hib3RRSmNLZTB2enFrT3IvOXpxOUdLS0RSbzZ0cENiOXdJREFRQUJBb0lCQUZ5b3FWMXBiQUxVK2IvZApnYlNicnlIRFJZTDUzUTB2d2sxTDVnUGxWMDgxQUdJTHk1Siswemg1eDhDYmR1bUlMdEczb0pZL1J0bXZuUkVWCkpyWTQxWVdEaGN3bGIwblRpS3BOVDVtYWNKMmd6VjBhRysrU09ad0dqSDg5VTBqbTZTWVkwWXByQ0hQaHB6UksKOXUvOVdtUzVFR2VUU092bjZQclk2bXVPVHF2MnZsb2RmNy9UcEtMOTZYTzZycy9uVmFHWnVqZy9ZWW0zSEJ3YgpMTUVJQVF3QTY5WFhOOTM4ZVdacm5HU1NocXU2UmVvUXA3NDgwWEJnNnNSZEtiaHFzQVcrZWJJTFJKM0k3MEZFClBpV3JGSWhqVTEvQ1AyWVJROFlmVHhKQk90Q1I2TnRaZHk5K2tBbDRGTTVSdEVYV25LOHpBQkE0aGlwTUYzRzgKcC82RGxaa0NnWUVBMzg0SmFjTi9wNEViNm9UWFBBckFIc0JyaFFYb1dKY1JHc1pMaXJoWis4cEg0V0hGdWNnWgpucEFMblFrT2krUG85ZEMraW41QmFwaERLcG5lOGZsWUJERnpxc0pENW1LZ0RDUHk4cEVVT1ZVSXd5b25BaGI0CkE3WC9HV09nU203WW5BOGFSK2hUVUlKUTlaTGtjYjlZdmF0VTd5cVlEbi9Bb3Myak04UVVLTWtDZ1lFQTJBWXAKT0svbTZjN2hDNDBvNmtiQTEzWkZzeG43SFNyNjJvWnhuWWxXUCsyMEpWYjZHWWxHQWpraTFSRW9WR3M3ajlRVApnOUxFNU9nVUcrSkhFUWplajk3Q2dpY1F0djJzZVFRNm1yby8xNXArNnRNWkRyV1dtcGZYTU4vWnZhV1RxUCtTCllFWVRzSnJFSStzd1RRd1ptTytHaGM4WkcvdDRxeUNuSlJ5NXZyOENnWUVBeVpxMGFBMnZ4SmhOS1drWTZnRlYKSjE1MmZKSGh4MHZ1SUl4WUtGSUEzUXhPeS94alBRTy84RklaNUEvd2hwdDdrMVBERU1iQzd0N1NRbUh4cjAvSgp0WjFHY0tBbXdqWTlyaklEKy9Zc25haTRCL2JFeE9FajhWUFV4RzQyU2xhbjBZelpROFZJcDlGOFZIdEtSaHowCk40ZExMMWJUT3R4aUQwWG1xZzhMaWVFQ2dZRUFoMDlFbnFjL2dnLzlVbGoyMmRlN2pyb2NhbFRKdjdsZUsyYXUKMzdoWWQrNlNPaGxDeXAvN1pBVVoxay9LN1NYRnh3OVZzZXBoUGVoSVFEYjV3S2ZIa0dJOWYzeXNzWkl2YUJYSQpCNGJGMm15Qk51Rkcvcm1yUGVZQitqRWNsL2VRaC9pZFhRUkg3UVRqK29Pa1czNUt3a3ExL2paOFNkUzMvcWlUClNXRzJ6czBDZ1lFQWthdEx3NUpZQlFFZWtFVE1QckQ2YVNpK3B6NnRyMFZXWVVBNWg3enNLSzdRcTJBbEpRQi8KKzVKSzFnSDBIZWtBckNhWi9sOWE4anNnaFIrSHNtVUtrbUx1VFRhdjFQVEJSNnhEM05EaitCZWRzZWY4L2RkRQpFbHJhSlBISzduSkdmM3JQSWZVWTVhb3lsbjBBZ2pPaGJVNENEaWdYNWtIWWRnbHE4UW9QK04wPQotLS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQo=
 ---
 # Source: kubescape-operator/templates/storage/certgen/secret.yaml
 apiVersion: v1
@@ -795,11 +795,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -807,9 +807,9 @@ metadata:
     kubescape.io/ignore: "true"
 type: kubernetes.io/tls
 data:
-  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURYVENDQWtXZ0F3SUJBZ0lSQUpyckxMZHpFa1pySy9udE5MV2ZGM0F3RFFZSktvWklodmNOQVFFTEJRQXcKRlRFVE1CRUdBMVVFQXhNS2MzUnZjbUZuWlMxallUQWVGdzB5TmpFd01EY3hNVEUwTWpWYUZ3MHlPREV3TURZeApNVEUwTWpWYU1Cd3hHakFZQmdOVkJBTVRFWE4wYjNKaFoyVXVhRzl1WlhrdWMzWmpNSUlCSWpBTkJna3Foa2lHCjl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUF1Z0NacGVIYTdwYnNXRmo2c05xM0pRRzZ2VC8wNXcwQ0d5MzkKellTdXpFSXVaNnVCeG14OFJ1RjJDRnAwR1JHSkVORElSUkxSdjFoSXlMY0lRUFBQYzBCVWJrQUhZaUw5YjlUTgozeC80eVNDM1hma2RqR29QdHErd1kwR2ZJZEMyZFdQZFRTcE5pbkd6UEtKY2JWSnRtU1JDK1lTMHQwTWdlQ2RUClB2bTBKczQ1VXdvRUQ0NDBWYVRxVmRuTG1oTXVXY1RtMURBVmVQeDFrbW50ZGpLa0tvb2JRZm14d3NNMUltREIKSUVvdUN0aER0ZjR5SkIyOEVud0RvWmtBMDJ4QTczRTg0VTB4SmdFZjFwUVVDbUxxU2pyblVUSjhTM3hwWHBnWQpqZlZZaUFxejUyWkZHeUk3TW1oLzJQbDN6VVJCUm5tSFd2M0pLT2tCaE1rem1BRldSUUlEQVFBQm80R2dNSUdkCk1BNEdBMVVkRHdFQi93UUVBd0lGb0RBZEJnTlZIU1VFRmpBVUJnZ3JCZ0VGQlFjREFRWUlLd1lCQlFVSEF3SXcKREFZRFZSMFRBUUgvQkFJd0FEQWZCZ05WSFNNRUdEQVdnQlEyRnhuNllCa1p4Q2tibzZOblBQSXBRZnZYSFRBOQpCZ05WSFJFRU5qQTBnaEZ6ZEc5eVlXZGxMbWh2Ym1WNUxuTjJZNElmYzNSdmNtRm5aUzVvYjI1bGVTNXpkbU11ClkyeDFjM1JsY2k1c2IyTmhiREFOQmdrcWhraUc5dzBCQVFzRkFBT0NBUUVBYi8renF6SzV5Q1g2a3U5MTA3K00Kd0ttNWx3aitySExyb1ovbzhEYk5TaVNQM080R1lldis0R1pvMjhUZnVvekZQTUJqbFdNdHBoYTVnWElhVStsOAp2R2V5Y04xN01VckZnNVgvUWRVTzZsWndyejhuU2d2OWpQYURScC9ESmZJSWJyZkZpdEVMd1pEZ0k5dlNDYUFVCjdtc2RVYU1RTHFOL1lxQkhLaGZ0UldURDFwSmwyRkFQKzJwQjA4WUJQS1lXZWVsQ3JwZUI3NXc5MkMxOVluMnYKZVl2bHA4b3czeGlCdDJaQ001Y05DUE40Q2l0bE0wUXF4WnFqWTJ0azFCR0hpYXVHdEtoTVkwbDJ1TXlWR1BaMQo0V3ZjcFExVUMzMXNHY0FNNm93ZU5scSthUS9vUmdDUi9HTGpCZ3ZSL05mTFJyaVRnTEZXS1k5dnRkV0xwMDFtCkx3PT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
-  tls.key: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFb3dJQkFBS0NBUUVBdWdDWnBlSGE3cGJzV0ZqNnNOcTNKUUc2dlQvMDV3MENHeTM5ellTdXpFSXVaNnVCCnhteDhSdUYyQ0ZwMEdSR0pFTkRJUlJMUnYxaEl5TGNJUVBQUGMwQlVia0FIWWlMOWI5VE4zeC80eVNDM1hma2QKakdvUHRxK3dZMEdmSWRDMmRXUGRUU3BOaW5HelBLSmNiVkp0bVNSQytZUzB0ME1nZUNkVFB2bTBKczQ1VXdvRQpENDQwVmFUcVZkbkxtaE11V2NUbTFEQVZlUHgxa21udGRqS2tLb29iUWZteHdzTTFJbURCSUVvdUN0aER0ZjR5CkpCMjhFbndEb1prQTAyeEE3M0U4NFUweEpnRWYxcFFVQ21McVNqcm5VVEo4UzN4cFhwZ1lqZlZZaUFxejUyWkYKR3lJN01taC8yUGwzelVSQlJubUhXdjNKS09rQmhNa3ptQUZXUlFJREFRQUJBb0lCQUJtRHg0L253WDZGR1hxdApDZ2FFbWlicmE5QldHNlF1TnFHLzExYi80bktHaVpNVEJjUlFVV1B2dlo4N3VUMVBHSHhFQjVUaUZmK25mcVI1CjV4bngxLzA1VDl1bjBOdDNiVWlQNm9XMi93dW4vejlXMHVUV0Q3M0JyL0tOcCtTZG1zblRueUhjc2JKU0VvSTQKeTNEN282a2tQa080SG9vZEhURWVROThacGNyRXQxeEVaOU9wWU96V3NTbG5MWmJKdExUUG5JZUwyb0lGamRraQpnVnM0RGFQNEplY3NJNHlIbnNXNkdIQ3FiWkQ2WC9MNmVLU1FaelI3R2M5THJaOVdaUmxqNCs4Qm1oUGFuNjByClBFWjlPU2J2TjUycjFQcnRmS2FTajVwYUZ6UURZRmcvOFZWMGlYYncvVy9mNjRrK0poc3dwalUvV1BYLzRGbmYKaWJpMHVxa0NnWUVBM2RjeVZPS2RtblBtRytUSGdSZVoyekk5d2c5T3FuMnFmZUJZOUJ3cnBaT3hNZkdPQ0xHdQplRjNSanZGOEdzTjZWYlgzUnBaV1RWTE9GZlprWWplMGNPVWwyY0RXWU1ZK1JmZEZmZk15U0p4SGQycmFxSFdsCk9EZnVFc2s0b1lXSEZxd3pFTGxBTUFRdHd5TmEra3ZxTmxpWFl6aGZRRzhPekhZZjFQK25pZWNDZ1lFQTFxU3YKRXgvcm9TcGV5UGk0eW50dWswU1FnS2dxYmRVM3FNd1ZXR21tSnIxbzhuSWlrZnRuNkV4QWJTbmg0MWVMQW1oTApZeTVNSTBNUE1jV3o4RCt1elVGejlOZUZpS0U4ZFJLbTRNTkJ1aml0QjA5dmdFUE5TMWpySFNaY3BqUzZ1OU5CCkRreHFhdjB1UVB3V1Zac0x6eGRoUm9tTFpHaTZpQ2hacGVSdEVQTUNnWUF4RTBRZEp5eTZXRjFWV2wwUUg4cDMKaFR2SVRGNll0TWdjcEo3SkVkcE4vTWc4UmpXbmtyY0lCYWt3T0JlK1MvUXFOZUVJQ29YNUFSSjZKVkc3c0pzSQpSb2tERFBmZjNMczEreWV5WHpTR2Y1d0h2T20yVHFCSU9ZYy9QS2g4Z3UrSmducWhmbm5HcFlZQ0h6WW5ITmdwClFadnI1VEtkTEhSWG91SVQycUtUalFLQmdRREFuSU9teTh3c2tkTUEwWUV4NGxXMXZaOVdkSkd1Z2RreWxnREoKbC9UTGFza1VWeXVDaUhJVDJPa3ZqSmZ4NUlzUG0vdWFndDg3L1Y5VE1MQnA5UnV0Z1FESFErZkdWYm5rN05ubgpkQkExUmNxdmRxNytFTm5XdFhJMmRFaEx0YUdrRHN5Z1FoNTA1OEZyKzBzbmdyeTBGNnpwR1dDR3VCdzdOc3BMCnZaSEoxUUtCZ0dVQ1M3NlQ2RWlQV0x1aWEyZzV4bGNSbFgydGVFT0d4Wkw2eGlNUVE5emFIV3RzUFJlM1RrRXYKSTFLeVV1QkVqWVJwclA4c3E2d1F5c1lkWlJQS1VXTDZYcjJWRnI1c2JiTHJqMUpYWDVla2I4bjUwK1Y1aFQxUApHdDVPMm0rY0pvb3ZvQ3ptQjZEc0VrQ0tiMHFMRjB5aXlyNG1FOTFxdVJ0M080cE4zNU9wCi0tLS0tRU5EIFJTQSBQUklWQVRFIEtFWS0tLS0t
-  ca.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURGakNDQWY2Z0F3SUJBZ0lSQVBseHJjK0FMYm4vemZsbXVZckppYWN3RFFZSktvWklodmNOQVFFTEJRQXcKRlRFVE1CRUdBMVVFQXhNS2MzUnZjbUZuWlMxallUQWVGdzB5TmpFd01EY3hNVEUwTWpWYUZ3MHlPREV3TURZeApNVEUwTWpWYU1CVXhFekFSQmdOVkJBTVRDbk4wYjNKaFoyVXRZMkV3Z2dFaU1BMEdDU3FHU0liM0RRRUJBUVVBCkE0SUJEd0F3Z2dFS0FvSUJBUUM5TTFMMTh6WHNVSjJwUHNBY1FOYUQvUDI2bVI0ZUtzT1ZOUlMrME43eGI2V3oKaWdnZmFTK0RoTEJzcXg0NURjajJKL1UvaWhUTm5YUE5sY3ljQ3BQUFFnaTlZZVp4QlUycDBTb0FGYWtiS284eAptelhMYytMNWRJVTJyQ2RURmhJUXRteXFJRjZJNmltb1U2WjZJS1dSZjlGTkFaRk5PMWZZaWViU3B1Z2s3MHYxClA0QnN0ekZ1SlUzL0NoYU9BL2xXVEcwaXpYVkttNTFPRXdzVWNFemN5NGZmWXpoeDc5M0d4RStkOGJ2TVh3MysKOUswOGlIeWtGbk91cGhwaXRQR1R2SUFVRFhVMURSdkJuM05kYm9MeGlpR0I5RlVyM2tZR0IzdzN6OWlOb1B1ZwprT2hRMVhDTE1TREkzclppd2lIbGVnbmQ3L3RuMXlSb1o3MjVWWW9CQWdNQkFBR2pZVEJmTUE0R0ExVWREd0VCCi93UUVBd0lDcERBZEJnTlZIU1VFRmpBVUJnZ3JCZ0VGQlFjREFRWUlLd1lCQlFVSEF3SXdEd1lEVlIwVEFRSC8KQkFVd0F3RUIvekFkQmdOVkhRNEVGZ1FVTmhjWittQVpHY1FwRzZPalp6enlLVUg3MXgwd0RRWUpLb1pJaHZjTgpBUUVMQlFBRGdnRUJBRTg5YmQvOVdFdkFRM3VmcnZnSzRWckFqNG1IUmZkMVc2azZrbVhZd0xNOUI5OG1TeGtSCmVtS1Vnb3RFMS9nMkNITWllTTZHYjVFL3ZVSTE4cXNZeGl0NUJQNnFOVlllbmh3cUJDTkZkWlJtM1ZSWUFiMzIKZTF5SEFpRmJKUlhqY1VuQnNIZEZzQ1Ixc0RIeGduYzhUM2hDMDFLMVd3N3d0UE52QlZtVjRFWXU4TENrVVl6RQo2MXdTOURBRjAyL094MTNMRUZJV2hmVVNJWXk2ZXNqTzNvVlM1ck51ZkRTYWh0TERPUjZsVy8zNkFFZklhekZVCjdoaHRYdm50VllXaGJHa0xJS0dWK3Z0eG84NHZ0aTRVYWRSVmZLcGJkbzl2WVozdHc3QzBweER0QjFMK0lHUk4KRmNodGZ4aC94eElYcGJXUU1HUnJmeHFNT1F5NmZQZnhubGc9Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURYRENDQWtTZ0F3SUJBZ0lRWnRmOWN3VW9YcW03QWNZeDB1Z3kxREFOQmdrcWhraUc5dzBCQVFzRkFEQVYKTVJNd0VRWURWUVFERXdwemRHOXlZV2RsTFdOaE1CNFhEVEkyTVRBd056RTBNREkwTUZvWERUSTRNVEF3TmpFMApNREkwTUZvd0hERWFNQmdHQTFVRUF4TVJjM1J2Y21GblpTNW9iMjVsZVM1emRtTXdnZ0VpTUEwR0NTcUdTSWIzCkRRRUJBUVVBQTRJQkR3QXdnZ0VLQW9JQkFRREJXVlRYTkd5NXpJNUV2ckRpOFk5UWNIVzZvZUhJZytDT3BqU08KR1J2SmtiNlpiVzZ4YkU0Zk5lYmtWTXoyVDBKcmtLL2NRMHl1bmp5RW1UWm5oZUUwMGN6cTFWZU13cjNNQnFiWgpldjliV1pETmtNTG1UYXA0NlR3YnIwaUpFZHZWY2hLN3doUnpGTWwvWnNlY215YjdjYVZkMWVWRllZZzc1L2hlCmVySVJXaFNCZUliRVhvVEVIa3JtT2VJdGFtRTV0eGtBQ0lBVVhVVVUxNGRMTXN1UlNEejhybjJTNWIzRTBSU2QKNzdlcDN5Q25rdHp0blVTTldPNzN4TVhzVXQ0dkpGcTZ0TnRFekN6eHFHQVQ3YzNoWWkrVEVUdTRoanowYUE0RApycTYrVHZIMEI4QnU3bnJJTEhxeXVPZmplOGgrb0VHbXBtYllvbFFlclNtTzBudDNBZ01CQUFHamdhQXdnWjB3CkRnWURWUjBQQVFIL0JBUURBZ1dnTUIwR0ExVWRKUVFXTUJRR0NDc0dBUVVGQndNQkJnZ3JCZ0VGQlFjREFqQU0KQmdOVkhSTUJBZjhFQWpBQU1COEdBMVVkSXdRWU1CYUFGTmR5KzZUSHVlakxsR09DNEI0eEVtVzlQc0hITUQwRwpBMVVkRVFRMk1EU0NFWE4wYjNKaFoyVXVhRzl1WlhrdWMzWmpnaDl6ZEc5eVlXZGxMbWh2Ym1WNUxuTjJZeTVqCmJIVnpkR1Z5TG14dlkyRnNNQTBHQ1NxR1NJYjNEUUVCQ3dVQUE0SUJBUUJucG1PTGhLNmY2Y1VGaWFoKzRnU2YKT3FCODBjLzExS2tTanhiQjVPVHAvZkhPdUFVaWFJR25aY0xjQnV6b1BzZEpmRmttUlJUV3NndTR1K0xRWVFDbwpDMFJMcmRVaVhTYlMzSVZ5U0hrbGZCWkZvNkZLVGRNOVNqOTZERk5iTUZvaUdFZ1hPN0xSUVB2MnpoeElXU1J1CmNOY2IrRGR3U1BPSUhOMFJIbWYyczN2aWVGZEJHbTJ3WW1oODFCNlJzeXY3MFFiV0RXTHJhTDZ3MWNwNGFsbnIKY3A2MUdPNVJ0djFiYWMvM09jRjRCMGFWRzJQV3F2SktyeUpySVJqK0lxKzcrcjZTNVI1V1RZN1AwVWR4YVM5RQo4ODF1Zm0wOGJFTVdKdC9tRFhQMXlrdHk3UTNib1V3SG1RK2NzdkRTUVZvaXVFWmdmRzBCWXd4YVNHa08zUnNmCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+  tls.key: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFb3dJQkFBS0NBUUVBd1ZsVTF6UnN1Y3lPUkw2dzR2R1BVSEIxdXFIaHlJUGdqcVkwamhrYnlaRyttVzF1CnNXeE9IelhtNUZUTTlrOUNhNUN2M0VOTXJwNDhoSmsyWjRYaE5OSE02dFZYak1LOXpBYW0yWHIvVzFtUXpaREMKNWsycWVPazhHNjlJaVJIYjFYSVN1OElVY3hUSmYyYkhuSnNtKzNHbFhkWGxSV0dJTytmNFhucXlFVm9VZ1hpRwp4RjZFeEI1SzVqbmlMV3BoT2JjWkFBaUFGRjFGRk5lSFN6TExrVWc4L0s1OWt1Vzl4TkVVbmUrM3FkOGdwNUxjCjdaMUVqVmp1OThURjdGTGVMeVJhdXJUYlJNd3M4YWhnRSszTjRXSXZreEU3dUlZODlHZ09BNjZ1dms3eDlBZkEKYnU1NnlDeDZzcmpuNDN2SWZxQkJwcVptMktKVUhxMHBqdEo3ZHdJREFRQUJBb0lCQUFnQzV4Q0p0QTJZeTdaTwpmbTdRMm9MWFBoR1BIcGRiMjRTZG4yVFo1bnhhSlI4ZldTeFIxQVRZQzJxZmx1U0gwVFU2eUFhazVUc0JCSG5zCkRVU0oyQlNEc3UxeURKQWhDNU0ySFZpNmozVWVCM0YxRTVaT1ZvZHZCcFlSRTd6V09Ca21nbDgwUWZ1b3UxYWoKa0JiTm1QWm5OWlpuUS9vMWVkc2RsLzEyTVFXbDl1NVZ4NmFQaW03UXZDLzF5OTU1cWhrQ2g2SWFlQVlUaGtaKwpYaGxwVGNkbktaUEFPVUxEazNSMFFkOCtDTU81RVZiRGRua2s4UmM5UUk2UlR0dG5qcTVuN0x6VlNwUW1hSFk1CnN1Y0hMcXMzd2NEYU5ydUlGd1U0eHgyYnU0bDRFVG9xU3hWNTZxTC8zaE5KZzNxMkVxUHNhK3FudjJ3ZzAwa00KSjdZcEd6MENnWUVBNFNadnFoZjhXZHdJa1d3RkF4RFhicWszWm50Qkl4NUduNk5FcFd3eXpxWHVjUUd3QUw3dQpGTnVsWE9xZU9ScXdQTGJYTUJhMmlsWktGSjJDSG9Ca2Fmbk8ycWVKOU13TVhoVkdXRDZ3ZC9za3I1WHYrZjJiCmhweEVacllpWmc2Uk01bTZwUGhoZTdYeW5uYVFkemVscHRwZ2ZmVlRkd0dGM0pyT1pNWmJ6ZlVDZ1lFQTI5ZG8KcFRWWVVRM0hTZUxhRGhUWEpja2xMbUd6Q1FHaDV3SmRVMzNjTVhVWERZNVF2WUE0ZjlvUkpoaExVWjBhdGNNZgpsVGE5Q1Vzbk1kc0E4ODl5QVRLdk1DZFc0eUZuN3pzMUFMMjEySVplK0VXSS96SnM1alMySDNjakQ1VzJPdlhsCjJxdjA3Q0ZQTk1wY2dFeXBqZElualJuYm9GVUprcm1jbkgrYmREc0NnWUJpNFN4OU9SZDhwMk9qNmhxeFkvNFkKL1h2MUtBQk5XZ2lPSjNnSVptSlIyeEhDMDRqbWF2UEllVVpBYmxHYXBwdnJyaWtIVjVKSFl1b1o3NnFybHB1Qwo1MUR2T2xFZUQxY0hJclRJSUpBRHdXbzFLdFkvcGg5ZG1OZDVmRmZURm1heWtMc2xwR2U3bXdhNGpUMlkvZmxrCk05Zll1WnMwVXBqbGI1OWhKclErMlFLQmdCVDhTeEQ2TnFRR0hMQUE1Ni9RYlhrOTZqNnpOTlAzUSswNVhJOUwKeEdrME5DOG5GcTRBUDJSMC9JNFdZNW8yMVFYa3ltOEQrcWVZZFBWZFlvbmprNDVwdUM5d2tlcThsWjlRbDQ2cQpqV0ZOOG1MZ3dHTWIvU2s4ZnVZaUNVYkRrOUd0QjNRSVZpajBSUXRWQmQ5NWNmWUh5WjYraVNpVTlZVDhFdWNkCmgwbGhBb0dCQUtFNG5wd1A0VUllMnJsODBIUmcyanVCOU9nUzBTUDNENWxwU0tWM2h0YzZ5UUpjdGNOQXRacVQKN0FzYzkyOExKNmdnOHRlSXc2NmNBU1IwMWtCNVU4bW1VQ0ROUmVzemJrcGJnNEtta0l6bnBTZzU1UTA1RENyMwpGdmF4QnNFUDFjT1ZiMjdaS3pSUlZXdGM5L01Vb0FwOGlWNGE3N01vYWhoZWpESU5QeDJKCi0tLS0tRU5EIFJTQSBQUklWQVRFIEtFWS0tLS0t
+  ca.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURGVENDQWYyZ0F3SUJBZ0lRZGVuaEtRZlB6U2ZQRThBUWpLTjBFekFOQmdrcWhraUc5dzBCQVFzRkFEQVYKTVJNd0VRWURWUVFERXdwemRHOXlZV2RsTFdOaE1CNFhEVEkyTVRBd056RTBNREkwTUZvWERUSTRNVEF3TmpFMApNREkwTUZvd0ZURVRNQkVHQTFVRUF4TUtjM1J2Y21GblpTMWpZVENDQVNJd0RRWUpLb1pJaHZjTkFRRUJCUUFECmdnRVBBRENDQVFvQ2dnRUJBTHpiT3M4RHlnRzROeG5IRUQ4Wk5VMWVveVJ1WFFYMUxSbEVnZnFTczR1bStIYjYKbm5JQk4wSjFpZEJQM2RaQUZkeVZJMnlJN29FUmpKNWZnMkZ6S25sRlZmSkdyNnA3eERFQzNJVEViZXI0Q000QwpWMHZFZVF5d0lUcllzYWYwWkhlTTc4ZTdkVGlxME9NVXV0RlIyQXFoNEI1NWNROUYzYUxQSVUyUU5xcVFCSDlpCjFqWWp1dU9JTzNyMmdDZEF2NEpkb3lqYW9nVmtDQlV5aEhzaEQ2Zk9hOURRUlk5WFVid1VyVGZzR21rZzlkdFUKZFBDdXFzZzltYmVrQkJ5cEtCeXEzeHg1clZYbHhNQmpGSzhSa3FNZkxKOWVWalBWOU9pMHZOVzlyR3k0NzExNAorbzhvUGwyNkxVQ1hDbnRMODZwRHEvL2M2dlJpaWcwYU9yYVFtL2NDQXdFQUFhTmhNRjh3RGdZRFZSMFBBUUgvCkJBUURBZ0trTUIwR0ExVWRKUVFXTUJRR0NDc0dBUVVGQndNQkJnZ3JCZ0VGQlFjREFqQVBCZ05WSFJNQkFmOEUKQlRBREFRSC9NQjBHQTFVZERnUVdCQlRYY3Z1a3g3bm95NVJqZ3VBZU1SSmx2VDdCeHpBTkJna3Foa2lHOXcwQgpBUXNGQUFPQ0FRRUFsdjFHdHZMamRIYmhNN2cxMWRGeXEybVhvOU8xTkpiM1BGWHpBMFhuaGYzaU1uOEFET3lDCjJBclROamU2dFIzVFh4OElvczQyTmFEYXROM0o4UGpuUmpGYnpzZTB3NnNaRFJRN1ZXRy80bS9CU2lPV0ZGK04KL1pQYklSdldiUmhDVENUcGFJdUoxTm1QLzRnYm9SSG5FYWt0Zi9zQXFKVnJzVWlsNk00NmJIYU9VSnR0Y1lncQp5WGRZeG4rRHE3bHhzbXlhTVBBRGthZEM2THlXZXdrUkpXbkw4ZC9tUXl4MHc2aHo5Uk9GSHRzdVhJUXJlcTZtCitHWTg4V0I5SEZycnhNZDdPNmFGN1RPWndtNGtjUkxhYjY0dFdQMHEwVmFRYXJUWUNGaGtIY3BCMXhqcEs1clAKUWorZlI2eS9zSEI2QVM5YjhNNm5DOHQybU1JRHgyUEUzdz09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
 ---
 # Source: kubescape-operator/templates/configs/cloudapi-configmap.yaml
 kind: ConfigMap
@@ -820,11 +820,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: ks-cloud-config
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: ks-cloud-config
@@ -869,11 +869,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: ks-capabilities
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: ks-capabilities
@@ -900,11 +900,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: kubescape
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: kubescape
@@ -1001,11 +1001,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: node-agent
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: node-agent
@@ -1092,11 +1092,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: operator
@@ -1146,11 +1146,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: ks-cloud-config
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: ks-cloud-config
@@ -1235,11 +1235,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: ks-cloud-config
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: ks-cloud-config
@@ -1323,11 +1323,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: ks-cloud-config
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: ks-cloud-config
@@ -1411,11 +1411,11 @@ metadata:
   name: storage
   namespace: {{ .Values.namespaces.honey }}
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -1453,11 +1453,11 @@ metadata:
     # skip creation and orphan an existing one).
     resources.gardener.cloud/ignore: "true"
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -1860,11 +1860,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: seccompprofile
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: seccompprofile
@@ -2186,11 +2186,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: node-agent
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: node-agent
@@ -2264,11 +2264,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: operator
@@ -2314,11 +2314,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -2349,11 +2349,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: node-agent
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: node-agent
@@ -2376,11 +2376,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: operator
@@ -2403,11 +2403,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -2430,11 +2430,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -2458,11 +2458,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: operator
@@ -2485,11 +2485,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: operator
@@ -2513,11 +2513,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -2542,11 +2542,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: node-agent
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: node-agent
@@ -2572,11 +2572,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: operator
@@ -2602,11 +2602,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -2633,11 +2633,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: node-agent
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: node-agent
@@ -2654,19 +2654,19 @@ spec:
     metadata:
       annotations:
         
-        checksum/node-agent-config: e7275e385324bedf67572931f1920cee0a4b7d25013e7830cea8cb5784cee108
+        checksum/node-agent-config: 27105227bbe3f3694db1125f8f881d9d0a246150c33fad8c3fd357e51456a042
         # soc bounces the DaemonSet after applying its rules, because the agent reads them
         # at boot. GRM does not restart anything, so the equivalent is this: the pod
         # template changes when the rule set does, and the rollout follows.
         checksum/soc-rules: {{ list .Values.kubescape.rules .Values.kubescape.excludeNamespaces .Values.kubescape.mode | toJson | sha256sum }}
-        checksum/cloud-secret: cb4671336c0ddcf27d0f9a559f1c7cad5a0561972f694556be7cb2244b95ad79
-        checksum/cloud-config: 5d54a7110d36d3339ff58771cd1781e5cc2227e192e70640c31d5abb041a35a9
+        checksum/cloud-secret: 4ab2b76d7131cd95a4e0ec507de40a8c3dc80f048a8ecadde674da274559916b
+        checksum/cloud-config: 7fbeb039af519866e4fdec62f9d50baa6404a359e169524914a36ed15a02a158
       labels:
-        helm.sh/chart: kubescape-operator-1.41.0-duckling57
+        helm.sh/chart: kubescape-operator-1.41.0-duckling58
         app.kubernetes.io/name: kubescape-operator
         app.kubernetes.io/instance: kubescape
         app.kubernetes.io/component: node-agent
-        app.kubernetes.io/version: "v0.1.0-rogue77"
+        app.kubernetes.io/version: "v0.1.0-rogue78"
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/part-of: kubescape
         app: node-agent
@@ -2813,7 +2813,7 @@ spec:
           - name: KUBELET_ROOT
             value: "/var/lib/kubelet"
           - name: AGENT_VERSION
-            value: "v0.1.0-rogue77"
+            value: "v0.1.0-rogue78"
           - name: NodeName
             valueFrom:
               fieldRef:
@@ -2901,11 +2901,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: operator
@@ -2929,17 +2929,17 @@ spec:
     metadata:
       annotations:
         
-        checksum/operator-config: 80029a2241251c5ab050ac37ad8c6e8d94174d59181f695d200e6b1e77a532ce
-        checksum/cloud-secret: cb4671336c0ddcf27d0f9a559f1c7cad5a0561972f694556be7cb2244b95ad79
-        checksum/cloud-config: 5d54a7110d36d3339ff58771cd1781e5cc2227e192e70640c31d5abb041a35a9
-        checksum/capabilities-config: 286ba2fef3b8d7e4e8ae932e95fc36e5c08a8f18526e19e9c43510cd9b22d521
-        checksum/matching-rules-config: 4cd1488d45ce604bdbad6f81890f476be3f9b22a2df3f2ca33c70dca522212a9
+        checksum/operator-config: f8d30bc4681035937a3ec74035752a79c5e7115acc4274b060d3e130e94d84d2
+        checksum/cloud-secret: 4ab2b76d7131cd95a4e0ec507de40a8c3dc80f048a8ecadde674da274559916b
+        checksum/cloud-config: 7fbeb039af519866e4fdec62f9d50baa6404a359e169524914a36ed15a02a158
+        checksum/capabilities-config: b7040d5e8b34db3c62e966c5c3a230eccd21e313bd0c4c530b962f1945b89a22
+        checksum/matching-rules-config: 17cacbfa5fe560c478c48cb0e6facb0d35f59c2378ddd3c94a3ebf4c2e0518b3
       labels:
-        helm.sh/chart: kubescape-operator-1.41.0-duckling57
+        helm.sh/chart: kubescape-operator-1.41.0-duckling58
         app.kubernetes.io/name: kubescape-operator
         app.kubernetes.io/instance: kubescape
         app.kubernetes.io/component: operator
-        app.kubernetes.io/version: "v0.1.0-rogue77"
+        app.kubernetes.io/version: "v0.1.0-rogue78"
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/part-of: kubescape
         app: operator
@@ -2997,7 +2997,7 @@ spec:
                 fieldRef:
                   fieldPath: spec.nodeName
             - name: HELM_RELEASE
-              value: kubescape-operator-1.41.0-duckling57
+              value: kubescape-operator-1.41.0-duckling58
             - name: GOMEMLIMIT
               valueFrom:
                 resourceFieldRef:
@@ -3075,11 +3075,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -3099,14 +3099,14 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/storage-config: 0512a71c5fefac5389359d7550a11b240350b2aaabb358d95dae1316d49daa35
-        checksum/cloud-config: 5d54a7110d36d3339ff58771cd1781e5cc2227e192e70640c31d5abb041a35a9
+        checksum/storage-config: 59df7d20d9a9ccda04a3a66fee9c6718aae2847f675d2fe4400b8bec0f5d016a
+        checksum/cloud-config: 7fbeb039af519866e4fdec62f9d50baa6404a359e169524914a36ed15a02a158
       labels:
-        helm.sh/chart: kubescape-operator-1.41.0-duckling57
+        helm.sh/chart: kubescape-operator-1.41.0-duckling58
         app.kubernetes.io/name: kubescape-operator
         app.kubernetes.io/instance: kubescape
         app.kubernetes.io/component: storage
-        app.kubernetes.io/version: "v0.1.0-rogue77"
+        app.kubernetes.io/version: "v0.1.0-rogue78"
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/part-of: kubescape
         app: storage
@@ -3206,11 +3206,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling57
+    helm.sh/chart: kubescape-operator-1.41.0-duckling58
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "v0.1.0-rogue77"
+    app.kubernetes.io/version: "v0.1.0-rogue78"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -3224,7 +3224,7 @@ spec:
   service:
     name: storage
     namespace: {{ .Values.namespaces.honey }}
-  caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURGakNDQWY2Z0F3SUJBZ0lSQVBseHJjK0FMYm4vemZsbXVZckppYWN3RFFZSktvWklodmNOQVFFTEJRQXcKRlRFVE1CRUdBMVVFQXhNS2MzUnZjbUZuWlMxallUQWVGdzB5TmpFd01EY3hNVEUwTWpWYUZ3MHlPREV3TURZeApNVEUwTWpWYU1CVXhFekFSQmdOVkJBTVRDbk4wYjNKaFoyVXRZMkV3Z2dFaU1BMEdDU3FHU0liM0RRRUJBUVVBCkE0SUJEd0F3Z2dFS0FvSUJBUUM5TTFMMTh6WHNVSjJwUHNBY1FOYUQvUDI2bVI0ZUtzT1ZOUlMrME43eGI2V3oKaWdnZmFTK0RoTEJzcXg0NURjajJKL1UvaWhUTm5YUE5sY3ljQ3BQUFFnaTlZZVp4QlUycDBTb0FGYWtiS284eAptelhMYytMNWRJVTJyQ2RURmhJUXRteXFJRjZJNmltb1U2WjZJS1dSZjlGTkFaRk5PMWZZaWViU3B1Z2s3MHYxClA0QnN0ekZ1SlUzL0NoYU9BL2xXVEcwaXpYVkttNTFPRXdzVWNFemN5NGZmWXpoeDc5M0d4RStkOGJ2TVh3MysKOUswOGlIeWtGbk91cGhwaXRQR1R2SUFVRFhVMURSdkJuM05kYm9MeGlpR0I5RlVyM2tZR0IzdzN6OWlOb1B1ZwprT2hRMVhDTE1TREkzclppd2lIbGVnbmQ3L3RuMXlSb1o3MjVWWW9CQWdNQkFBR2pZVEJmTUE0R0ExVWREd0VCCi93UUVBd0lDcERBZEJnTlZIU1VFRmpBVUJnZ3JCZ0VGQlFjREFRWUlLd1lCQlFVSEF3SXdEd1lEVlIwVEFRSC8KQkFVd0F3RUIvekFkQmdOVkhRNEVGZ1FVTmhjWittQVpHY1FwRzZPalp6enlLVUg3MXgwd0RRWUpLb1pJaHZjTgpBUUVMQlFBRGdnRUJBRTg5YmQvOVdFdkFRM3VmcnZnSzRWckFqNG1IUmZkMVc2azZrbVhZd0xNOUI5OG1TeGtSCmVtS1Vnb3RFMS9nMkNITWllTTZHYjVFL3ZVSTE4cXNZeGl0NUJQNnFOVlllbmh3cUJDTkZkWlJtM1ZSWUFiMzIKZTF5SEFpRmJKUlhqY1VuQnNIZEZzQ1Ixc0RIeGduYzhUM2hDMDFLMVd3N3d0UE52QlZtVjRFWXU4TENrVVl6RQo2MXdTOURBRjAyL094MTNMRUZJV2hmVVNJWXk2ZXNqTzNvVlM1ck51ZkRTYWh0TERPUjZsVy8zNkFFZklhekZVCjdoaHRYdm50VllXaGJHa0xJS0dWK3Z0eG84NHZ0aTRVYWRSVmZLcGJkbzl2WVozdHc3QzBweER0QjFMK0lHUk4KRmNodGZ4aC94eElYcGJXUU1HUnJmeHFNT1F5NmZQZnhubGc9Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+  caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURGVENDQWYyZ0F3SUJBZ0lRZGVuaEtRZlB6U2ZQRThBUWpLTjBFekFOQmdrcWhraUc5dzBCQVFzRkFEQVYKTVJNd0VRWURWUVFERXdwemRHOXlZV2RsTFdOaE1CNFhEVEkyTVRBd056RTBNREkwTUZvWERUSTRNVEF3TmpFMApNREkwTUZvd0ZURVRNQkVHQTFVRUF4TUtjM1J2Y21GblpTMWpZVENDQVNJd0RRWUpLb1pJaHZjTkFRRUJCUUFECmdnRVBBRENDQVFvQ2dnRUJBTHpiT3M4RHlnRzROeG5IRUQ4Wk5VMWVveVJ1WFFYMUxSbEVnZnFTczR1bStIYjYKbm5JQk4wSjFpZEJQM2RaQUZkeVZJMnlJN29FUmpKNWZnMkZ6S25sRlZmSkdyNnA3eERFQzNJVEViZXI0Q000QwpWMHZFZVF5d0lUcllzYWYwWkhlTTc4ZTdkVGlxME9NVXV0RlIyQXFoNEI1NWNROUYzYUxQSVUyUU5xcVFCSDlpCjFqWWp1dU9JTzNyMmdDZEF2NEpkb3lqYW9nVmtDQlV5aEhzaEQ2Zk9hOURRUlk5WFVid1VyVGZzR21rZzlkdFUKZFBDdXFzZzltYmVrQkJ5cEtCeXEzeHg1clZYbHhNQmpGSzhSa3FNZkxKOWVWalBWOU9pMHZOVzlyR3k0NzExNAorbzhvUGwyNkxVQ1hDbnRMODZwRHEvL2M2dlJpaWcwYU9yYVFtL2NDQXdFQUFhTmhNRjh3RGdZRFZSMFBBUUgvCkJBUURBZ0trTUIwR0ExVWRKUVFXTUJRR0NDc0dBUVVGQndNQkJnZ3JCZ0VGQlFjREFqQVBCZ05WSFJNQkFmOEUKQlRBREFRSC9NQjBHQTFVZERnUVdCQlRYY3Z1a3g3bm95NVJqZ3VBZU1SSmx2VDdCeHpBTkJna3Foa2lHOXcwQgpBUXNGQUFPQ0FRRUFsdjFHdHZMamRIYmhNN2cxMWRGeXEybVhvOU8xTkpiM1BGWHpBMFhuaGYzaU1uOEFET3lDCjJBclROamU2dFIzVFh4OElvczQyTmFEYXROM0o4UGpuUmpGYnpzZTB3NnNaRFJRN1ZXRy80bS9CU2lPV0ZGK04KL1pQYklSdldiUmhDVENUcGFJdUoxTm1QLzRnYm9SSG5FYWt0Zi9zQXFKVnJzVWlsNk00NmJIYU9VSnR0Y1lncQp5WGRZeG4rRHE3bHhzbXlhTVBBRGthZEM2THlXZXdrUkpXbkw4ZC9tUXl4MHc2aHo5Uk9GSHRzdVhJUXJlcTZtCitHWTg4V0I5SEZycnhNZDdPNmFGN1RPWndtNGtjUkxhYjY0dFdQMHEwVmFRYXJUWUNGaGtIY3BCMXhqcEs1clAKUWorZlI2eS9zSEI2QVM5YjhNNm5DOHQybU1JRHgyUEUzdz09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
 ---
 # Source: kubescape-operator/templates/node-agent/servicemonitor.yaml
 # If prometheus enabled, add prometheus exporter
