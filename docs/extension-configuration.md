@@ -44,8 +44,8 @@ spec:
         detection:
           mode: default              # default | alert | enforce
           rules: []                  # bound rule names; empty = the SOC default set
-          excludeNamespaces: []      # sensor ignore list
-          bindingExcludeNamespaces: []
+          excludeNamespaces: []      # namespaces the sensor ignores, and therefore the
+                                     # namespaces the alert binding leaves out
         profiles:                    # signed-off profiles and rules, see profile-signoff.md
           repo: k8sstormcenter/bob
           ref: refs/pull/412/head    # any ref; a PR head runs the proposal under review

@@ -175,50 +175,28 @@ kubescape:
   # (node-agent-bundle-policy ConfigMap): default leaves the field out, which the agent
   # treats as alert; alert | enforce set it. Enforce refuses unsigned/unverifiable artifacts.
   mode: default
-  # Namespaces the sensor ignores entirely. Applied twice on purpose: as the operator's
-  # excludeNamespaces and as the NotIn selector of the alert binding; one list, one owner.
-  # The stack's own namespaces are in it so it does not alert on itself.
+  # Namespaces the sensor ignores. ONE list, because the sensor's ignore list and the alert
+  # binding's must agree: a namespace the sensor skips produces no profiles at all, so the
+  # binding asking for rules there can never fire. They drifted apart once — the binding
+  # watched the observability namespaces while this list still skipped them, and the result
+  # was a cluster with no workload profiles, no alerts, and every component reporting
+  # healthy. Only infrastructure that would watch itself belongs here.
   excludeNamespaces:
     - kubescape
     - kube-system
     - kube-public
     - kube-node-lease
-    - local-path-storage
-    - gmp-system
-    - gmp-public
-    - storm
-    - lightening
-    - cert-manager
-    - kube-flannel
-    - ingress-nginx
-    - honey
-    - clickhouse
-    - chain-loadgen
-    - pl
-    - olm
-    - px-operator
-    - tailscale-system
-    - traefik
-    - cilium-secrets
-    - external-dns
-  # Namespaces the alert binding leaves out. Narrower than excludeNamespaces on purpose:
-  # pixie's own namespaces stay bound so their profiles are enforced.
-  bindingExcludeNamespaces:
-    - kube-system
-    - kube-public
-    - kube-node-lease
     - kubeconfig
-    - kubescape
     - kube-flannel
     - ingress-nginx
-    - honey
-    - clickhouse
     - local-path-storage
     - gmp-system
     - gmp-public
     - storm
     - lightening
     - cert-manager
+    - honey
+    - clickhouse
   # Rules bound to every workload; narrow the list per shoot.
   rules:
     - "Unexpected process launched"

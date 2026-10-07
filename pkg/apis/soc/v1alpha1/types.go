@@ -53,10 +53,9 @@ type Detection struct {
 	Mode *string `json:"mode,omitempty"`
 	// Rules replaces the bound rule set (names from soc's default-rules).
 	Rules []string `json:"rules,omitempty"`
-	// ExcludeNamespaces replaces the sensor's ignore list.
+	// ExcludeNamespaces replaces the namespaces the sensor ignores, which is also what the
+	// alert binding leaves out: rules bound where the sensor does not look cannot fire.
 	ExcludeNamespaces []string `json:"excludeNamespaces,omitempty"`
-	// BindingExcludeNamespaces replaces the alert binding's NotIn list.
-	BindingExcludeNamespaces []string `json:"bindingExcludeNamespaces,omitempty"`
 }
 
 type Components struct {

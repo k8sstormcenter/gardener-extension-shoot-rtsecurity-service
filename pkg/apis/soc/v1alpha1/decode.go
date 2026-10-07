@@ -82,9 +82,6 @@ func (c *SOCConfig) Values() map[string]any {
 		if d.ExcludeNamespaces != nil {
 			set("kubescape", "excludeNamespaces", d.ExcludeNamespaces)
 		}
-		if d.BindingExcludeNamespaces != nil {
-			set("kubescape", "bindingExcludeNamespaces", d.BindingExcludeNamespaces)
-		}
 	}
 	if co := c.Components; co != nil {
 		for k, v := range map[string]*bool{"kubescape": co.Kubescape, "vector": co.Vector, "adaptiveExport": co.AdaptiveExport, "dx": co.Dx} {

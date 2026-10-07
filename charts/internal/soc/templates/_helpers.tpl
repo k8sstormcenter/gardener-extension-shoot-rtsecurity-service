@@ -21,13 +21,19 @@ from ungoverned runs is exactly what the signoff loop needs as input.
 {{- .Values.kubescape.excludeNamespaces | uniq | join "," -}}
 {{- end }}
 {{/*
-Namespaces the alert binding leaves out. The target's is added while it has no signed-off
-profile: the rules would evaluate every one of its pods against nothing, and an ungoverned
-pod is deny-all, so a workload that bursts to hundreds of pods would alert on every exec.
-Watched but not judged, until there is something to judge it by.
+Namespaces the alert binding leaves out: the same list the sensor ignores, plus the
+target's while it has no signed-off profile.
+
+The same list on purpose. A namespace the sensor skips produces no profiles at all, so
+rules bound there can never fire whatever the binding says — the sensor's list always
+wins. Keeping two lists is exactly how a cluster ends up with no workload profiles, no
+alerts, and every component reporting healthy.
+
+The target is the one legitimate difference: watched so its runs are learned, not judged
+until there is a signed-off profile to judge it by.
 */}}
 {{- define "soc.kubescape.bindingExcludeNamespaces" -}}
-{{- $ns := .Values.kubescape.bindingExcludeNamespaces -}}
+{{- $ns := .Values.kubescape.excludeNamespaces -}}
 {{- if and .Values.target.enabled (not .Values.profiles.enabled) -}}
 {{- $ns = append $ns .Values.target.namespace -}}
 {{- end -}}
