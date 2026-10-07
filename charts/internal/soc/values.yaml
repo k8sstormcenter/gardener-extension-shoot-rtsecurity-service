@@ -18,7 +18,9 @@ images:
   # Digest-pinned: the tag moves during a pre-release line.
   nodeAgent: "docker.io/entlein/duckling:v0.1.0-rogue77@sha256:94e5a8ad0188a2234f59686a3a15595b589399bed3c0f393c2131e865e297254"
   vector: "timberio/vector:0.58.0-distroless-libc"
-  kubectl: "docker.io/bitnami/kubectl:1.34.4"
+  # registry.k8s.io, not bitnami: bitnami withdrew its free docker.io images, so that
+  # reference resolves to NotFound and anything depending on it never starts.
+  kubectl: "registry.k8s.io/kubectl:v1.34.4"
   adaptiveExport: "docker.io/tanzeee/adaptive-export:0.16.50-6dc818c"
   dxDaemon: "docker.io/tanzeee/dx-daemon:0.6.0-shadow-rc99"
 
