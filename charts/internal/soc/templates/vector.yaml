@@ -33,74 +33,8 @@ metadata:
     app.kubernetes.io/version: 0.58.0-distroless-libc
     app.kubernetes.io/managed-by: Helm
 data:
-  vector.yaml: "api:\n  address: 127.0.0.1:8686\n  enabled: true\ndata_dir: /vector-data-dir\n\
-    sinks:\n  dx_daemon:\n    batch:\n      max_events: 1\n    buffer:\n      max_size:\
-    \ 1073741824\n      type: disk\n      when_full: drop_newest\n    encoding:\n\
-    \      codec: json\n    inputs:\n    - kubescape_enrich\n    method: post\n  \
-    \  tls:\n      verify_certificate: false\n    type: http\n    uri: https://dx-daemon.{{ .Values.namespaces.honey }}.svc.cluster.local:9099/findings\n\
-    \  kubescape_clickhouse:\n    auth:\n      password: {{ .Values.clickhouse.ingest.password }}\n      strategy:\
-    \ basic\n      user: {{ .Values.clickhouse.ingest.user }}\n    batch:\n      max_bytes: 5000000\n   \
-    \   timeout_secs: 2\n    database: forensic_db\n    date_time_best_effort: true\n\
-    \    endpoint: {{ include "soc.clickhouse.httpEndpoint" . }}\n\
-    \    inputs:\n    - kubescape_enrich\n    skip_unknown_fields: true\n    table:\
-    \ kubescape_logs\n    type: clickhouse\n  kubescape_debug:\n    encoding:\n  \
-    \    codec: json\n    inputs:\n    - kubescape_enrich\n    path: /tmp/kubescape.json\n\
-    \    type: file\nsources:\n  kubescape_nodeagent_logs:\n    extra_label_selector:\
-    \ app=node-agent\n    type: kubernetes_logs\ntransforms:\n  kubescape_enrich:\n\
-    \    inputs:\n    - kubescape_filter\n    source: |\n      .CloudMetadata = \"\
-    empty\"\n      .hostname = get_env_var!(\"NODE_NAME\")\n      ts, err = parse_timestamp(.BaseRuntimeMetadata.timestamp,\
-    \ \"%+\")\n      # Transport the ORIGINAL kubescape timestamp at NANOSECOND resolution.\n\
-    \      # Truncating to seconds (the to_unix_timestamp default) collapses the AE\n\
-    \      # trigger watermark to 1s granularity and loses sub-second ordering. The\n\
-    \      # forensic_db.kubescape_logs schema partitions/TTLs event_time as nanos\n\
-    \      # (fromUnixTimestamp64Nano); AE normalizes seconds-or-nanos by magnitude.\n\
-    \      # Sanity floor 2000-01-01: a Go zero time.Time serializes as a VALID\n\
-    \      # RFC3339 (\"0001-01-01T00:00:00Z\"), so a missing/sentinel timestamp parses\n\
-    \      # cleanly and would silently become the correlation anchor. Only a plausible\n\
-    \      # epoch may anchor; anything else falls back to ingestion time.\n     \
-    \ .event_time = to_unix_timestamp(now(), unit: \"nanoseconds\")\n      if err\
-    \ == null {\n        ets = to_unix_timestamp(ts, unit: \"nanoseconds\")\n    \
-    \    if ets > 946684800000000000 {\n          .event_time = ets\n        }\n \
-    \     }\n      # MITRE enrichment: node-agent's BaseRuntimeAlert struct (armoapi-go)\n\
-    \      # does not include mitreTactic / mitreTechnique fields, so they are\n \
-    \     # absent from the alert payload even though they are defined on the\n  \
-    \    # Rule. Inject them here from a static map (regenerate with\n      # ./build-values.sh\
-    \ <path-to-default-rules.yaml> when rules change).\n      mitre_map = {\n    \
-    \    \"R0001\": {\"tactic\": \"TA0002\", \"technique\": \"T1059\"},\n        \"\
-    R0002\": {\"tactic\": \"TA0009\", \"technique\": \"T1005\"},\n        \"R0003\"\
-    : {\"tactic\": \"TA0002\", \"technique\": \"T1059\"},\n        \"R0004\": {\"\
-    tactic\": \"TA0002\", \"technique\": \"T1059\"},\n        \"R0005\": {\"tactic\"\
-    : \"TA0011\", \"technique\": \"T1071.004\"},\n        \"R0006\": {\"tactic\":\
-    \ \"TA0006\", \"technique\": \"T1528\"},\n        \"R0007\": {\"tactic\": \"TA0007\"\
-    , \"technique\": \"T1613\"},\n        \"R0008\": {\"tactic\": \"TA0006\", \"technique\"\
-    : \"T1552.001\"},\n        \"R0009\": {\"tactic\": \"TA0002\", \"technique\":\
-    \ \"T1106\"},\n        \"R0010\": {\"tactic\": \"TA0006\", \"technique\": \"T1005\"\
-    },\n        \"R0011\": {\"tactic\": \"TA0010\", \"technique\": \"T1041\"},\n \
-    \       \"R0012\": {\"tactic\": \"TA0010\", \"technique\": \"T1041\"},\n     \
-    \   \"R0040\": {\"tactic\": \"TA0002\", \"technique\": \"T1059\"},\n        \"\
-    R1000\": {\"tactic\": \"TA0002\", \"technique\": \"T1059\"},\n        \"R1001\"\
-    : {\"tactic\": \"TA0005\", \"technique\": \"T1036\"},\n        \"R1002\": {\"\
-    tactic\": \"TA0005\", \"technique\": \"T1014\"},\n        \"R1003\": {\"tactic\"\
-    : \"TA0008\", \"technique\": \"T1021.001\"},\n        \"R1004\": {\"tactic\":\
-    \ \"TA0002\", \"technique\": \"T1059\"},\n        \"R1005\": {\"tactic\": \"TA0005\"\
-    , \"technique\": \"T1620\"},\n        \"R1006\": {\"tactic\": \"TA0004\", \"technique\"\
-    : \"T1611\"},\n        \"R1007\": {\"tactic\": \"TA0040\", \"technique\": \"T1496.001\"\
-    },\n        \"R1008\": {\"tactic\": \"TA0011\", \"technique\": \"T1071.004\"},\n\
-    \        \"R1009\": {\"tactic\": \"TA0040\", \"technique\": \"T1496.001\"},\n\
-    \        \"R1010\": {\"tactic\": \"TA0006\", \"technique\": \"T1005\"},\n    \
-    \    \"R1011\": {\"tactic\": \"TA0005\", \"technique\": \"T1574.006\"},\n    \
-    \    \"R1012\": {\"tactic\": \"TA0006\", \"technique\": \"T1005\"},\n        \"\
-    R1015\": {\"tactic\": \"TA0005\", \"technique\": \"T1055.008\"},\n        \"R1016\"\
-    : {\"tactic\": \"TA0005\", \"technique\": \"T1562\"},\n        \"R1030\": {\"\
-    tactic\": \"TA0005\", \"technique\": \"T1014\"},\n        \"R1031\": {\"tactic\"\
-    : \"TA0002\", \"technique\": \"T1609\"},\n        \"R2000\": {\"tactic\": \"TA0002\"\
-    , \"technique\": \"T1609\"}\n      }\n      rule_id = .RuleID || \"\"\n      m\
-    \ = get(mitre_map, [rule_id]) ?? null\n      if m != null {\n        .BaseRuntimeMetadata.mitreTactic\
-    \ = m.tactic\n        .BaseRuntimeMetadata.mitreTechnique = m.technique\n    \
-    \  }\n      del(.time)\n    type: remap\n  kubescape_filter:\n    condition: .BaseRuntimeMetadata\
-    \ != null\n    inputs:\n    - kubescape_parse\n    type: filter\n  kubescape_parse:\n\
-    \    inputs:\n    - kubescape_nodeagent_logs\n    source: |\n      . = parse_json!(.message)\n\
-    \    type: remap\n"
+  vector.yaml: |
+{{ include "soc.vector.config" . | indent 4 }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -217,7 +151,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: c5cd81d2f8c17078c341cfc508689e60eb086e12c4aa4e5ca5a2d309f9fcf256
+        checksum/config: {{ include "soc.vector.config" . | sha256sum }}
       labels:
         app.kubernetes.io/name: vector
         app.kubernetes.io/instance: vector

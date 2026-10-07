@@ -2655,6 +2655,7 @@ spec:
       annotations:
         
         checksum/node-agent-config: 27105227bbe3f3694db1125f8f881d9d0a246150c33fad8c3fd357e51456a042
+        checksum/soc-config: {{ list .Values.kubescape (include "soc.kubescape.excludeNamespaces" .) .Values.namespaces.honey .Values.pixie.clusterName | toJson | sha256sum }}
         # soc bounces the DaemonSet after applying its rules, because the agent reads them
         # at boot. GRM does not restart anything, so the equivalent is this: the pod
         # template changes when the rule set does, and the rollout follows.
@@ -2930,6 +2931,7 @@ spec:
       annotations:
         
         checksum/operator-config: f8d30bc4681035937a3ec74035752a79c5e7115acc4274b060d3e130e94d84d2
+        checksum/soc-config: {{ list .Values.kubescape (include "soc.kubescape.excludeNamespaces" .) .Values.namespaces.honey .Values.pixie.clusterName .Values.server | toJson | sha256sum }}
         checksum/cloud-secret: 4ab2b76d7131cd95a4e0ec507de40a8c3dc80f048a8ecadde674da274559916b
         checksum/cloud-config: 7fbeb039af519866e4fdec62f9d50baa6404a359e169524914a36ed15a02a158
         checksum/capabilities-config: b7040d5e8b34db3c62e966c5c3a230eccd21e313bd0c4c530b962f1945b89a22
@@ -3100,6 +3102,7 @@ spec:
     metadata:
       annotations:
         checksum/storage-config: 59df7d20d9a9ccda04a3a66fee9c6718aae2847f675d2fe4400b8bec0f5d016a
+        checksum/soc-config: {{ list .Values.namespaces.honey .Values.pixie.clusterName | toJson | sha256sum }}
         checksum/cloud-config: 7fbeb039af519866e4fdec62f9d50baa6404a359e169524914a36ed15a02a158
       labels:
         helm.sh/chart: kubescape-operator-1.41.0-duckling58

@@ -635,6 +635,7 @@ spec:
         prometheus.io/port: '8888'
         prometheus.io/scrape: 'true'
         checksum/files: 4c45830ede9ed1d441c459662f61fe62292dfabbfb3da165224726b78ec3b20c
+        checksum/soc-config: {{ list .Values.namespaces.clickhouse | toJson | sha256sum }}
         checksum/confd-files: b91f7a11b7723e63a952065268301290f99bfe16f6386af22ea5002e8ba05bfe
         checksum/configd-files: 56a1d2052db367a3e509a86a09ef90363feeffb17baac91ff2c9ed475533e223
         checksum/templatesd-files: aa11634e170acb4c937ee68279c112880fd30af5a1c7f7c41491b400eb223c91
