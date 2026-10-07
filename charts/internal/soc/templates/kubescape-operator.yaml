@@ -2655,6 +2655,10 @@ spec:
       annotations:
         
         checksum/node-agent-config: e7275e385324bedf67572931f1920cee0a4b7d25013e7830cea8cb5784cee108
+        # soc bounces the DaemonSet after applying its rules, because the agent reads them
+        # at boot. GRM does not restart anything, so the equivalent is this: the pod
+        # template changes when the rule set does, and the rollout follows.
+        checksum/soc-rules: {{ list .Values.kubescape.rules .Values.kubescape.excludeNamespaces .Values.kubescape.mode | toJson | sha256sum }}
         checksum/cloud-secret: cb4671336c0ddcf27d0f9a559f1c7cad5a0561972f694556be7cb2244b95ad79
         checksum/cloud-config: 5d54a7110d36d3339ff58771cd1781e5cc2227e192e70640c31d5abb041a35a9
       labels:
