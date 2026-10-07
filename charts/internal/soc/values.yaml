@@ -15,7 +15,8 @@ images:
   clickhouseServer: "clickhouse/clickhouse-server:24.8"
   kubescapeOperator: "quay.io/kubescape/operator:v0.2.162"
   kubescapeStorage: "ghcr.io/k8sstormcenter/storage:rc-rogue23"
-  nodeAgent: "docker.io/entlein/duckling:v0.1.0-rogue66"
+  # Digest-pinned: the tag moves during a pre-release line.
+  nodeAgent: "docker.io/entlein/duckling:v0.1.0-rogue77@sha256:94e5a8ad0188a2234f59686a3a15595b589399bed3c0f393c2131e865e297254"
   vector: "timberio/vector:0.58.0-distroless-libc"
   adaptiveExport: "docker.io/tanzeee/adaptive-export:0.16.50-6dc818c"
   dxDaemon: "docker.io/tanzeee/dx-daemon:0.6.0-shadow-rc99"
