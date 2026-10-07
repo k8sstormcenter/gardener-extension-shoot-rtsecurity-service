@@ -164,9 +164,14 @@ transforms:
     inputs:
     - kubescape_parse
     type: filter
-  kubescape_parse:
+  kubescape_json_only:
+    condition: starts_with(string(.message) ?? "", "{")
     inputs:
     - kubescape_nodeagent_logs
+    type: filter
+  kubescape_parse:
+    inputs:
+    - kubescape_json_only
     source: |
       . = parse_json!(.message)
     type: remap
