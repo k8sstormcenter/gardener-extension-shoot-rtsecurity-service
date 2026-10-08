@@ -186,7 +186,7 @@ transforms:
     "httpDetectionEnabled": true,
     "hostProfileServiceEnabled": true,
     "hostProfileUpdateDataPeriod": {{ .Values.kubescape.learn.hostProfileUpdatePeriod | quote }},
-    "directAlerts": {"enabled": false, "port": 50405, "jwtPublicKeyPath": "/etc/node-agent-direct/public.pem", "windowBytes": 67108864},
+    "directAlerts": {"enabled": true, "port": 50405, "jwtPublicKeyPath": "/etc/node-agent-direct/public.pem", "windowBytes": 67108864},
     "networkServiceEnabled": true,
     "malwareDetectionEnabled": false,
     "hostMalwareSensorEnabled": false,
