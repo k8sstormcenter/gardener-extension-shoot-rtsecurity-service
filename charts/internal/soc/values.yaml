@@ -144,6 +144,12 @@ kubescape:
   enabled: true
   # Storage class of the kubescape-storage PVC; empty = the cluster default.
   storageClassName: local-path
+  # Memory ceiling for the kubescape storage apiserver. Upstream ships 1500Mi, which this
+  # cluster outgrew: storage reloads every ContainerProfile on start, and with ~3800 of them
+  # (node timeseries snapshots that consolidation was not keeping up with) it measured 1422Mi
+  # and was OOMKilled into CrashLoopBackOff, taking the aggregated APIService with it. A limit
+  # is a ceiling, not a reservation, so raising it cannot cost more than the crash loop did.
+  storageMemoryLimit: 4Gi
   # Suggester: the node-agent derives a candidate profile itself and writes it to the
   # cluster as a ContainerProfile labelled kubescape.io/profile-role=suggestion. That is
   # the input to the signoff loop, so it is on, and scope must be full: at scope network
