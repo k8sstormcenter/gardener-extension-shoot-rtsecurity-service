@@ -96,9 +96,4 @@ type Credentials struct {
 	PullEntlein    *string `json:"pullEntlein,omitempty"`
 	PullTanzeee    *string `json:"pullTanzeee,omitempty"`
 	ArcGithubToken *string `json:"arcGithubToken,omitempty"`
-	// DirectJWT names the entry holding the ES256 pair the direct alert stream uses:
-	// data key.pem (dx signs) and public.pem (the sensor verifies). One Secret rather than
-	// two so a mismatched pair cannot be seeded: a public half that does not match the
-	// private one makes every stream fail verification, and dx reports that as OFF.
-	DirectJWT *string `json:"directJwt,omitempty"`
 }

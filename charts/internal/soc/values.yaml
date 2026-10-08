@@ -73,11 +73,6 @@ pixie:
 credentials:
   pixieDeployKey: ""     # registers the vizier with the cloud
   pixieApiKey: ""        # adaptive-export and dx query the cloud API with it
-  # The ES256 pair for the direct alert stream, both halves from one referenced Secret so a
-  # mismatched pair cannot be seeded. Empty = the stream stays off and vector remains the
-  # only path from the sensor to ClickHouse, which is a valid configuration.
-  directAlertsJwtKey: ""  # key.pem    — dx signs each stream with it
-  directAlertsJwtPub: ""  # public.pem — the sensor verifies against it
   ducklingPullSecret: "" # raw .dockerconfigjson for the node-agent images
   tanzeeePullSecret: ""  # raw .dockerconfigjson for adaptive-export and dx-daemon
 
