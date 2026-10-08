@@ -60,7 +60,6 @@ type Detection struct {
 
 type Components struct {
 	Kubescape      *bool `json:"kubescape,omitempty"`
-	Vector         *bool `json:"vector,omitempty"`
 	AdaptiveExport *bool `json:"adaptiveExport,omitempty"`
 	Dx             *bool `json:"dx,omitempty"`
 }

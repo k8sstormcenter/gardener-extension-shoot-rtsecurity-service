@@ -42,7 +42,7 @@ data:
     
     CREATE DATABASE IF NOT EXISTS forensic_db;
     
-    -- Kubescape alerts (Vector kubescape_to_alerts sink).
+    -- Kubescape alerts. dx writes these directly; vector used to.
     CREATE TABLE IF NOT EXISTS forensic_db.alerts (
         timestamp       DateTime64(9),
         ingest_time     DateTime64(9) DEFAULT now64(9),
@@ -70,7 +70,7 @@ data:
       SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1;
     
     -- Kubescape raw logs — columns match infer_flat.json exactly.
-    -- Vector kubescape_enrich sink writes here; the adaptive_export operator
+    -- dx writes here (vector's kubescape_enrich sink used to); the adaptive_export operator
     -- polls this table (WHERE hostname='<this-node>' AND event_time>watermark)
     -- and derives the workload anomaly_hash = sha256[:16] of (pid:comm:pod:ns).
     -- The anomaly_hash column below is preserved DEFAULT '' for compat with

@@ -21,7 +21,6 @@ images:
   certgenKubectl: "quay.io/kubescape/kubectl:1.36.1@sha256:e2b97dde9666986c61c56d49aae85a714b89b69392baa531438e74ec34096fb4"
   # Digest-pinned: the tag moves during a pre-release line.
   nodeAgent: "docker.io/entlein/duckling:v0.1.0-rogue84@sha256:c4f553432a13c7806069c34c093cd7c6cd79c6af45be072189da2758a581bef2"
-  vector: "timberio/vector:0.58.0-distroless-libc"
   # Needs kubectl AND a shell. Two wrong answers already: bitnami/kubectl was withdrawn
   # from docker.io and resolves to NotFound, and registry.k8s.io/kubectl is distroless, so
   # its pod dies on exec /bin/sh. This image declares /bin/sh as its own default command.
@@ -135,12 +134,6 @@ target:
 profiles:
   enabled: false
   documents: []
-
-# vector is the only path from the node-agent's stdout to ClickHouse: with it off, alerts
-# are produced and never stored, so the evidence tables stay empty. On a shoot that already
-# runs a vector outside this chart, turn it off rather than let GRM take the DaemonSet over.
-vector:
-  enabled: true
 
 # Kubescape rules are data, not code: the rule set and its binding are rendered from the
 # values below rather than taken from the upstream chart's defaults.

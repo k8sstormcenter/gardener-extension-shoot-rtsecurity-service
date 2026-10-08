@@ -84,7 +84,7 @@ func (c *SOCConfig) Values() map[string]any {
 		}
 	}
 	if co := c.Components; co != nil {
-		for k, v := range map[string]*bool{"kubescape": co.Kubescape, "vector": co.Vector, "adaptiveExport": co.AdaptiveExport, "dx": co.Dx} {
+		for k, v := range map[string]*bool{"kubescape": co.Kubescape, "adaptiveExport": co.AdaptiveExport, "dx": co.Dx} {
 			if v != nil {
 				set(k, "enabled", *v)
 			}

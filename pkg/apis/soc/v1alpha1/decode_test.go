@@ -16,7 +16,7 @@ detection:
   mode: enforce
   rules: ["Exec to pod"]
 components:
-  vector: true
+  kubescape: true
 credentials:
   pixieApiKey: my-key-ref
 images:
@@ -38,8 +38,8 @@ images:
 	if ks["mode"] != "enforce" || len(ks["rules"].([]string)) != 1 {
 		t.Fatalf("kubescape values: %v", ks)
 	}
-	if v["vector"].(map[string]any)["enabled"] != true {
-		t.Fatalf("components: %v", v["vector"])
+	if v["kubescape"].(map[string]any)["enabled"] != true {
+		t.Fatalf("components: %v", v["kubescape"])
 	}
 	if v["images"].(map[string]any)["nodeAgent"] != "example/agent:1" {
 		t.Fatalf("images: %v", v["images"])
