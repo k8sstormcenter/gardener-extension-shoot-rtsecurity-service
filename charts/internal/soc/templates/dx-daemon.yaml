@@ -250,10 +250,14 @@ spec:
       - name: proof-suite
         configMap:
           name: dx-proof-suite
+      # NOT optional, deliberately. dx reads this key once at startup and nothing restarts it
+      # when the Secret appears later, so an optional mount let dx come up with an empty volume
+      # and log "direct alerts OFF" forever while the keygen Job created the key behind it. A
+      # required mount makes kubelet hold the pod in ContainerCreating until the key exists,
+      # which is exactly what the sensor does with the public half, and it worked there.
       - name: alert-key
         secret:
           secretName: node-agent-direct-jwt
-          optional: true
           items:
           - key: key.pem
             path: key.pem
