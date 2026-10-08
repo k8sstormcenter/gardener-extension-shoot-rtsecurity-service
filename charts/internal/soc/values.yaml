@@ -16,7 +16,7 @@ images:
   kubescapeOperator: "quay.io/kubescape/operator:v0.2.162"
   kubescapeStorage: "ghcr.io/k8sstormcenter/storage:rc-rogue23"
   # Digest-pinned: the tag moves during a pre-release line.
-  nodeAgent: "docker.io/entlein/duckling:v0.1.0-rogue78@sha256:791d9984e871c9694e82f01cb520c3f4a1b2f827877c1e915e617585c4eff28b"
+  nodeAgent: "docker.io/entlein/duckling:duckling61@sha256:dd1b610c888261b7cacca764bd26ac3ea7593633969976c5ac99d2cf1b2bb0fb"
   vector: "timberio/vector:0.58.0-distroless-libc"
   # Needs kubectl AND a shell. Two wrong answers already: bitnami/kubectl was withdrawn
   # from docker.io and resolves to NotFound, and registry.k8s.io/kubectl is distroless, so
@@ -49,7 +49,7 @@ namespaces:
 pixie:
   enabled: true
   cloudAddr: ""
-  vizierVersion: "0.14.19-aeprod95"  # the newest release/vizier tag in the fork
+  vizierVersion: "0.14.19-noae1"  # the newest release/vizier tag in the fork; ships no adaptive-export, so GRM is its sole owner
   dataAccess: Full
   pemMemoryLimit: 4Gi
   pemMemoryRequest: 2Gi

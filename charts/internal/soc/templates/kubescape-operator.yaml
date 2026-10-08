@@ -661,11 +661,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: kubescape-critical
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: kubescape-critical
@@ -684,11 +684,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: node-agent
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: node-agent
@@ -702,11 +702,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: operator
@@ -725,11 +725,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -745,11 +745,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: cloud-secret
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: cloud-secret
@@ -771,11 +771,11 @@ metadata:
     
     "helm.sh/resource-policy": keep
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -795,11 +795,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -820,11 +820,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: ks-cloud-config
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: ks-cloud-config
@@ -869,11 +869,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: ks-capabilities
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: ks-capabilities
@@ -900,11 +900,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: kubescape
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: kubescape
@@ -1001,11 +1001,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: node-agent
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: node-agent
@@ -1014,74 +1014,7 @@ metadata:
     kubescape.io/tier: "core"
 data:
   config.json: |
-    {
-        "applicationProfileServiceEnabled": true,
-        "backendStorageEnabled": false,
-        "prometheusExporterEnabled": true,
-        "runtimeDetectionEnabled": true,
-        "httpDetectionEnabled": true,
-        "hostProfileServiceEnabled": true,
-        "networkServiceEnabled": true,
-        "malwareDetectionEnabled": false,
-        "hostMalwareSensorEnabled": false,
-        "hostNetworkSensorEnabled": false,
-        "hostSensorEnabled": true,
-        "hostSensorInterval": "5m",
-        "nodeProfileServiceEnabled": false,
-        "networkStreamingEnabled": false,
-        "maxImageSize": 5.36870912e+09,
-        "maxSBOMSize": 2.097152e+07,
-        "sbomGenerationEnabled": false,
-        "enableEmbeddedSBOMs": false,
-        "seccompServiceEnabled": true,
-        "seccompProfileBackend": "crd",
-        "initialDelay": {{ .Values.kubescape.learn.initialDelay | quote }},
-        "updateDataPeriod": {{ .Values.kubescape.learn.updatePeriod | quote }},
-        "nodeProfileInterval": "10m",
-        "networkStreamingInterval": "2m",
-        "maxSniffingTimePerContainer": {{ .Values.kubescape.learn.maxSniffingTime | quote }},
-        "bundleTrustPolicyPath": "/etc/bundle/trust-policy.json",
-        "excludeNamespaces": {{ include "soc.kubescape.excludeNamespaces" . | quote }},
-        "excludeLabels":null,
-        "exporters": {
-          "alertManagerExporterUrls":[],
-          "stdoutExporter":true,
-          "syslogExporterURL": ""
-        },
-        "excludeJsonPaths":null,
-        "ruleCooldown": {
-            "ruleCooldownDuration": "0h",
-            "ruleCooldownAfterCount": 1e+09,
-            "ruleCooldownOnProfileFailure": false,
-            "ruleCooldownMaxSize": 20000
-        },
-        "alertDeduplication": {
-            "bypass": false
-        },
-        "scanFailureReporting": false,
-        "suggester": {
-            "enabled": {{ .Values.kubescape.suggester.enabled }},
-            "bobctlPath": "/usr/bin/bobctl",
-            "workDir": "/tmp/suggester",
-            "queueSize": 64,
-            "eventInterval": "10m",
-            "maxPerMinute": {{ .Values.kubescape.suggester.maxPerMinute }},
-            "timeout": {{ .Values.kubescape.suggester.timeout | quote }},
-            "mode": {{ .Values.kubescape.suggester.mode | quote }},
-            "scope": {{ .Values.kubescape.suggester.scope | quote }},
-            "defaultBundle": "",
-            "delta": {
-                "enabled": {{ .Values.kubescape.suggester.delta.enabled }},
-                "expiry": {{ .Values.kubescape.suggester.delta.expiry | quote }},
-                "argsLiteralCap": 3
-            },
-            "peers": {
-                "enabled": {{ .Values.kubescape.suggester.peers.enabled }},
-                "crossNamespace": {{ .Values.kubescape.suggester.peers.crossNamespace }}
-            },
-            "skipNamespaces": ["kube-system", {{ .Values.namespaces.honey | quote }}]
-        }
-    }
+{{ include "soc.kubescape.nodeAgentConfig" . | indent 4 }}
 ---
 # Source: kubescape-operator/templates/operator/configmap.yaml
 apiVersion: v1
@@ -1092,11 +1025,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: operator
@@ -1146,11 +1079,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: ks-cloud-config
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: ks-cloud-config
@@ -1235,11 +1168,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: ks-cloud-config
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: ks-cloud-config
@@ -1323,11 +1256,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: ks-cloud-config
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: ks-cloud-config
@@ -1411,11 +1344,11 @@ metadata:
   name: storage
   namespace: {{ .Values.namespaces.honey }}
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -1453,11 +1386,11 @@ metadata:
     # skip creation and orphan an existing one).
     resources.gardener.cloud/ignore: "true"
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -1860,11 +1793,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: seccompprofile
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: seccompprofile
@@ -2186,11 +2119,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: node-agent
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: node-agent
@@ -2264,11 +2197,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: operator
@@ -2314,11 +2247,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -2349,11 +2282,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: node-agent
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: node-agent
@@ -2376,11 +2309,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: operator
@@ -2403,11 +2336,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -2430,11 +2363,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -2458,11 +2391,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: operator
@@ -2485,11 +2418,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: operator
@@ -2513,11 +2446,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -2542,11 +2475,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: node-agent
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: node-agent
@@ -2572,11 +2505,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: operator
@@ -2602,11 +2535,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -2633,11 +2566,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: node-agent
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: node-agent
@@ -2654,7 +2587,7 @@ spec:
     metadata:
       annotations:
         
-        checksum/node-agent-config: 27105227bbe3f3694db1125f8f881d9d0a246150c33fad8c3fd357e51456a042
+        checksum/node-agent-config: {{ include "soc.kubescape.nodeAgentConfig" . | sha256sum }}
         checksum/soc-config: {{ list .Values.kubescape (include "soc.kubescape.excludeNamespaces" .) .Values.namespaces.honey .Values.pixie.clusterName | toJson | sha256sum }}
         # soc bounces the DaemonSet after applying its rules, because the agent reads them
         # at boot. GRM does not restart anything, so the equivalent is this: the pod
@@ -2663,11 +2596,11 @@ spec:
         checksum/cloud-secret: 4ab2b76d7131cd95a4e0ec507de40a8c3dc80f048a8ecadde674da274559916b
         checksum/cloud-config: 7fbeb039af519866e4fdec62f9d50baa6404a359e169524914a36ed15a02a158
       labels:
-        helm.sh/chart: kubescape-operator-1.41.0-duckling58
+        helm.sh/chart: kubescape-operator-1.41.0-duckling61
         app.kubernetes.io/name: kubescape-operator
         app.kubernetes.io/instance: kubescape
         app.kubernetes.io/component: node-agent
-        app.kubernetes.io/version: "v0.1.0-rogue78"
+        app.kubernetes.io/version: "duckling61"
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/part-of: kubescape
         app: node-agent
@@ -2902,11 +2835,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: operator
@@ -2937,11 +2870,11 @@ spec:
         checksum/capabilities-config: b7040d5e8b34db3c62e966c5c3a230eccd21e313bd0c4c530b962f1945b89a22
         checksum/matching-rules-config: 17cacbfa5fe560c478c48cb0e6facb0d35f59c2378ddd3c94a3ebf4c2e0518b3
       labels:
-        helm.sh/chart: kubescape-operator-1.41.0-duckling58
+        helm.sh/chart: kubescape-operator-1.41.0-duckling61
         app.kubernetes.io/name: kubescape-operator
         app.kubernetes.io/instance: kubescape
         app.kubernetes.io/component: operator
-        app.kubernetes.io/version: "v0.1.0-rogue78"
+        app.kubernetes.io/version: "duckling61"
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/part-of: kubescape
         app: operator
@@ -2999,7 +2932,7 @@ spec:
                 fieldRef:
                   fieldPath: spec.nodeName
             - name: HELM_RELEASE
-              value: kubescape-operator-1.41.0-duckling58
+              value: kubescape-operator-1.41.0-duckling61
             - name: GOMEMLIMIT
               valueFrom:
                 resourceFieldRef:
@@ -3077,11 +3010,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -3105,11 +3038,11 @@ spec:
         checksum/soc-config: {{ list .Values.namespaces.honey .Values.pixie.clusterName | toJson | sha256sum }}
         checksum/cloud-config: 7fbeb039af519866e4fdec62f9d50baa6404a359e169524914a36ed15a02a158
       labels:
-        helm.sh/chart: kubescape-operator-1.41.0-duckling58
+        helm.sh/chart: kubescape-operator-1.41.0-duckling61
         app.kubernetes.io/name: kubescape-operator
         app.kubernetes.io/instance: kubescape
         app.kubernetes.io/component: storage
-        app.kubernetes.io/version: "v0.1.0-rogue78"
+        app.kubernetes.io/version: "duckling61"
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/part-of: kubescape
         app: storage
@@ -3209,11 +3142,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling58
+    helm.sh/chart: kubescape-operator-1.41.0-duckling61
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "v0.1.0-rogue78"
+    app.kubernetes.io/version: "duckling61"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage

@@ -176,3 +176,75 @@ transforms:
       . = parse_json!(.message)
     type: remap
 {{- end }}
+
+{{- define "soc.kubescape.nodeAgentConfig" -}}
+{
+    "applicationProfileServiceEnabled": true,
+    "backendStorageEnabled": false,
+    "prometheusExporterEnabled": true,
+    "runtimeDetectionEnabled": true,
+    "httpDetectionEnabled": true,
+    "hostProfileServiceEnabled": true,
+    "directAlerts": {"enabled": false, "port": 50405, "jwtPublicKeyPath": "/etc/node-agent-direct/public.pem", "windowBytes": 67108864},
+    "networkServiceEnabled": true,
+    "malwareDetectionEnabled": false,
+    "hostMalwareSensorEnabled": false,
+    "hostNetworkSensorEnabled": false,
+    "hostSensorEnabled": true,
+    "hostSensorInterval": "5m",
+    "nodeProfileServiceEnabled": false,
+    "networkStreamingEnabled": false,
+    "maxImageSize": 5.36870912e+09,
+    "maxSBOMSize": 2.097152e+07,
+    "sbomGenerationEnabled": false,
+    "enableEmbeddedSBOMs": false,
+    "seccompServiceEnabled": true,
+    "seccompProfileBackend": "crd",
+    "initialDelay": {{ .Values.kubescape.learn.initialDelay | quote }},
+    "updateDataPeriod": {{ .Values.kubescape.learn.updatePeriod | quote }},
+    "nodeProfileInterval": "10m",
+    "networkStreamingInterval": "2m",
+    "maxSniffingTimePerContainer": {{ .Values.kubescape.learn.maxSniffingTime | quote }},
+    "bundleTrustPolicyPath": "/etc/bundle/trust-policy.json",
+    "excludeNamespaces": {{ include "soc.kubescape.excludeNamespaces" . | quote }},
+    "excludeLabels":null,
+    "exporters": {
+      "alertManagerExporterUrls":[],
+      "stdoutExporter":true,
+      "syslogExporterURL": ""
+    },
+    "excludeJsonPaths":null,
+    "ruleCooldown": {
+        "ruleCooldownDuration": "0h",
+        "ruleCooldownAfterCount": 1e+09,
+        "ruleCooldownOnProfileFailure": false,
+        "ruleCooldownMaxSize": 20000
+    },
+    "alertDeduplication": {
+        "bypass": false
+    },
+    "scanFailureReporting": false,
+    "suggester": {
+        "enabled": {{ .Values.kubescape.suggester.enabled }},
+        "bobctlPath": "/usr/bin/bobctl",
+        "workDir": "/tmp/suggester",
+        "queueSize": 64,
+        "eventInterval": "10m",
+        "maxPerMinute": {{ .Values.kubescape.suggester.maxPerMinute }},
+        "timeout": {{ .Values.kubescape.suggester.timeout | quote }},
+        "mode": {{ .Values.kubescape.suggester.mode | quote }},
+        "scope": {{ .Values.kubescape.suggester.scope | quote }},
+        "defaultBundle": "",
+        "delta": {
+            "enabled": {{ .Values.kubescape.suggester.delta.enabled }},
+            "expiry": {{ .Values.kubescape.suggester.delta.expiry | quote }},
+            "argsLiteralCap": 3
+        },
+        "peers": {
+            "enabled": {{ .Values.kubescape.suggester.peers.enabled }},
+            "crossNamespace": {{ .Values.kubescape.suggester.peers.crossNamespace }}
+        },
+        "skipNamespaces": ["kube-system", {{ .Values.namespaces.honey | quote }}]
+    }
+}
+{{- end }}
