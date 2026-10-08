@@ -147,7 +147,6 @@ spec:
           jsonPath: .metadata.creationTimestamp
       subresources:
         status: {}
-
 ---
 # Source: kubescape-operator/crds/operator-command.crd.yaml
 apiVersion: apiextensions.k8s.io/v1
@@ -241,7 +240,6 @@ spec:
                   nullable: true
       subresources:
         status: {}
-
 ---
 # Source: kubescape-operator/crds/rules.crd.yaml
 apiVersion: apiextensions.k8s.io/v1
@@ -370,7 +368,6 @@ spec:
                 - rules
       subresources:
         status: {}
-
 ---
 # Source: kubescape-operator/crds/security-exception.crd.yaml
 apiVersion: apiextensions.k8s.io/v1
@@ -503,7 +500,6 @@ spec:
           jsonPath: .metadata.creationTimestamp
       subresources:
         status: {}
-
 ---
 # Source: kubescape-operator/crds/service-scan-result.crd.yaml
 apiVersion: apiextensions.k8s.io/v1
@@ -550,7 +546,6 @@ spec:
                     authenticated:
                       type: boolean
                       nullable: true
-
 ---
 # Source: kubescape-operator/charts/kubescape-alert-crd/crds/runtime-rule-binding.crd.yaml
 apiVersion: apiextensions.k8s.io/v1
@@ -651,7 +646,6 @@ spec:
                         type: string
                     severity:
                       type: string
-
 ---
 # Source: kubescape-operator/templates/configs/priority-class.yaml
 apiVersion: scheduling.k8s.io/v1
@@ -661,11 +655,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: kubescape-critical
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: kubescape-critical
@@ -684,11 +678,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: node-agent
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: node-agent
@@ -702,11 +696,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: operator
@@ -725,11 +719,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -745,11 +739,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: cloud-secret
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: cloud-secret
@@ -761,56 +755,6 @@ data:
   account: ""
   accessKey: ""
 ---
-# Source: kubescape-operator/templates/storage/certgen/secret.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: storage-tls-ca
-  namespace: {{ .Values.namespaces.honey }}
-  annotations:
-    
-    "helm.sh/resource-policy": keep
-  labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
-    app.kubernetes.io/name: kubescape-operator
-    app.kubernetes.io/instance: kubescape
-    app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "duckling61"
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/part-of: kubescape
-    app: storage
-    tier: ks-control-plane
-    kubescape.io/ignore: "true"
-type: kubernetes.io/tls
-data:
-  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURGVENDQWYyZ0F3SUJBZ0lRZGVuaEtRZlB6U2ZQRThBUWpLTjBFekFOQmdrcWhraUc5dzBCQVFzRkFEQVYKTVJNd0VRWURWUVFERXdwemRHOXlZV2RsTFdOaE1CNFhEVEkyTVRBd056RTBNREkwTUZvWERUSTRNVEF3TmpFMApNREkwTUZvd0ZURVRNQkVHQTFVRUF4TUtjM1J2Y21GblpTMWpZVENDQVNJd0RRWUpLb1pJaHZjTkFRRUJCUUFECmdnRVBBRENDQVFvQ2dnRUJBTHpiT3M4RHlnRzROeG5IRUQ4Wk5VMWVveVJ1WFFYMUxSbEVnZnFTczR1bStIYjYKbm5JQk4wSjFpZEJQM2RaQUZkeVZJMnlJN29FUmpKNWZnMkZ6S25sRlZmSkdyNnA3eERFQzNJVEViZXI0Q000QwpWMHZFZVF5d0lUcllzYWYwWkhlTTc4ZTdkVGlxME9NVXV0RlIyQXFoNEI1NWNROUYzYUxQSVUyUU5xcVFCSDlpCjFqWWp1dU9JTzNyMmdDZEF2NEpkb3lqYW9nVmtDQlV5aEhzaEQ2Zk9hOURRUlk5WFVid1VyVGZzR21rZzlkdFUKZFBDdXFzZzltYmVrQkJ5cEtCeXEzeHg1clZYbHhNQmpGSzhSa3FNZkxKOWVWalBWOU9pMHZOVzlyR3k0NzExNAorbzhvUGwyNkxVQ1hDbnRMODZwRHEvL2M2dlJpaWcwYU9yYVFtL2NDQXdFQUFhTmhNRjh3RGdZRFZSMFBBUUgvCkJBUURBZ0trTUIwR0ExVWRKUVFXTUJRR0NDc0dBUVVGQndNQkJnZ3JCZ0VGQlFjREFqQVBCZ05WSFJNQkFmOEUKQlRBREFRSC9NQjBHQTFVZERnUVdCQlRYY3Z1a3g3bm95NVJqZ3VBZU1SSmx2VDdCeHpBTkJna3Foa2lHOXcwQgpBUXNGQUFPQ0FRRUFsdjFHdHZMamRIYmhNN2cxMWRGeXEybVhvOU8xTkpiM1BGWHpBMFhuaGYzaU1uOEFET3lDCjJBclROamU2dFIzVFh4OElvczQyTmFEYXROM0o4UGpuUmpGYnpzZTB3NnNaRFJRN1ZXRy80bS9CU2lPV0ZGK04KL1pQYklSdldiUmhDVENUcGFJdUoxTm1QLzRnYm9SSG5FYWt0Zi9zQXFKVnJzVWlsNk00NmJIYU9VSnR0Y1lncQp5WGRZeG4rRHE3bHhzbXlhTVBBRGthZEM2THlXZXdrUkpXbkw4ZC9tUXl4MHc2aHo5Uk9GSHRzdVhJUXJlcTZtCitHWTg4V0I5SEZycnhNZDdPNmFGN1RPWndtNGtjUkxhYjY0dFdQMHEwVmFRYXJUWUNGaGtIY3BCMXhqcEs1clAKUWorZlI2eS9zSEI2QVM5YjhNNm5DOHQybU1JRHgyUEUzdz09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
-  tls.key: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcFFJQkFBS0NBUUVBdk5zNnp3UEtBYmczR2NjUVB4azFUVjZqSkc1ZEJmVXRHVVNCK3BLemk2YjRkdnFlCmNnRTNRbldKMEUvZDFrQVYzSlVqYklqdWdSR01ubCtEWVhNcWVVVlY4a2F2cW52RU1RTGNoTVJ0NnZnSXpnSlgKUzhSNURMQWhPdGl4cC9Sa2Q0enZ4N3QxT0tyUTR4UzYwVkhZQ3FIZ0hubHhEMFhkb3M4aFRaQTJxcEFFZjJMVwpOaU82NDRnN2V2YUFKMEMvZ2wyaktOcWlCV1FJRlRLRWV5RVBwODVyME5CRmoxZFJ2QlN0Tit3YWFTRDEyMVIwCjhLNnF5RDJadDZRRUhLa29IS3JmSEhtdFZlWEV3R01VcnhHU294OHNuMTVXTTlYMDZMUzgxYjJzYkxqdlhYajYKanlnK1hib3RRSmNLZTB2enFrT3IvOXpxOUdLS0RSbzZ0cENiOXdJREFRQUJBb0lCQUZ5b3FWMXBiQUxVK2IvZApnYlNicnlIRFJZTDUzUTB2d2sxTDVnUGxWMDgxQUdJTHk1Siswemg1eDhDYmR1bUlMdEczb0pZL1J0bXZuUkVWCkpyWTQxWVdEaGN3bGIwblRpS3BOVDVtYWNKMmd6VjBhRysrU09ad0dqSDg5VTBqbTZTWVkwWXByQ0hQaHB6UksKOXUvOVdtUzVFR2VUU092bjZQclk2bXVPVHF2MnZsb2RmNy9UcEtMOTZYTzZycy9uVmFHWnVqZy9ZWW0zSEJ3YgpMTUVJQVF3QTY5WFhOOTM4ZVdacm5HU1NocXU2UmVvUXA3NDgwWEJnNnNSZEtiaHFzQVcrZWJJTFJKM0k3MEZFClBpV3JGSWhqVTEvQ1AyWVJROFlmVHhKQk90Q1I2TnRaZHk5K2tBbDRGTTVSdEVYV25LOHpBQkE0aGlwTUYzRzgKcC82RGxaa0NnWUVBMzg0SmFjTi9wNEViNm9UWFBBckFIc0JyaFFYb1dKY1JHc1pMaXJoWis4cEg0V0hGdWNnWgpucEFMblFrT2krUG85ZEMraW41QmFwaERLcG5lOGZsWUJERnpxc0pENW1LZ0RDUHk4cEVVT1ZVSXd5b25BaGI0CkE3WC9HV09nU203WW5BOGFSK2hUVUlKUTlaTGtjYjlZdmF0VTd5cVlEbi9Bb3Myak04UVVLTWtDZ1lFQTJBWXAKT0svbTZjN2hDNDBvNmtiQTEzWkZzeG43SFNyNjJvWnhuWWxXUCsyMEpWYjZHWWxHQWpraTFSRW9WR3M3ajlRVApnOUxFNU9nVUcrSkhFUWplajk3Q2dpY1F0djJzZVFRNm1yby8xNXArNnRNWkRyV1dtcGZYTU4vWnZhV1RxUCtTCllFWVRzSnJFSStzd1RRd1ptTytHaGM4WkcvdDRxeUNuSlJ5NXZyOENnWUVBeVpxMGFBMnZ4SmhOS1drWTZnRlYKSjE1MmZKSGh4MHZ1SUl4WUtGSUEzUXhPeS94alBRTy84RklaNUEvd2hwdDdrMVBERU1iQzd0N1NRbUh4cjAvSgp0WjFHY0tBbXdqWTlyaklEKy9Zc25haTRCL2JFeE9FajhWUFV4RzQyU2xhbjBZelpROFZJcDlGOFZIdEtSaHowCk40ZExMMWJUT3R4aUQwWG1xZzhMaWVFQ2dZRUFoMDlFbnFjL2dnLzlVbGoyMmRlN2pyb2NhbFRKdjdsZUsyYXUKMzdoWWQrNlNPaGxDeXAvN1pBVVoxay9LN1NYRnh3OVZzZXBoUGVoSVFEYjV3S2ZIa0dJOWYzeXNzWkl2YUJYSQpCNGJGMm15Qk51Rkcvcm1yUGVZQitqRWNsL2VRaC9pZFhRUkg3UVRqK29Pa1czNUt3a3ExL2paOFNkUzMvcWlUClNXRzJ6czBDZ1lFQWthdEx3NUpZQlFFZWtFVE1QckQ2YVNpK3B6NnRyMFZXWVVBNWg3enNLSzdRcTJBbEpRQi8KKzVKSzFnSDBIZWtBckNhWi9sOWE4anNnaFIrSHNtVUtrbUx1VFRhdjFQVEJSNnhEM05EaitCZWRzZWY4L2RkRQpFbHJhSlBISzduSkdmM3JQSWZVWTVhb3lsbjBBZ2pPaGJVNENEaWdYNWtIWWRnbHE4UW9QK04wPQotLS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQo=
----
-# Source: kubescape-operator/templates/storage/certgen/secret.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: storage-tls
-  namespace: {{ .Values.namespaces.honey }}
-  annotations:
-    
-  labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
-    app.kubernetes.io/name: kubescape-operator
-    app.kubernetes.io/instance: kubescape
-    app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "duckling61"
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/part-of: kubescape
-    app: storage
-    tier: ks-control-plane
-    kubescape.io/ignore: "true"
-type: kubernetes.io/tls
-data:
-  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURYRENDQWtTZ0F3SUJBZ0lRWnRmOWN3VW9YcW03QWNZeDB1Z3kxREFOQmdrcWhraUc5dzBCQVFzRkFEQVYKTVJNd0VRWURWUVFERXdwemRHOXlZV2RsTFdOaE1CNFhEVEkyTVRBd056RTBNREkwTUZvWERUSTRNVEF3TmpFMApNREkwTUZvd0hERWFNQmdHQTFVRUF4TVJjM1J2Y21GblpTNW9iMjVsZVM1emRtTXdnZ0VpTUEwR0NTcUdTSWIzCkRRRUJBUVVBQTRJQkR3QXdnZ0VLQW9JQkFRREJXVlRYTkd5NXpJNUV2ckRpOFk5UWNIVzZvZUhJZytDT3BqU08KR1J2SmtiNlpiVzZ4YkU0Zk5lYmtWTXoyVDBKcmtLL2NRMHl1bmp5RW1UWm5oZUUwMGN6cTFWZU13cjNNQnFiWgpldjliV1pETmtNTG1UYXA0NlR3YnIwaUpFZHZWY2hLN3doUnpGTWwvWnNlY215YjdjYVZkMWVWRllZZzc1L2hlCmVySVJXaFNCZUliRVhvVEVIa3JtT2VJdGFtRTV0eGtBQ0lBVVhVVVUxNGRMTXN1UlNEejhybjJTNWIzRTBSU2QKNzdlcDN5Q25rdHp0blVTTldPNzN4TVhzVXQ0dkpGcTZ0TnRFekN6eHFHQVQ3YzNoWWkrVEVUdTRoanowYUE0RApycTYrVHZIMEI4QnU3bnJJTEhxeXVPZmplOGgrb0VHbXBtYllvbFFlclNtTzBudDNBZ01CQUFHamdhQXdnWjB3CkRnWURWUjBQQVFIL0JBUURBZ1dnTUIwR0ExVWRKUVFXTUJRR0NDc0dBUVVGQndNQkJnZ3JCZ0VGQlFjREFqQU0KQmdOVkhSTUJBZjhFQWpBQU1COEdBMVVkSXdRWU1CYUFGTmR5KzZUSHVlakxsR09DNEI0eEVtVzlQc0hITUQwRwpBMVVkRVFRMk1EU0NFWE4wYjNKaFoyVXVhRzl1WlhrdWMzWmpnaDl6ZEc5eVlXZGxMbWh2Ym1WNUxuTjJZeTVqCmJIVnpkR1Z5TG14dlkyRnNNQTBHQ1NxR1NJYjNEUUVCQ3dVQUE0SUJBUUJucG1PTGhLNmY2Y1VGaWFoKzRnU2YKT3FCODBjLzExS2tTanhiQjVPVHAvZkhPdUFVaWFJR25aY0xjQnV6b1BzZEpmRmttUlJUV3NndTR1K0xRWVFDbwpDMFJMcmRVaVhTYlMzSVZ5U0hrbGZCWkZvNkZLVGRNOVNqOTZERk5iTUZvaUdFZ1hPN0xSUVB2MnpoeElXU1J1CmNOY2IrRGR3U1BPSUhOMFJIbWYyczN2aWVGZEJHbTJ3WW1oODFCNlJzeXY3MFFiV0RXTHJhTDZ3MWNwNGFsbnIKY3A2MUdPNVJ0djFiYWMvM09jRjRCMGFWRzJQV3F2SktyeUpySVJqK0lxKzcrcjZTNVI1V1RZN1AwVWR4YVM5RQo4ODF1Zm0wOGJFTVdKdC9tRFhQMXlrdHk3UTNib1V3SG1RK2NzdkRTUVZvaXVFWmdmRzBCWXd4YVNHa08zUnNmCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
-  tls.key: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFb3dJQkFBS0NBUUVBd1ZsVTF6UnN1Y3lPUkw2dzR2R1BVSEIxdXFIaHlJUGdqcVkwamhrYnlaRyttVzF1CnNXeE9IelhtNUZUTTlrOUNhNUN2M0VOTXJwNDhoSmsyWjRYaE5OSE02dFZYak1LOXpBYW0yWHIvVzFtUXpaREMKNWsycWVPazhHNjlJaVJIYjFYSVN1OElVY3hUSmYyYkhuSnNtKzNHbFhkWGxSV0dJTytmNFhucXlFVm9VZ1hpRwp4RjZFeEI1SzVqbmlMV3BoT2JjWkFBaUFGRjFGRk5lSFN6TExrVWc4L0s1OWt1Vzl4TkVVbmUrM3FkOGdwNUxjCjdaMUVqVmp1OThURjdGTGVMeVJhdXJUYlJNd3M4YWhnRSszTjRXSXZreEU3dUlZODlHZ09BNjZ1dms3eDlBZkEKYnU1NnlDeDZzcmpuNDN2SWZxQkJwcVptMktKVUhxMHBqdEo3ZHdJREFRQUJBb0lCQUFnQzV4Q0p0QTJZeTdaTwpmbTdRMm9MWFBoR1BIcGRiMjRTZG4yVFo1bnhhSlI4ZldTeFIxQVRZQzJxZmx1U0gwVFU2eUFhazVUc0JCSG5zCkRVU0oyQlNEc3UxeURKQWhDNU0ySFZpNmozVWVCM0YxRTVaT1ZvZHZCcFlSRTd6V09Ca21nbDgwUWZ1b3UxYWoKa0JiTm1QWm5OWlpuUS9vMWVkc2RsLzEyTVFXbDl1NVZ4NmFQaW03UXZDLzF5OTU1cWhrQ2g2SWFlQVlUaGtaKwpYaGxwVGNkbktaUEFPVUxEazNSMFFkOCtDTU81RVZiRGRua2s4UmM5UUk2UlR0dG5qcTVuN0x6VlNwUW1hSFk1CnN1Y0hMcXMzd2NEYU5ydUlGd1U0eHgyYnU0bDRFVG9xU3hWNTZxTC8zaE5KZzNxMkVxUHNhK3FudjJ3ZzAwa00KSjdZcEd6MENnWUVBNFNadnFoZjhXZHdJa1d3RkF4RFhicWszWm50Qkl4NUduNk5FcFd3eXpxWHVjUUd3QUw3dQpGTnVsWE9xZU9ScXdQTGJYTUJhMmlsWktGSjJDSG9Ca2Fmbk8ycWVKOU13TVhoVkdXRDZ3ZC9za3I1WHYrZjJiCmhweEVacllpWmc2Uk01bTZwUGhoZTdYeW5uYVFkemVscHRwZ2ZmVlRkd0dGM0pyT1pNWmJ6ZlVDZ1lFQTI5ZG8KcFRWWVVRM0hTZUxhRGhUWEpja2xMbUd6Q1FHaDV3SmRVMzNjTVhVWERZNVF2WUE0ZjlvUkpoaExVWjBhdGNNZgpsVGE5Q1Vzbk1kc0E4ODl5QVRLdk1DZFc0eUZuN3pzMUFMMjEySVplK0VXSS96SnM1alMySDNjakQ1VzJPdlhsCjJxdjA3Q0ZQTk1wY2dFeXBqZElualJuYm9GVUprcm1jbkgrYmREc0NnWUJpNFN4OU9SZDhwMk9qNmhxeFkvNFkKL1h2MUtBQk5XZ2lPSjNnSVptSlIyeEhDMDRqbWF2UEllVVpBYmxHYXBwdnJyaWtIVjVKSFl1b1o3NnFybHB1Qwo1MUR2T2xFZUQxY0hJclRJSUpBRHdXbzFLdFkvcGg5ZG1OZDVmRmZURm1heWtMc2xwR2U3bXdhNGpUMlkvZmxrCk05Zll1WnMwVXBqbGI1OWhKclErMlFLQmdCVDhTeEQ2TnFRR0hMQUE1Ni9RYlhrOTZqNnpOTlAzUSswNVhJOUwKeEdrME5DOG5GcTRBUDJSMC9JNFdZNW8yMVFYa3ltOEQrcWVZZFBWZFlvbmprNDVwdUM5d2tlcThsWjlRbDQ2cQpqV0ZOOG1MZ3dHTWIvU2s4ZnVZaUNVYkRrOUd0QjNRSVZpajBSUXRWQmQ5NWNmWUh5WjYraVNpVTlZVDhFdWNkCmgwbGhBb0dCQUtFNG5wd1A0VUllMnJsODBIUmcyanVCOU9nUzBTUDNENWxwU0tWM2h0YzZ5UUpjdGNOQXRacVQKN0FzYzkyOExKNmdnOHRlSXc2NmNBU1IwMWtCNVU4bW1VQ0ROUmVzemJrcGJnNEtta0l6bnBTZzU1UTA1RENyMwpGdmF4QnNFUDFjT1ZiMjdaS3pSUlZXdGM5L01Vb0FwOGlWNGE3N01vYWhoZWpESU5QeDJKCi0tLS0tRU5EIFJTQSBQUklWQVRFIEtFWS0tLS0t
-  ca.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURGVENDQWYyZ0F3SUJBZ0lRZGVuaEtRZlB6U2ZQRThBUWpLTjBFekFOQmdrcWhraUc5dzBCQVFzRkFEQVYKTVJNd0VRWURWUVFERXdwemRHOXlZV2RsTFdOaE1CNFhEVEkyTVRBd056RTBNREkwTUZvWERUSTRNVEF3TmpFMApNREkwTUZvd0ZURVRNQkVHQTFVRUF4TUtjM1J2Y21GblpTMWpZVENDQVNJd0RRWUpLb1pJaHZjTkFRRUJCUUFECmdnRVBBRENDQVFvQ2dnRUJBTHpiT3M4RHlnRzROeG5IRUQ4Wk5VMWVveVJ1WFFYMUxSbEVnZnFTczR1bStIYjYKbm5JQk4wSjFpZEJQM2RaQUZkeVZJMnlJN29FUmpKNWZnMkZ6S25sRlZmSkdyNnA3eERFQzNJVEViZXI0Q000QwpWMHZFZVF5d0lUcllzYWYwWkhlTTc4ZTdkVGlxME9NVXV0RlIyQXFoNEI1NWNROUYzYUxQSVUyUU5xcVFCSDlpCjFqWWp1dU9JTzNyMmdDZEF2NEpkb3lqYW9nVmtDQlV5aEhzaEQ2Zk9hOURRUlk5WFVid1VyVGZzR21rZzlkdFUKZFBDdXFzZzltYmVrQkJ5cEtCeXEzeHg1clZYbHhNQmpGSzhSa3FNZkxKOWVWalBWOU9pMHZOVzlyR3k0NzExNAorbzhvUGwyNkxVQ1hDbnRMODZwRHEvL2M2dlJpaWcwYU9yYVFtL2NDQXdFQUFhTmhNRjh3RGdZRFZSMFBBUUgvCkJBUURBZ0trTUIwR0ExVWRKUVFXTUJRR0NDc0dBUVVGQndNQkJnZ3JCZ0VGQlFjREFqQVBCZ05WSFJNQkFmOEUKQlRBREFRSC9NQjBHQTFVZERnUVdCQlRYY3Z1a3g3bm95NVJqZ3VBZU1SSmx2VDdCeHpBTkJna3Foa2lHOXcwQgpBUXNGQUFPQ0FRRUFsdjFHdHZMamRIYmhNN2cxMWRGeXEybVhvOU8xTkpiM1BGWHpBMFhuaGYzaU1uOEFET3lDCjJBclROamU2dFIzVFh4OElvczQyTmFEYXROM0o4UGpuUmpGYnpzZTB3NnNaRFJRN1ZXRy80bS9CU2lPV0ZGK04KL1pQYklSdldiUmhDVENUcGFJdUoxTm1QLzRnYm9SSG5FYWt0Zi9zQXFKVnJzVWlsNk00NmJIYU9VSnR0Y1lncQp5WGRZeG4rRHE3bHhzbXlhTVBBRGthZEM2THlXZXdrUkpXbkw4ZC9tUXl4MHc2aHo5Uk9GSHRzdVhJUXJlcTZtCitHWTg4V0I5SEZycnhNZDdPNmFGN1RPWndtNGtjUkxhYjY0dFdQMHEwVmFRYXJUWUNGaGtIY3BCMXhqcEs1clAKUWorZlI2eS9zSEI2QVM5YjhNNm5DOHQybU1JRHgyUEUzdz09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
----
 # Source: kubescape-operator/templates/configs/cloudapi-configmap.yaml
 kind: ConfigMap
 apiVersion: v1
@@ -820,11 +764,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: ks-cloud-config
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: ks-cloud-config
@@ -869,11 +813,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: ks-capabilities
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: ks-capabilities
@@ -900,11 +844,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: kubescape
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: kubescape
@@ -1001,11 +945,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: node-agent
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: node-agent
@@ -1025,11 +969,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: operator
@@ -1079,11 +1023,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: ks-cloud-config
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: ks-cloud-config
@@ -1168,11 +1112,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: ks-cloud-config
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: ks-cloud-config
@@ -1256,11 +1200,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: ks-cloud-config
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: ks-cloud-config
@@ -1344,11 +1288,11 @@ metadata:
   name: storage
   namespace: {{ .Values.namespaces.honey }}
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -1386,11 +1330,11 @@ metadata:
     # skip creation and orphan an existing one).
     resources.gardener.cloud/ignore: "true"
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -1793,11 +1737,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: seccompprofile
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: seccompprofile
@@ -2119,11 +2063,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: node-agent
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: node-agent
@@ -2197,11 +2141,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: operator
@@ -2247,11 +2191,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -2282,11 +2226,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: node-agent
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: node-agent
@@ -2309,11 +2253,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: operator
@@ -2336,11 +2280,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -2363,11 +2307,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -2391,11 +2335,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: operator
@@ -2418,11 +2362,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: operator
@@ -2446,11 +2390,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -2475,11 +2419,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: node-agent
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: node-agent
@@ -2505,11 +2449,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: operator
@@ -2535,11 +2479,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -2566,11 +2510,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: node-agent
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: node-agent
@@ -2593,8 +2537,8 @@ spec:
         # at boot. GRM does not restart anything, so the equivalent is this: the pod
         # template changes when the rule set does, and the rollout follows.
         checksum/soc-rules: {{ list .Values.kubescape.rules .Values.kubescape.excludeNamespaces .Values.kubescape.mode | toJson | sha256sum }}
-        checksum/cloud-secret: 4ab2b76d7131cd95a4e0ec507de40a8c3dc80f048a8ecadde674da274559916b
-        checksum/cloud-config: 7fbeb039af519866e4fdec62f9d50baa6404a359e169524914a36ed15a02a158
+        checksum/cloud-secret: 94cd76e58cd11251515bf75a4766e592e87e246db9841ffbea5434ea067818ef
+        checksum/cloud-config: 906dd07c0a2ed8648d18754f10a070f13f3aa3ccf2234b3ae0d3feb4d37f9382
       labels:
         app.kubernetes.io/name: kubescape-operator
         app.kubernetes.io/instance: kubescape
@@ -2833,11 +2777,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: operator
@@ -2861,12 +2805,12 @@ spec:
     metadata:
       annotations:
         
-        checksum/operator-config: f8d30bc4681035937a3ec74035752a79c5e7115acc4274b060d3e130e94d84d2
+        checksum/operator-config: f0b3ba844ea275a79f949a74fc85242cc15caa4d62d4f4c7db1872fe30a5e49d
         checksum/soc-config: {{ list (include "soc.kubescape.excludeNamespaces" .) .Values.namespaces.honey .Values.pixie.clusterName .Values.server | toJson | sha256sum }}
-        checksum/cloud-secret: 4ab2b76d7131cd95a4e0ec507de40a8c3dc80f048a8ecadde674da274559916b
-        checksum/cloud-config: 7fbeb039af519866e4fdec62f9d50baa6404a359e169524914a36ed15a02a158
-        checksum/capabilities-config: b7040d5e8b34db3c62e966c5c3a230eccd21e313bd0c4c530b962f1945b89a22
-        checksum/matching-rules-config: 17cacbfa5fe560c478c48cb0e6facb0d35f59c2378ddd3c94a3ebf4c2e0518b3
+        checksum/cloud-secret: 94cd76e58cd11251515bf75a4766e592e87e246db9841ffbea5434ea067818ef
+        checksum/cloud-config: 906dd07c0a2ed8648d18754f10a070f13f3aa3ccf2234b3ae0d3feb4d37f9382
+        checksum/capabilities-config: 6110d5980865882b1f344901fed14bd5b02ba6e390361956d21319042c1b2428
+        checksum/matching-rules-config: 242f07612458ddafb3bdd310e90d70bb85d231277a61ec4daefbd98bd2f4bcee
       labels:
         app.kubernetes.io/name: kubescape-operator
         app.kubernetes.io/instance: kubescape
@@ -2928,7 +2872,7 @@ spec:
                 fieldRef:
                   fieldPath: spec.nodeName
             - name: HELM_RELEASE
-              value: kubescape-operator-1.41.0-duckling61
+              value: kubescape-operator-1.41.0-duckling64
             - name: GOMEMLIMIT
               valueFrom:
                 resourceFieldRef:
@@ -3006,11 +2950,11 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -3030,9 +2974,10 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/storage-config: 59df7d20d9a9ccda04a3a66fee9c6718aae2847f675d2fe4400b8bec0f5d016a
+        checksum/storage-config: 8d4cd9aa44c0ce7adfee58fc92b6e0c84398821383bc8e44e82a45ed117d0a8a
+        checksum/storage-certgen-scripts: c1645425589b351f104bda613e32e029df03a11dc821b2916a1c2b6779c85729
         checksum/soc-config: {{ list .Values.namespaces.honey .Values.pixie.clusterName | toJson | sha256sum }}
-        checksum/cloud-config: 7fbeb039af519866e4fdec62f9d50baa6404a359e169524914a36ed15a02a158
+        checksum/cloud-config: 906dd07c0a2ed8648d18754f10a070f13f3aa3ccf2234b3ae0d3feb4d37f9382
       labels:
         app.kubernetes.io/name: kubescape-operator
         app.kubernetes.io/instance: kubescape
@@ -3052,6 +2997,69 @@ spec:
           type: RuntimeDefault
         runAsUser: 65532
         fsGroup: 65532
+      initContainers:
+        - name: certgen-create
+          image: {{ .Values.images.certgenKubectl | quote }}
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsUser: 65532
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          command: ["/scripts/certgen-create.sh"]
+          args:
+            - --namespace
+            - {{ .Values.namespaces.honey }}
+            - --secret-name
+            - storage-tls-init
+            - --host
+            - storage,storage.{{ .Values.namespaces.honey }}.svc
+            - --out-dir
+            - /etc/storage-ca-certificates
+            - --ca-name
+            - ca.crt
+            - --cert-name
+            - tls.crt
+            - --key-name
+            - tls.key
+          volumeMounts:
+            - name: storage-certgen-scripts
+              mountPath: /scripts
+              readOnly: true
+            - name: "ca-certificates"
+              mountPath: /etc/storage-ca-certificates
+        - name: certgen-patch
+          image: {{ .Values.images.certgenKubectl | quote }}
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsUser: 65532
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          command: ["/scripts/certgen-patch.sh"]
+          args:
+            - --namespace
+            - {{ .Values.namespaces.honey }}
+            - --secret-name
+            - storage-tls-init
+            - --ca-name
+            - ca.crt
+            - --resource-type
+            - apiservice
+            - --resource-name
+            - v1beta1.spdx.softwarecomposition.kubescape.io
+            - --retries
+            - "60"
+            - --retry-interval
+            - "5"
+          volumeMounts:
+            - name: storage-certgen-scripts
+              mountPath: /scripts
+              readOnly: true
       containers:
       - name: apiserver
         image: {{ .Values.images.kubescapeStorage | quote }}
@@ -3125,8 +3133,11 @@ spec:
               - key: "config.json"
                 path: "config.json"
         - name: "ca-certificates"
-          secret:
-            secretName: storage-tls
+          emptyDir: {}
+        - name: storage-certgen-scripts
+          configMap:
+            name: storage-certgen-scripts-1c799911
+            defaultMode: 0755
 ---
 # Source: kubescape-operator/templates/storage/apiservice.yaml
 apiVersion: apiregistration.k8s.io/v1
@@ -3134,13 +3145,17 @@ kind: APIService
 metadata:
   name: v1beta1.spdx.softwarecomposition.kubescape.io
   annotations:
-    
+    # certgen-patch writes the caBundle at runtime from the Secret it mints in-cluster. GRM
+    # re-applies the declared spec every reconcile, and the declared spec has no caBundle, so
+    # without this it would wipe the patch on every reconcile and the aggregated API would
+    # stop being trusted. ignore=true: create once, never update. Same reason the PVC has it.
+    resources.gardener.cloud/ignore: "true"
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling61
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
-    app.kubernetes.io/version: "duckling61"
+    app.kubernetes.io/version: "v0.1.0-rogue81"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: kubescape
     app: storage
@@ -3154,8 +3169,314 @@ spec:
   service:
     name: storage
     namespace: {{ .Values.namespaces.honey }}
-  caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURGVENDQWYyZ0F3SUJBZ0lRZGVuaEtRZlB6U2ZQRThBUWpLTjBFekFOQmdrcWhraUc5dzBCQVFzRkFEQVYKTVJNd0VRWURWUVFERXdwemRHOXlZV2RsTFdOaE1CNFhEVEkyTVRBd056RTBNREkwTUZvWERUSTRNVEF3TmpFMApNREkwTUZvd0ZURVRNQkVHQTFVRUF4TUtjM1J2Y21GblpTMWpZVENDQVNJd0RRWUpLb1pJaHZjTkFRRUJCUUFECmdnRVBBRENDQVFvQ2dnRUJBTHpiT3M4RHlnRzROeG5IRUQ4Wk5VMWVveVJ1WFFYMUxSbEVnZnFTczR1bStIYjYKbm5JQk4wSjFpZEJQM2RaQUZkeVZJMnlJN29FUmpKNWZnMkZ6S25sRlZmSkdyNnA3eERFQzNJVEViZXI0Q000QwpWMHZFZVF5d0lUcllzYWYwWkhlTTc4ZTdkVGlxME9NVXV0RlIyQXFoNEI1NWNROUYzYUxQSVUyUU5xcVFCSDlpCjFqWWp1dU9JTzNyMmdDZEF2NEpkb3lqYW9nVmtDQlV5aEhzaEQ2Zk9hOURRUlk5WFVid1VyVGZzR21rZzlkdFUKZFBDdXFzZzltYmVrQkJ5cEtCeXEzeHg1clZYbHhNQmpGSzhSa3FNZkxKOWVWalBWOU9pMHZOVzlyR3k0NzExNAorbzhvUGwyNkxVQ1hDbnRMODZwRHEvL2M2dlJpaWcwYU9yYVFtL2NDQXdFQUFhTmhNRjh3RGdZRFZSMFBBUUgvCkJBUURBZ0trTUIwR0ExVWRKUVFXTUJRR0NDc0dBUVVGQndNQkJnZ3JCZ0VGQlFjREFqQVBCZ05WSFJNQkFmOEUKQlRBREFRSC9NQjBHQTFVZERnUVdCQlRYY3Z1a3g3bm95NVJqZ3VBZU1SSmx2VDdCeHpBTkJna3Foa2lHOXcwQgpBUXNGQUFPQ0FRRUFsdjFHdHZMamRIYmhNN2cxMWRGeXEybVhvOU8xTkpiM1BGWHpBMFhuaGYzaU1uOEFET3lDCjJBclROamU2dFIzVFh4OElvczQyTmFEYXROM0o4UGpuUmpGYnpzZTB3NnNaRFJRN1ZXRy80bS9CU2lPV0ZGK04KL1pQYklSdldiUmhDVENUcGFJdUoxTm1QLzRnYm9SSG5FYWt0Zi9zQXFKVnJzVWlsNk00NmJIYU9VSnR0Y1lncQp5WGRZeG4rRHE3bHhzbXlhTVBBRGthZEM2THlXZXdrUkpXbkw4ZC9tUXl4MHc2aHo5Uk9GSHRzdVhJUXJlcTZtCitHWTg4V0I5SEZycnhNZDdPNmFGN1RPWndtNGtjUkxhYjY0dFdQMHEwVmFRYXJUWUNGaGtIY3BCMXhqcEs1clAKUWorZlI2eS9zSEI2QVM5YjhNNm5DOHQybU1JRHgyUEUzdz09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
 ---
 # Source: kubescape-operator/templates/node-agent/servicemonitor.yaml
 # If prometheus enabled, add prometheus exporter
+---
+# Source: kubescape-operator/templates/storage/certgen/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: storage-certgen-scripts-1c799911
+  namespace: {{ .Values.namespaces.honey }}
+  annotations:
+    
+  labels:
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
+    app.kubernetes.io/name: kubescape-operator
+    app.kubernetes.io/instance: ks
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/version: "v0.1.0-rogue81"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: kubescape
+    app: storage
+    tier: ks-control-plane
+    kubescape.io/ignore: "true"
+immutable: true
+data:
+  certgen-create.sh: |
+    #!/usr/bin/env bash
+    set -euo pipefail
+    
+    NAMESPACE=""
+    SECRET_NAME=""
+    HOSTS=""
+    OUT_DIR=""
+    CA_NAME="ca"
+    CERT_NAME="cert"
+    KEY_NAME="key"
+    DAYS="36500"
+    
+    usage() {
+      cat >&2 <<EOF
+    Usage: certgen-create.sh [flags]
+      -n, --namespace      Namespace for the secret (required)
+      -s, --secret-name    Name of the secret to read/create (required)
+      -H, --host           Comma-separated DNS SANs for the leaf cert (required)
+      -o, --out-dir        Directory to write the leaf cert/key into (required)
+          --ca-name        Key in the secret for the CA cert (default: ca)
+          --cert-name      Key in the secret for the leaf cert (default: cert)
+          --key-name       Key in the secret for the leaf key (default: key)
+          --days           Validity in days (default: 36500 ~= 100y)
+    EOF
+      exit 2
+    }
+    
+    while [[ $# -gt 0 ]]; do
+      case "$1" in
+        -n|--namespace)   NAMESPACE="$2";   shift 2;;
+        -s|--secret-name) SECRET_NAME="$2"; shift 2;;
+        -H|--host)        HOSTS="$2";       shift 2;;
+        -o|--out-dir)     OUT_DIR="$2";     shift 2;;
+        --ca-name)        CA_NAME="$2";     shift 2;;
+        --cert-name)      CERT_NAME="$2";   shift 2;;
+        --key-name)       KEY_NAME="$2";    shift 2;;
+        --days)           DAYS="$2";        shift 2;;
+        -h|--help)        usage;;
+        *) echo "unknown flag: $1" >&2; usage;;
+      esac
+    done
+    
+    [[ -n "$NAMESPACE"   ]] || { echo "--namespace required"   >&2; usage; }
+    [[ -n "$SECRET_NAME" ]] || { echo "--secret-name required" >&2; usage; }
+    [[ -n "$HOSTS"       ]] || { echo "--host required"        >&2; usage; }
+    [[ -n "$OUT_DIR"     ]] || { echo "--out-dir required"     >&2; usage; }
+    
+    mkdir -p "$OUT_DIR"
+    
+    # --- path 1: secret already exists -> just materialize cert / key ---
+    if SECRET_JSON="$(kubectl -n "$NAMESPACE" get secret "$SECRET_NAME" -o json 2>/dev/null)"; then
+      echo "secret $NAMESPACE/$SECRET_NAME exists, reusing"
+      echo "$SECRET_JSON" | jq -er --arg k "$CERT_NAME" '.data[$k] // empty' | base64 -d > "$OUT_DIR/$CERT_NAME"
+      echo "$SECRET_JSON" | jq -er --arg k "$KEY_NAME"  '.data[$k] // empty' | base64 -d > "$OUT_DIR/$KEY_NAME"
+      [[ -s "$OUT_DIR/$CERT_NAME" && -s "$OUT_DIR/$KEY_NAME" ]] || { echo "secret missing $CERT_NAME/$KEY_NAME" >&2; exit 1; }
+      exit 0
+    fi
+    
+    # --- path 2: generate CA + leaf, save locally and to a new secret ---
+    echo "secret $NAMESPACE/$SECRET_NAME not found, generating"
+    
+    TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
+    
+    # Build SANs from the comma-separated host list (DNS only).
+    SAN=""; i=0
+    IFS=',' read -ra HOST_ARR <<< "$HOSTS"
+    for h in "${HOST_ARR[@]}"; do
+      i=$((i+1))
+      SAN+="DNS.${i} = ${h}"$'\n'
+    done
+    
+    cat > "$TMP/leaf.cnf" <<EOF
+    [req]
+    distinguished_name = dn
+    req_extensions     = v3
+    prompt             = no
+    [dn]
+    CN = ${HOST_ARR[0]}
+    [v3]
+    subjectAltName = @san
+    keyUsage = digitalSignature, keyEncipherment
+    extendedKeyUsage = serverAuth
+    [san]
+    ${SAN}
+    EOF
+    
+    # CA
+    openssl ecparam -name prime256v1 -genkey -noout -out "$TMP/ca.key"
+    openssl req -x509 -new -key "$TMP/ca.key" -days "$DAYS" -subj "/O=certgen-ca" -out "$TMP/ca.crt"
+    
+    # Leaf
+    openssl ecparam -name prime256v1 -genkey -noout -out "$TMP/tls.key"
+    openssl req -new -key "$TMP/tls.key" -config "$TMP/leaf.cnf" -out "$TMP/tls.csr"
+    openssl x509 -req -in "$TMP/tls.csr" -CA "$TMP/ca.crt" -CAkey "$TMP/ca.key" -CAcreateserial \
+      -days "$DAYS" -extensions v3 -extfile "$TMP/leaf.cnf" -out "$TMP/tls.crt"
+    
+    # Local copy for the pod (filenames mirror the secret keys).
+    cp "$TMP/tls.crt" "$OUT_DIR/$CERT_NAME"
+    cp "$TMP/tls.key" "$OUT_DIR/$KEY_NAME"
+    
+    # Persist to a new secret so subsequent pod restarts and the patch step can reuse it.
+    kubectl -n "$NAMESPACE" create secret generic "$SECRET_NAME" \
+      --from-file="${CA_NAME}=$TMP/ca.crt" \
+      --from-file="${CERT_NAME}=$TMP/tls.crt" \
+      --from-file="${KEY_NAME}=$TMP/tls.key"
+    
+  certgen-patch.sh: |
+    #!/usr/bin/env bash
+    set -euo pipefail
+    
+    NAMESPACE=""
+    SECRET_NAME=""
+    CA_NAME="ca"
+    RESOURCE_TYPE=""
+    RESOURCE_NAME=""
+    RETRIES="60"
+    RETRY_INTERVAL="5"
+    
+    usage() {
+      cat >&2 <<EOF
+    Usage: certgen-patch.sh [flags]
+      -n, --namespace        Namespace of the secret (required)
+      -s, --secret-name      Name of the secret holding the CA (required)
+      -c, --ca-name          Key inside the secret holding the CA cert (default: ca)
+      -t, --resource-type    Resource to patch: apiservice | vwc (required)
+      -r, --resource-name    Name of the resource to patch (required)
+          --retries          Max patch attempts (default: 60)
+          --retry-interval   Seconds between attempts (default: 5)
+    EOF
+      exit 2
+    }
+    
+    while [[ $# -gt 0 ]]; do
+      case "$1" in
+        -n|--namespace)      NAMESPACE="$2";      shift 2;;
+        -s|--secret-name)    SECRET_NAME="$2";    shift 2;;
+        -c|--ca-name)        CA_NAME="$2";        shift 2;;
+        -t|--resource-type)  RESOURCE_TYPE="$2";  shift 2;;
+        -r|--resource-name)  RESOURCE_NAME="$2";  shift 2;;
+        --retries)           RETRIES="$2";        shift 2;;
+        --retry-interval)    RETRY_INTERVAL="$2"; shift 2;;
+        -h|--help)           usage;;
+        *) echo "unknown flag: $1" >&2; usage;;
+      esac
+    done
+    
+    [[ -n "$NAMESPACE"     ]] || { echo "--namespace required"     >&2; usage; }
+    [[ -n "$SECRET_NAME"   ]] || { echo "--secret-name required"   >&2; usage; }
+    [[ -n "$RESOURCE_TYPE" ]] || { echo "--resource-type required" >&2; usage; }
+    [[ -n "$RESOURCE_NAME" ]] || { echo "--resource-name required" >&2; usage; }
+    
+    case "$RESOURCE_TYPE" in
+      apiservice|vwc) ;;
+      *) echo "--resource-type must be 'apiservice' or 'vwc', got '$RESOURCE_TYPE'" >&2; exit 2;;
+    esac
+    
+    CA_BUNDLE="$(kubectl -n "$NAMESPACE" get secret "$SECRET_NAME" -o json | jq -er --arg k "$CA_NAME" '.data[$k] // empty')"
+    [[ -n "$CA_BUNDLE" ]] || { echo "no '$CA_NAME' key in secret $NAMESPACE/$SECRET_NAME" >&2; exit 1; }
+    
+    patch_once() {
+      case "$RESOURCE_TYPE" in
+        apiservice)
+          kubectl patch apiservice "$RESOURCE_NAME" --type=merge \
+            -p "{\"spec\":{\"caBundle\":\"$CA_BUNDLE\",\"insecureSkipTLSVerify\":false}}"
+          ;;
+        vwc)
+          kubectl patch validatingwebhookconfiguration "$RESOURCE_NAME" --type=json \
+            -p "[{\"op\":\"add\",\"path\":\"/webhooks/0/clientConfig/caBundle\",\"value\":\"$CA_BUNDLE\"}]"
+          ;;
+      esac
+    }
+    
+    for i in $(seq 1 "$RETRIES"); do
+      if patch_once; then
+        exit 0
+      fi
+      echo "patch attempt $i/$RETRIES failed, retrying in ${RETRY_INTERVAL}s" >&2
+      sleep "$RETRY_INTERVAL"
+    done
+    
+    echo "patch failed after $RETRIES attempts" >&2
+    exit 1
+---
+# Source: kubescape-operator/templates/storage/certgen/clusterrole.yaml
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: storage-certgen
+  annotations:
+    
+  labels:
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
+    app.kubernetes.io/name: kubescape-operator
+    app.kubernetes.io/instance: ks
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/version: "v0.1.0-rogue81"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: kubescape
+    app: storage
+    tier: ks-control-plane
+    kubescape.io/ignore: "true"
+rules:
+  - apiGroups: ["apiregistration.k8s.io"]
+    resources: ["apiservices"]
+    verbs: ["get", "patch"]
+---
+# Source: kubescape-operator/templates/storage/certgen/clusterrolebinding.yaml
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: storage-certgen
+  annotations:
+    
+  labels:
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
+    app.kubernetes.io/name: kubescape-operator
+    app.kubernetes.io/instance: ks
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/version: "v0.1.0-rogue81"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: kubescape
+    app: storage
+    tier: ks-control-plane
+    kubescape.io/ignore: "true"
+subjects:
+- kind: ServiceAccount
+  name: storage
+  namespace: {{ .Values.namespaces.honey }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: storage-certgen
+---
+# Source: kubescape-operator/templates/storage/certgen/role.yaml
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: storage-certgen
+  namespace: {{ .Values.namespaces.honey }}
+  annotations:
+    
+  labels:
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
+    app.kubernetes.io/name: kubescape-operator
+    app.kubernetes.io/instance: ks
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/version: "v0.1.0-rogue81"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: kubescape
+    app: storage
+    tier: ks-control-plane
+    kubescape.io/ignore: "true"
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "create"]
+---
+# Source: kubescape-operator/templates/storage/certgen/rolebinding.yaml
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: storage-certgen
+  namespace: {{ .Values.namespaces.honey }}
+  annotations:
+    
+  labels:
+    helm.sh/chart: kubescape-operator-1.41.0-duckling64
+    app.kubernetes.io/name: kubescape-operator
+    app.kubernetes.io/instance: ks
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/version: "v0.1.0-rogue81"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: kubescape
+    app: storage
+    tier: ks-control-plane
+    kubescape.io/ignore: "true"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: storage-certgen
+subjects:
+- kind: ServiceAccount
+  name: storage
+  namespace: {{ .Values.namespaces.honey }}
 {{- end }}

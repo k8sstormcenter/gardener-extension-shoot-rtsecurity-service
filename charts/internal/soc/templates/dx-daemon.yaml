@@ -240,6 +240,9 @@ spec:
         - name: proof-suite
           mountPath: /etc/dx/proof
           readOnly: true
+        - name: alert-key
+          mountPath: /etc/dx/node-agent-direct-jwt
+          readOnly: true
       imagePullSecrets:
       - name: dx-pull
       serviceAccountName: dx-daemon
@@ -247,6 +250,13 @@ spec:
       - name: proof-suite
         configMap:
           name: dx-proof-suite
+      - name: alert-key
+        secret:
+          secretName: node-agent-direct-jwt
+          optional: true
+          items:
+          - key: key.pem
+            path: key.pem
       terminationGracePeriodSeconds: 35
       tolerations:
       - operator: Exists

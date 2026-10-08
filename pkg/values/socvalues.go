@@ -5,7 +5,9 @@ package values
 
 import (
 	"context"
+	"encoding/pem"
 	"fmt"
+	"strings"
 
 	corev1 "k8s.io/api/core/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -69,10 +71,10 @@ func (c *ConfigBuilder) BuildSOCValues(ctx context.Context, reconcileCtx *utils.
 }
 
 type credentialRefs struct {
-	deployKey, apiKey, pullEntlein, pullTanzeee, arcToken string
+	deployKey, apiKey, pullEntlein, pullTanzeee, arcToken, directJWT string
 }
 
-var defaultCredentialRefs = credentialRefs{RefPixieDeployKey, RefPixieAPIKey, RefPullEntlein, RefPullTanzeee, RefArcGithubToken}
+var defaultCredentialRefs = credentialRefs{RefPixieDeployKey, RefPixieAPIKey, RefPullEntlein, RefPullTanzeee, RefArcGithubToken, RefDirectJWT}
 
 func (r credentialRefs) override(c *socv1alpha1.Credentials) credentialRefs {
 	pick := func(cur string, v *string) string {
@@ -81,7 +83,7 @@ func (r credentialRefs) override(c *socv1alpha1.Credentials) credentialRefs {
 		}
 		return cur
 	}
-	return credentialRefs{pick(r.deployKey, c.PixieDeployKey), pick(r.apiKey, c.PixieAPIKey), pick(r.pullEntlein, c.PullEntlein), pick(r.pullTanzeee, c.PullTanzeee), pick(r.arcToken, c.ArcGithubToken)}
+	return credentialRefs{pick(r.deployKey, c.PixieDeployKey), pick(r.apiKey, c.PixieAPIKey), pick(r.pullEntlein, c.PullEntlein), pick(r.pullTanzeee, c.PullTanzeee), pick(r.arcToken, c.ArcGithubToken), pick(r.directJWT, c.DirectJWT)}
 }
 
 // addProfiles fetches the signed-off profiles and rules and puts them in the values as
@@ -132,6 +134,7 @@ const (
 	RefPullEntlein    = "soc-pull-entlein"
 	RefPullTanzeee    = "soc-pull-tanzeee"
 	RefArcGithubToken = "soc-arc-github-token"
+	RefDirectJWT      = "soc-direct-jwt"
 )
 
 // referencedSecret resolves one NamedResourceReference to the Secret gardener mirrored into
@@ -168,6 +171,36 @@ func (c *ConfigBuilder) credentialValues(ctx context.Context, reconcileCtx *util
 			return nil, fmt.Errorf("resource %q must be a kubernetes.io/dockerconfigjson secret (missing %s)", ref, corev1.DockerConfigJsonKey)
 		}
 		out[key] = string(cfg)
+	}
+	// The direct-alert keypair arrives as ONE value holding both PEM blocks, and is split
+	// here by block type. One value rather than two keys or two refs so a mismatched pair
+	// cannot be seeded: a public half from a different generation than the private one makes
+	// every stream fail verification while dx merely logs OFF. It also keeps the Key Vault
+	// and the terraform ref-copy at one value per credential, which is what they model.
+	if s, err := c.referencedSecret(ctx, reconcileCtx, refs.directJWT); err != nil {
+		return nil, err
+	} else if s != nil {
+		var priv, pub string
+		for _, raw := range s.Data {
+			rest := raw
+			for {
+				var blk *pem.Block
+				blk, rest = pem.Decode(rest)
+				if blk == nil {
+					break
+				}
+				switch {
+				case strings.HasSuffix(blk.Type, "PRIVATE KEY"):
+					priv = string(pem.EncodeToMemory(blk))
+				case strings.HasSuffix(blk.Type, "PUBLIC KEY"):
+					pub = string(pem.EncodeToMemory(blk))
+				}
+			}
+		}
+		if priv == "" || pub == "" {
+			return nil, fmt.Errorf("resource %q must hold both halves of the ES256 pair as PEM blocks (found private=%t public=%t)", refs.directJWT, priv != "", pub != "")
+		}
+		out["directAlertsJwtKey"], out["directAlertsJwtPub"] = priv, pub
 	}
 	for ref, key := range map[string]string{refs.deployKey: "pixieDeployKey", refs.apiKey: "pixieApiKey", refs.arcToken: "arcGithubToken"} {
 		s, err := c.referencedSecret(ctx, reconcileCtx, ref)
