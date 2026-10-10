@@ -258,7 +258,6 @@ kubescape:
     - "Unexpected Sensitive File Access"
     - "Hard link created over sensitive file"
     - "Exec to pod"
-    - "Port forward"
     - "Unexpected Egress Network Traffic"
     - "Unexpected Ingress Network Traffic"
     - "Malicious Ptrace Usage"
