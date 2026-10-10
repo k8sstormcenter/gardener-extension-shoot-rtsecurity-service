@@ -81,6 +81,10 @@ type Profiles struct {
 	// *.yml directly inside it are read; subdirectories are ignored so that a per-shoot
 	// directory cannot silently pull in another shoot's profiles.
 	Path string `json:"path,omitempty"`
+	// SuitePath is one file in the same repo, read at the same Ref, used as dx's attack
+	// suite. One ref for both means the suite and the profiles it scores against cannot
+	// drift. Empty leaves the chart's bundled proof-suite.yaml in place.
+	SuitePath string `json:"suitePath,omitempty"`
 	// TokenRef names the Shoot spec.resources[] entry holding a token for a private repo.
 	// A public repo needs none.
 	TokenRef *string `json:"tokenRef,omitempty"`

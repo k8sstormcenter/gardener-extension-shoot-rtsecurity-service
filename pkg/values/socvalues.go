@@ -109,7 +109,7 @@ func (c *ConfigBuilder) addProfiles(ctx context.Context, reconcileCtx *utils.Rec
 		}
 	}
 
-	docs, err := c.profiles.Fetch(ctx, profiles.Source{Repo: p.Repo, Ref: p.Ref, Path: p.Path, Token: token})
+	docs, suite, err := c.profiles.Fetch(ctx, profiles.Source{Repo: p.Repo, Ref: p.Ref, Path: p.Path, SuitePath: p.SuitePath, Token: token})
 	if err != nil {
 		return err
 	}
@@ -118,6 +118,16 @@ func (c *ConfigBuilder) addProfiles(ctx context.Context, reconcileCtx *utils.Rec
 		out = append(out, map[string]any{"name": d.Name, "content": d.Content})
 	}
 	values["profiles"] = map[string]any{"enabled": true, "documents": out}
+	// Merged rather than assigned: dx may already carry values from the providerConfig, and
+	// a key with two owners is the bug this comment exists to prevent.
+	if suite != "" {
+		dx, _ := values["dx"].(map[string]any)
+		if dx == nil {
+			dx = map[string]any{}
+		}
+		dx["proofSuite"] = suite
+		values["dx"] = dx
+	}
 	return nil
 }
 

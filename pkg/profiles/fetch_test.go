@@ -58,7 +58,7 @@ func TestFetchReadsOnlyTheNamedDirectory(t *testing.T) {
 	})
 	f := serve(t, body, "/repos/k8sstormcenter/bob/tarball/refs/pull/7/head")
 
-	docs, err := f.Fetch(context.Background(), Source{Repo: "k8sstormcenter/bob", Ref: "refs/pull/7/head", Path: "profiles/mine"})
+	docs, _, err := f.Fetch(context.Background(), Source{Repo: "k8sstormcenter/bob", Ref: "refs/pull/7/head", Path: "profiles/mine"})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -77,13 +77,13 @@ func TestFetchReadsOnlyTheNamedDirectory(t *testing.T) {
 
 func TestFetchRejects(t *testing.T) {
 	f := serve(t, tarball(t, map[string]string{"profiles/mine/a.yaml": "kind: A\n"}), "")
-	if _, err := f.Fetch(context.Background(), Source{Repo: "k8sstormcenter/bob", Path: "profiles/typo"}); err == nil {
+	if _, _, err := f.Fetch(context.Background(), Source{Repo: "k8sstormcenter/bob", Path: "profiles/typo"}); err == nil {
 		t.Error("a path with no documents must fail rather than deploy nothing")
 	}
-	if _, err := f.Fetch(context.Background(), Source{Repo: "bob", Path: "profiles/mine"}); err == nil {
+	if _, _, err := f.Fetch(context.Background(), Source{Repo: "bob", Path: "profiles/mine"}); err == nil {
 		t.Error("accepted a repo that is not <owner>/<name>")
 	}
-	if _, err := NewFetcher().Fetch(context.Background(), Source{Path: "x"}); err == nil {
+	if _, _, err := NewFetcher().Fetch(context.Background(), Source{Path: "x"}); err == nil {
 		t.Error("accepted an empty repo")
 	}
 }
@@ -95,7 +95,69 @@ func TestFetchRejectsHTTPError(t *testing.T) {
 	defer srv.Close()
 	f := NewFetcher()
 	f.baseURL = srv.URL
-	if _, err := f.Fetch(context.Background(), Source{Repo: "k8sstormcenter/bob", Ref: "nope", Path: "p"}); err == nil {
+	if _, _, err := f.Fetch(context.Background(), Source{Repo: "k8sstormcenter/bob", Ref: "nope", Path: "p"}); err == nil {
 		t.Error("accepted a 404")
+	}
+}
+
+// The suite is read from the same tarball at the same ref as the profiles, which is what
+// makes the attack suite and the profiles it is scored against unable to drift apart.
+func TestFetchReadsTheSuiteFromTheSameRef(t *testing.T) {
+	body := tarball(t, map[string]string{
+		"example/github-runner/sbobs/runner.yaml": "kind: ContainerProfile\n",
+		"example/github-runner-attacks.yaml":      "kind: AttackSuite\n",
+		"example/other-attacks.yaml":              "kind: AttackSuite\nname: wrong\n",
+	})
+	f := serve(t, body, "/repos/k8sstormcenter/bob/tarball/v1")
+
+	docs, suite, err := f.Fetch(context.Background(), Source{
+		Repo:      "k8sstormcenter/bob",
+		Ref:       "v1",
+		Path:      "example/github-runner/sbobs",
+		SuitePath: "example/github-runner-attacks.yaml",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(docs) != 1 || docs[0].Name != "runner.yaml" {
+		t.Fatalf("docs: %v", docs)
+	}
+	// The named file, not the sibling that also matches the kind.
+	if suite != "kind: AttackSuite\n" {
+		t.Fatalf("suite: %q", suite)
+	}
+}
+
+// A named suite that is not in the tarball is a typo, not an opt-out: the same rule the
+// profiles directory already follows, so a mistake cannot quietly ship a stack with no
+// suite to score against.
+func TestFetchRejectsAMissingSuite(t *testing.T) {
+	body := tarball(t, map[string]string{
+		"example/github-runner/sbobs/runner.yaml": "kind: ContainerProfile\n",
+	})
+	f := serve(t, body, "/repos/k8sstormcenter/bob/tarball/v1")
+
+	if _, _, err := f.Fetch(context.Background(), Source{
+		Repo:      "k8sstormcenter/bob",
+		Ref:       "v1",
+		Path:      "example/github-runner/sbobs",
+		SuitePath: "example/github-runner-attacks.yaml",
+	}); err == nil {
+		t.Fatal("a missing suite must be an error")
+	}
+}
+
+// No suite requested means no suite returned, and the profiles still load: the chart's
+// bundled proof-suite.yaml stays the fallback.
+func TestFetchWithoutASuite(t *testing.T) {
+	body := tarball(t, map[string]string{"p/a.yaml": "kind: A\n"})
+	f := serve(t, body, "/repos/k8sstormcenter/bob/tarball/v1")
+
+	docs, suite, err := f.Fetch(context.Background(), Source{Repo: "k8sstormcenter/bob", Ref: "v1", Path: "p"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(docs) != 1 || suite != "" {
+		t.Fatalf("docs %v suite %q", docs, suite)
 	}
 }

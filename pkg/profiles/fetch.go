@@ -28,10 +28,14 @@ const maxBytes = 512 << 10
 
 // Source identifies what to read.
 type Source struct {
-	Repo  string // "<owner>/<name>"
-	Ref   string // branch, tag, sha or refs/pull/<n>/head; empty = default branch
-	Path  string // directory inside the repo
-	Token string // optional, for a private repo
+	Repo string // "<owner>/<name>"
+	Ref  string // branch, tag, sha or refs/pull/<n>/head; empty = default branch
+	Path string // directory inside the repo
+	// SuitePath is one file inside the repo, read from the SAME tarball at the SAME ref as
+	// Path. Keeping both in one fetch is what makes the attack suite and the profiles it is
+	// scored against structurally unable to drift: there is one ref, so there is one answer.
+	SuitePath string
+	Token     string // optional, for a private repo
 }
 
 // Document is one YAML file from the repository.
@@ -50,18 +54,19 @@ func NewFetcher() *Fetcher {
 }
 
 // Fetch returns the YAML documents directly inside src.Path, sorted by name so the
-// rendered output is stable and a reconcile does not churn the ManagedResource.
-func (f *Fetcher) Fetch(ctx context.Context, src Source) ([]Document, error) {
+// rendered output is stable and a reconcile does not churn the ManagedResource, plus the
+// contents of src.SuitePath when one is named.
+func (f *Fetcher) Fetch(ctx context.Context, src Source) ([]Document, string, error) {
 	if src.Repo == "" {
-		return nil, fmt.Errorf("profiles.repo is required")
+		return nil, "", fmt.Errorf("profiles.repo is required")
 	}
 	if strings.Count(src.Repo, "/") != 1 {
-		return nil, fmt.Errorf("profiles.repo %q must be <owner>/<name>", src.Repo)
+		return nil, "", fmt.Errorf("profiles.repo %q must be <owner>/<name>", src.Repo)
 	}
 	url := fmt.Sprintf("%s/repos/%s/tarball/%s", f.baseURL, src.Repo, src.Ref)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 	req.Header.Set("Accept", "application/vnd.github+json")
 	if src.Token != "" {
@@ -69,39 +74,48 @@ func (f *Fetcher) Fetch(ctx context.Context, src Source) ([]Document, error) {
 	}
 	resp, err := f.client.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("fetching %s@%s: %w", src.Repo, src.Ref, err)
+		return nil, "", fmt.Errorf("fetching %s@%s: %w", src.Repo, src.Ref, err)
 	}
 	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("fetching %s@%s: %s", src.Repo, src.Ref, resp.Status)
+		return nil, "", fmt.Errorf("fetching %s@%s: %s", src.Repo, src.Ref, resp.Status)
 	}
 
-	docs, err := documentsUnder(resp.Body, src.Path)
+	docs, suite, err := extract(resp.Body, src.Path, src.SuitePath)
 	if err != nil {
-		return nil, fmt.Errorf("reading %s@%s: %w", src.Repo, src.Ref, err)
+		return nil, "", fmt.Errorf("reading %s@%s: %w", src.Repo, src.Ref, err)
 	}
 	// An empty result is an error, not an empty stack: the Shoot asked for profiles from a
 	// path, so a typo in the path must not quietly deploy nothing.
 	if len(docs) == 0 {
-		return nil, fmt.Errorf("no .yaml documents directly under %q in %s@%s", src.Path, src.Repo, src.Ref)
+		return nil, "", fmt.Errorf("no .yaml documents directly under %q in %s@%s", src.Path, src.Repo, src.Ref)
+	}
+	// Same rule as the directory: a named suite that is not there is a typo, not an opt-out.
+	if src.SuitePath != "" && suite == "" {
+		return nil, "", fmt.Errorf("suite %q not found in %s@%s", src.SuitePath, src.Repo, src.Ref)
 	}
 	sort.Slice(docs, func(i, j int) bool { return docs[i].Name < docs[j].Name })
-	return docs, nil
+	return docs, suite, nil
 }
 
 // documentsUnder walks the tarball. GitHub wraps everything in one generated top-level
 // directory whose name includes the commit, so the first path element is dropped rather
 // than matched. Only files directly inside dir are returned: a per-shoot directory must
 // not be able to pull in a neighbouring shoot's profiles through a subdirectory.
-func documentsUnder(body io.Reader, dir string) ([]Document, error) {
+func extract(body io.Reader, dir, suitePath string) ([]Document, string, error) {
 	gz, err := gzip.NewReader(body)
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 	defer func() { _ = gz.Close() }()
 
 	want := path.Clean("/" + dir)
+	wantSuite := ""
+	if suitePath != "" {
+		wantSuite = path.Clean("/" + suitePath)
+	}
 	var docs []Document
+	var suite string
 	tr := tar.NewReader(gz)
 	for {
 		h, err := tr.Next()
@@ -109,7 +123,7 @@ func documentsUnder(body io.Reader, dir string) ([]Document, error) {
 			break
 		}
 		if err != nil {
-			return nil, err
+			return nil, "", err
 		}
 		if h.Typeflag != tar.TypeReg {
 			continue
@@ -118,7 +132,19 @@ func documentsUnder(body io.Reader, dir string) ([]Document, error) {
 		if i := strings.IndexByte(name, '/'); i >= 0 {
 			name = name[i+1:]
 		}
-		if path.Dir(path.Clean("/"+name)) != want {
+		clean := path.Clean("/" + name)
+		if wantSuite != "" && clean == wantSuite {
+			content, err := io.ReadAll(io.LimitReader(tr, maxBytes+1))
+			if err != nil {
+				return nil, "", err
+			}
+			if len(content) > maxBytes {
+				return nil, "", fmt.Errorf("%s is larger than %d bytes", name, maxBytes)
+			}
+			suite = string(content)
+			continue
+		}
+		if path.Dir(clean) != want {
 			continue
 		}
 		if ext := path.Ext(name); ext != ".yaml" && ext != ".yml" {
@@ -126,12 +152,12 @@ func documentsUnder(body io.Reader, dir string) ([]Document, error) {
 		}
 		content, err := io.ReadAll(io.LimitReader(tr, maxBytes+1))
 		if err != nil {
-			return nil, err
+			return nil, "", err
 		}
 		if len(content) > maxBytes {
-			return nil, fmt.Errorf("%s is larger than %d bytes", name, maxBytes)
+			return nil, "", fmt.Errorf("%s is larger than %d bytes", name, maxBytes)
 		}
 		docs = append(docs, Document{Name: path.Base(name), Content: string(content)})
 	}
-	return docs, nil
+	return docs, suite, nil
 }
