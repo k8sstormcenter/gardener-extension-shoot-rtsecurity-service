@@ -27,6 +27,7 @@ type SOCConfig struct {
 	ClickHouse  *ClickHouse  `json:"clickhouse,omitempty"`
 	Detection   *Detection   `json:"detection,omitempty"`
 	Profiles    *Profiles    `json:"profiles,omitempty"`
+	Target      *Target      `json:"target,omitempty"`
 	Components  *Components  `json:"components,omitempty"`
 	Credentials *Credentials `json:"credentials,omitempty"`
 	// Image overrides keyed like values.images (pixieOperator, nodeAgent, ...).
@@ -72,6 +73,32 @@ type Components struct {
 // PR head is the point: the shoot runs the proposed profiles while the change is still
 // under review, and merging the PR is what makes them permanent rather than what first
 // applies them.
+// Target is the workload the signed-off profiles govern and the attack suite is scored
+// against. It belongs to the shoot rather than to the chart: a scale set's name is a
+// property of one cluster, and a chart default naming one cluster's workload is how a
+// suite ends up aimed at the cluster it was authored against.
+type Target struct {
+	// Enabled brings the workload's namespace under the sensor. Until a signed-off profile
+	// exists, leaving it off is deliberate: an ungoverned scale set bursting to hundreds of
+	// pods emits an alert per distinct exec.
+	Enabled *bool `json:"enabled,omitempty"`
+	// Namespace the workload runs in.
+	Namespace *string `json:"namespace,omitempty"`
+	// ProfileName is the kubescape.io/user-defined-profile label value its pods carry, and
+	// therefore the name the agent resolves per container as "<profileName>-<container>".
+	// It is NOT the workload's name: the label and the pod-name prefix are different
+	// strings, and one field serving both breaks whichever it is not.
+	ProfileName *string `json:"profileName,omitempty"`
+	// ScaleSetName is the workload's own name, which is the prefix its pods are named with.
+	// dx scores pods matching "<namespace>/<scaleSetName>-runner-%".
+	ScaleSetName *string `json:"scaleSetName,omitempty"`
+	// Containers and InitContainers are every container its pods run. A container no
+	// delivered profile names is unresolved, which the sensor treats as deny-all, so the
+	// render refuses a delivery that does not cover each one.
+	Containers     []string `json:"containers,omitempty"`
+	InitContainers []string `json:"initContainers,omitempty"`
+}
+
 type Profiles struct {
 	// Repo is "<owner>/<name>" on GitHub.
 	Repo string `json:"repo,omitempty"`

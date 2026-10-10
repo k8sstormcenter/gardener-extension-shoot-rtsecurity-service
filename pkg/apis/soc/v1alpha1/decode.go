@@ -83,6 +83,25 @@ func (c *SOCConfig) Values() map[string]any {
 			set("kubescape", "excludeNamespaces", d.ExcludeNamespaces)
 		}
 	}
+	if t := c.Target; t != nil {
+		if t.Enabled != nil {
+			set("target", "enabled", *t.Enabled)
+		}
+		for k, v := range map[string]*string{"namespace": t.Namespace, "profileName": t.ProfileName, "scaleSetName": t.ScaleSetName} {
+			if v != nil {
+				set("target", k, *v)
+			}
+		}
+		// Replaced rather than merged, and an explicitly empty list is honoured: the delivery
+		// for this workload ships no init-container profiles, and naming one that is not
+		// delivered has to stay a render failure rather than become a cluster failure.
+		if t.Containers != nil {
+			set("target", "containers", t.Containers)
+		}
+		if t.InitContainers != nil {
+			set("target", "initContainers", t.InitContainers)
+		}
+	}
 	if co := c.Components; co != nil {
 		for k, v := range map[string]*bool{"kubescape": co.Kubescape, "adaptiveExport": co.AdaptiveExport, "dx": co.Dx} {
 			if v != nil {
