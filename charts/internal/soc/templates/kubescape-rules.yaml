@@ -30,6 +30,15 @@ nothing watching the workloads.
 {{- if ne (dig "kind" "" $r) "Rules" }}
 {{- fail (printf "%s is a %q, not a Rules object. It is the only rule set, so the shoot would run with none at all." $from (dig "kind" "<none>" $r)) }}
 {{- end }}
+{{/*
+The document carries its own namespace, and it replaces the chart's object by name. If the
+two namespaces disagree the chart's set is suppressed and the fetched one lands somewhere
+the sensor is not looking: rules installed, nothing watching, no error.
+*/}}
+{{- $ns := dig "metadata" "namespace" "" $r }}
+{{- if and $ns (ne $ns .Values.namespaces.honey) }}
+{{- fail (printf "%s is namespaced %q but this stack runs in %q. It replaces the chart's rule set by name, so the shoot would end up with its rules in a namespace the sensor does not read." $from $ns .Values.namespaces.honey) }}
+{{- end }}
 {{- $spec := dig "spec" "rules" (list) $r }}
 {{- if not $spec }}
 {{- fail (printf "%s is a Rules object with an empty spec.rules. The shoot would run with no rules at all." $from) }}
