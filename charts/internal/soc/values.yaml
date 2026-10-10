@@ -29,9 +29,8 @@ images:
   # rc102 reads the attack suite's target.pod as the pod prefix, with service as a fallback,
   # and rejects a target naming neither. rc101 ignored the prefix and scored every pod in the
   # namespace, so the ARC controller and listener landed in the proof KPI alongside the
-  # runners. Tag-pinned, as this image has been; it wants a digest like the others, which
-  # needs the one from whoever published it.
-  dxDaemon: "docker.io/tanzeee/dx-daemon:0.6.0-shadow-rc102"
+  # runners. Digest-pinned like the rest: this is a pre-release line, where the tag moves.
+  dxDaemon: "docker.io/tanzeee/dx-daemon:0.6.0-shadow-rc102@sha256:65bd548b82cedda403d888c9f7d2fcaa68eb8a3df35a6ebd69aa817170265070"
 
 # Namespaces the stack occupies in the shoot. Kept as values because the shoot's
 # own policies may force different ones.
