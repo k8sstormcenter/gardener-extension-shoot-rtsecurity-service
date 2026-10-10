@@ -205,3 +205,37 @@ func TestFetchRejectsMissingRules(t *testing.T) {
 		t.Fatal("a missing rule set must be an error")
 	}
 }
+
+// A learned runner profile is hundreds of kilobytes of repeated paths and syscalls. The
+// first cap was 512 KiB, which rejected the real 687,815-byte profile and failed every
+// reconcile with "is larger than 524288 bytes" while the compressed ManagedResource Secret
+// it was protecting was at a tenth of its limit. The size that broke that roll is the size
+// this test pins.
+func TestFetchAcceptsALearnedProfile(t *testing.T) {
+	big := "kind: ContainerProfile\nspec:\n  execs:\n" + strings.Repeat("  - path: /usr/bin/something\n", 25000)
+	if len(big) < 687815 {
+		t.Fatalf("test fixture is %d bytes, smaller than the profile that broke the roll", len(big))
+	}
+	f := serve(t, tarball(t, map[string]string{"p/runner.yaml": big}), "")
+	res, err := f.Fetch(context.Background(), Source{Repo: "k8sstormcenter/bob", Path: "p"})
+	if err != nil {
+		t.Fatalf("a %d-byte profile must be accepted: %v", len(big), err)
+	}
+	if len(res.Documents) != 1 || res.Documents[0].Content != big {
+		t.Fatal("the profile came back truncated or missing")
+	}
+}
+
+// The cap still has a job: a run-away file has to fail here, with a message naming it,
+// rather than at apply time where the error is about a Secret rather than a document.
+func TestFetchStillRejectsARunawayFile(t *testing.T) {
+	huge := strings.Repeat("x", (4<<20)+1)
+	f := serve(t, tarball(t, map[string]string{"p/runner.yaml": huge}), "")
+	_, err := f.Fetch(context.Background(), Source{Repo: "k8sstormcenter/bob", Path: "p"})
+	if err == nil {
+		t.Fatal("a file over the cap must be an error")
+	}
+	if !strings.Contains(err.Error(), "runner.yaml") {
+		t.Errorf("the error must name the file; got %v", err)
+	}
+}

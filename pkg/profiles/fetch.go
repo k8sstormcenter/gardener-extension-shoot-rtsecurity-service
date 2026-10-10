@@ -21,10 +21,26 @@ import (
 	"time"
 )
 
-// maxBytes caps one decompressed document. The whole set lands in a ManagedResource
-// Secret, which Kubernetes caps at 1 MiB, so a run-away file has to fail here with a
-// readable message rather than at apply time.
-const maxBytes = 512 << 10
+// maxBytes caps one decompressed document, to catch a run-away file here with a readable
+// message rather than at apply time.
+//
+// It is NOT the real limit, and the first value chosen for it pretended to be. The set
+// lands in a ManagedResource Secret that Kubernetes caps at 1 MiB, but the actuator writes
+// that Secret through gardener's registry, which brotli-compresses every object into one
+// key. So the binding constraint is the COMPRESSED total, and a per-file byte count is a
+// proxy for it that can be wrong in both directions.
+//
+// Measured, rather than guessed: the whole rendered stack carrying a 687,815-byte learned
+// runner profile is 1,324,628 bytes plain and 111,466 bytes after brotli — 10.6% of the
+// limit. Learned profiles are long lists of repeated paths and syscalls and compress about
+// twelve to one. The previous 512 KiB cap therefore rejected a legitimate profile that the
+// Secret had ample room for, and every reconcile failed with
+// "arc-runner-runner.yaml is larger than 524288 bytes" while nothing was actually too big.
+//
+// 4 MiB keeps the run-away guard meaningful while leaving room for a profile that grows as
+// more of a build is learned. If a future stack ever does approach the Secret limit, the
+// thing to measure is the compressed total, not this number.
+const maxBytes = 4 << 20
 
 // Source identifies what to read.
 type Source struct {
