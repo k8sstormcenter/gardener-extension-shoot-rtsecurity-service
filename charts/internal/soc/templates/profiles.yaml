@@ -7,34 +7,61 @@ that was signed off. Whatever the review approved is what GRM applies, including
 annotations and signatures a governing profile needs.
 Fetched by pkg/profiles at reconcile; absent from values until a Shoot asks for them.
 
-The checks below guard the two ways a delivered profile governs nothing while looking
-installed. Both fail the render rather than the cluster, because the symptom in the cluster
-is an alert storm from workloads that are silently deny-all.
+The checks below are the deploy-time half of bob's harness/check_deploy.py, enforced again
+here because CI guards the repository and this guards the cluster: a shoot can be pointed at
+any ref, including one CI never saw. They fail the render rather than the cluster, because
+the symptom in the cluster is either an alert storm or silence from workloads that are
+ungoverned, and neither reports an error.
+
+The contract, from bob example/github-runner/README.md: the pod template carries
+kubescape.io/user-defined-profile: <label>, and the agent binds <label>-<container> per
+container. It composes nothing and does not read the kubescape.io/profile-fragment labels,
+so a fragment is not bindable and a flat <label> profile for a multi-container workload
+binds nothing at all.
 */}}
 {{- $t := .Values.target }}
-{{- range .Values.profiles.documents }}
 {{- if and $t.enabled $t.profileName }}
+{{- $byName := dict }}
+{{- range .Values.profiles.documents }}
 {{- $doc := fromYaml .content }}
-{{- if and (not $doc.Error) (eq (dig "kind" "" $doc) "ContainerProfile") (eq (dig "metadata" "name" "" $doc) $t.profileName) }}
-{{- if dig "metadata" "annotations" "kubescape.io/status" "" $doc }}
-{{- fail (printf "%s: %s still carries the kubescape.io/status annotation of a learned profile. The sensor refuses such a document as a user-defined profile and every pod naming it stays ungoverned. Strip it when authoring the profile." .name $t.profileName) }}
-{{- end }}
-{{- $covered := concat (dig "spec" "containers" (list) $doc) (dig "spec" "initContainers" (list) $doc) | compact }}
-{{- $declared := concat $t.containers $t.initContainers }}
-{{- if gt (len $declared) 1 }}
-{{- if not $covered }}
-{{- fail (printf "%s: %s is a flat profile, but %s/%s runs %d containers. A flat document applies one profile to every container, so a privileged sidecar's behaviour would be permitted for the workload too. Author it with spec.containers and spec.initContainers naming each one." .name $t.profileName $t.namespace $t.profileName (len $declared)) }}
-{{- end }}
-{{- $names := list }}
-{{- range $covered }}{{ $names = append $names (dig "name" "" .) }}{{- end }}
-{{- range $declared }}
-{{- if not (has . $names) }}
-{{- fail (printf "%s: %s does not cover container %q. A container the document does not name is unresolved, which the sensor treats as deny-all. Covered: %v" $.name $t.profileName . $names) }}
+{{- if and (not $doc.Error) (eq (dig "kind" "" $doc) "ContainerProfile") }}
+{{- $_ := set $byName (dig "metadata" "name" "" $doc) $doc }}
 {{- end }}
 {{- end }}
+{{/*
+A flat profile under the bare label is the failure that looks most like success: it is a
+real ContainerProfile with the name everyone expects, and the agent binds none of it.
+*/}}
+{{- $all := concat $t.containers $t.initContainers }}
+{{- if hasKey $byName $t.profileName }}
+{{- $want := list }}
+{{- range $all }}
+{{- $want = append $want (printf "%s-%s" $t.profileName .) }}
+{{- end }}
+{{- fail (printf "%s is a flat profile for a workload running %d containers. The agent binds <label>-<container>, so a profile under the bare label binds nothing and every container stays ungoverned, which the sensor treats as deny-all. Author one profile per container: %s." $t.profileName (len $all) (join ", " $want)) }}
+{{- end }}
+{{- range $c := $all }}
+{{- $want := printf "%s-%s" $t.profileName $c }}
+{{- if not (hasKey $byName $want) }}
+{{- fail (printf "container %q of %s/%s has no profile %q. A container no document names is unresolved, which the sensor treats as deny-all. Delivered: %v" $c $t.namespace $t.profileName $want (keys $byName | sortAlpha)) }}
+{{- end }}
+{{- $doc := get $byName $want }}
+{{- $md := dig "metadata" (dict) $doc }}
+{{- if dig "annotations" "kubescape.io/status" "" $md }}
+{{- fail (printf "%s still carries the kubescape.io/status annotation of a learned profile. The sensor refuses such a document as a user-defined profile, so every pod naming it stays ungoverned. Strip it when authoring the profile." $want) }}
+{{- end }}
+{{- range $k, $v := (dig "labels" (dict) $md) }}
+{{- if hasPrefix "kubescape.io/profile-fragment" $k }}
+{{- fail (printf "%s carries the fragment label %q. Fragments are inputs that a compose step merges; the agent reads none of them, so a fragment delivered as a profile governs nothing. Deliver the composed profile." $want $k) }}
+{{- end }}
+{{- end }}
+{{- $ns := dig "namespace" "" $md }}
+{{- if and $ns (ne $ns $t.namespace) }}
+{{- fail (printf "%s is namespaced %q but the workload runs in %q. A profile the agent cannot find in the pod's own namespace leaves the container unresolved." $want $ns $t.namespace) }}
 {{- end }}
 {{- end }}
 {{- end }}
+{{- range .Values.profiles.documents }}
 ---
 # {{ .name }}
 {{ .content }}

@@ -133,11 +133,17 @@ target:
   # name and never from the profile label above.
   scaleSetName: ""
   # Every container the workload's pods run, by name. The label is per POD but a profile is
-  # resolved per CONTAINER: a document that does not name a container leaves it unresolved,
-  # which is ungoverned, which is deny-all. Listing them here lets the chart refuse a
-  # delivered profile that would leave one out, instead of finding out at the first burst.
+  # bound per CONTAINER: the agent binds "<profileName>-<container>", composes nothing, and a
+  # container no document names is unresolved, which is ungoverned, which is deny-all.
+  # Listing them here lets the chart refuse a delivery that would leave one out, instead of
+  # finding out at the first burst.
   containers: [runner, dind]
-  initContainers: [chowner, init-dind-externals]
+  # Empty, and not an oversight. The signed-off delivery binds the two containers above and
+  # ships no profile for the init containers (chowner, init-dind-externals), so naming them
+  # here would fail the render. Whether they need profiles at all is an open question for
+  # whoever owns detection; listing them without delivering the documents would only move
+  # the failure from the render to the cluster.
+  initContainers: []
 
 # Signed-off profiles and rules, fetched from git by the actuator and rendered verbatim.
 # Filled in only when the Shoot's providerConfig names a repo, path and ref; the documents
