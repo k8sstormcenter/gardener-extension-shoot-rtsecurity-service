@@ -117,10 +117,21 @@ target:
   enabled: false
   namespace: arc-systems
   # The name every pod of the workload carries as kubescape.io/user-defined-profile, and
-  # therefore the name of the one profile that governs all of them. For a runner scale set
-  # this is the scale set name: its pods are owned by a per-job CR, so each job produces
-  # its own learned profile and only this label gives them a single stable judge.
+  # therefore the name of the one profile that governs all of them. Its pods are owned by a
+  # per-job CR, so each job produces its own learned profile and only this label gives them
+  # a single stable judge.
+  #
+  # This is the LABEL VALUE, which is not the scale set's name and must not be derived from
+  # it. On k3s-2 the scale set is "k3s-2" and the label is "arc-runner". One field cannot
+  # own both: used as the label it must match what the pods carry, and used as dx's pod-name
+  # prefix it must match what the pods are called. Getting either wrong is silent — the
+  # wrong label leaves the workload ungoverned, the wrong prefix makes dx score nothing and
+  # report it as a KPI of zero.
   profileName: ""
+  # The AutoscalingRunnerSet's name, which is the prefix its pods are named with. dx scores
+  # pods matching "<namespace>/<scaleSetName>-runner-%", so this is read from the workload's
+  # name and never from the profile label above.
+  scaleSetName: ""
   # Every container the workload's pods run, by name. The label is per POD but a profile is
   # resolved per CONTAINER: a document that does not name a container leaves it unresolved,
   # which is ungoverned, which is deny-all. Listing them here lets the chart refuse a

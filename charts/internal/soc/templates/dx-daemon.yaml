@@ -42,8 +42,8 @@ data:
   suite.yaml: |
 {{- $raw := .Values.dx.proofSuite | default (.Files.Get "files/proof-suite.yaml") }}
 {{- $parsed := fromYaml $raw }}
-{{- if and .Values.dx.proofSuite (not $parsed.Error) $parsed.target .Values.target.profileName .Values.target.namespace }}
-{{- $_ := set $parsed.target "service" (printf "%s-runner-" .Values.target.profileName) }}
+{{- if and .Values.dx.proofSuite (not $parsed.Error) $parsed.target .Values.target.scaleSetName .Values.target.namespace }}
+{{- $_ := set $parsed.target "service" (printf "%s-runner-" .Values.target.scaleSetName) }}
 {{- $_ := set $parsed.target "namespace" .Values.target.namespace }}
 {{- $raw = toYaml $parsed }}
 {{- end }}
