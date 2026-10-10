@@ -28,8 +28,26 @@ metadata:
   name: dx-proof-suite
   namespace: {{ .Values.namespaces.honey }}
 data:
+  # The suite's own target names the cluster it was authored against. dx scores pods matching
+  # "<namespace>/<service>%", where service is the pod-name prefix, so a suite carried over
+  # from another cluster scores NOTHING and says so only by a KPI of zero. Those two fields
+  # are therefore rewritten from this chart's target values, which is also where the sensor
+  # exclusion and the profile name come from, so there is one source for who the workload is.
+  # Rewritten on the parsed document rather than by string edit, so nothing else can be
+  # corrupted; if the suite does not parse, it is passed through untouched and dx reports it.
+  # Only a SUPPLIED suite is retargeted. The bundled fallback is a different workload
+  # entirely (redis), and rewriting its target would produce a suite whose attacks are
+  # redis-specific but aimed at runner pods: it would look correctly targeted and still
+  # score nothing, which is worse than an obviously wrong target.
   suite.yaml: |
-{{ .Values.dx.proofSuite | default (.Files.Get "files/proof-suite.yaml") | indent 4 }}
+{{- $raw := .Values.dx.proofSuite | default (.Files.Get "files/proof-suite.yaml") }}
+{{- $parsed := fromYaml $raw }}
+{{- if and .Values.dx.proofSuite (not $parsed.Error) $parsed.target .Values.target.profileName .Values.target.namespace }}
+{{- $_ := set $parsed.target "service" (printf "%s-runner-" .Values.target.profileName) }}
+{{- $_ := set $parsed.target "namespace" .Values.target.namespace }}
+{{- $raw = toYaml $parsed }}
+{{- end }}
+{{ $raw | indent 4 }}
 ---
 apiVersion: v1
 kind: ConfigMap
