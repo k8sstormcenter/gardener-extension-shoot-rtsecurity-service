@@ -655,7 +655,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: kubescape-critical
@@ -678,7 +678,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: node-agent
@@ -696,7 +696,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
@@ -719,7 +719,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
@@ -739,7 +739,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: cloud-secret
@@ -764,7 +764,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: ks-cloud-config
@@ -813,7 +813,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: ks-capabilities
@@ -844,7 +844,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: kubescape
@@ -945,7 +945,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: node-agent
@@ -969,7 +969,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
@@ -1023,7 +1023,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: ks-cloud-config
@@ -1112,7 +1112,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: ks-cloud-config
@@ -1200,7 +1200,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: ks-cloud-config
@@ -1288,7 +1288,7 @@ metadata:
   name: storage
   namespace: {{ .Values.namespaces.honey }}
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
@@ -1330,7 +1330,7 @@ metadata:
     # skip creation and orphan an existing one).
     resources.gardener.cloud/ignore: "true"
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
@@ -1737,7 +1737,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: seccompprofile
@@ -2063,7 +2063,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: node-agent
@@ -2141,7 +2141,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
@@ -2191,7 +2191,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
@@ -2226,7 +2226,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: node-agent
@@ -2253,7 +2253,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
@@ -2280,7 +2280,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
@@ -2307,7 +2307,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
@@ -2335,7 +2335,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
@@ -2362,7 +2362,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
@@ -2390,7 +2390,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
@@ -2419,7 +2419,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: node-agent
@@ -2449,7 +2449,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
@@ -2479,7 +2479,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
@@ -2510,7 +2510,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: node-agent
@@ -2788,7 +2788,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: operator
@@ -2961,7 +2961,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
@@ -3162,7 +3162,7 @@ metadata:
     # stop being trusted. ignore=true: create once, never update. Same reason the PVC has it.
     resources.gardener.cloud/ignore: "true"
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: kubescape
     app.kubernetes.io/component: storage
@@ -3193,7 +3193,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: ks
     app.kubernetes.io/component: storage
@@ -3397,7 +3397,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: ks
     app.kubernetes.io/component: storage
@@ -3420,7 +3420,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: ks
     app.kubernetes.io/component: storage
@@ -3448,7 +3448,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: ks
     app.kubernetes.io/component: storage
@@ -3472,7 +3472,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: ks
     app.kubernetes.io/component: storage
@@ -3500,7 +3500,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: ks
     app.kubernetes.io/component: node-agent
@@ -3520,7 +3520,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: ks
     app.kubernetes.io/component: node-agent
@@ -3569,7 +3569,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: ks
     app.kubernetes.io/component: node-agent
@@ -3592,7 +3592,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: ks
     app.kubernetes.io/component: node-agent
@@ -3620,7 +3620,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: ks
     app.kubernetes.io/component: node-agent
@@ -3644,7 +3644,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: ks
     app.kubernetes.io/component: node-agent
@@ -3672,7 +3672,7 @@ metadata:
   annotations:
     
   labels:
-    helm.sh/chart: kubescape-operator-1.41.0-duckling72
+    helm.sh/chart: kubescape-operator-1.41.0-duckling73
     app.kubernetes.io/name: kubescape-operator
     app.kubernetes.io/instance: ks
     app.kubernetes.io/component: node-agent-direct-keygen
