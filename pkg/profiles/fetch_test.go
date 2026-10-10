@@ -58,32 +58,32 @@ func TestFetchReadsOnlyTheNamedDirectory(t *testing.T) {
 	})
 	f := serve(t, body, "/repos/k8sstormcenter/bob/tarball/refs/pull/7/head")
 
-	docs, _, err := f.Fetch(context.Background(), Source{Repo: "k8sstormcenter/bob", Ref: "refs/pull/7/head", Path: "profiles/mine"})
+	res, err := f.Fetch(context.Background(), Source{Repo: "k8sstormcenter/bob", Ref: "refs/pull/7/head", Path: "profiles/mine"})
 	if err != nil {
 		t.Fatal(err)
 	}
 	var got []string
-	for _, d := range docs {
+	for _, d := range res.Documents {
 		got = append(got, d.Name)
 	}
 	// Sorted, no subdirectory, no non-YAML, nothing from a sibling directory.
 	if strings.Join(got, ",") != "a.yml,b.yaml" {
 		t.Fatalf("got %v", got)
 	}
-	if docs[1].Content != "kind: B\n" {
-		t.Fatalf("content mangled: %q", docs[1].Content)
+	if res.Documents[1].Content != "kind: B\n" {
+		t.Fatalf("content mangled: %q", res.Documents[1].Content)
 	}
 }
 
 func TestFetchRejects(t *testing.T) {
 	f := serve(t, tarball(t, map[string]string{"profiles/mine/a.yaml": "kind: A\n"}), "")
-	if _, _, err := f.Fetch(context.Background(), Source{Repo: "k8sstormcenter/bob", Path: "profiles/typo"}); err == nil {
+	if _, err := f.Fetch(context.Background(), Source{Repo: "k8sstormcenter/bob", Path: "profiles/typo"}); err == nil {
 		t.Error("a path with no documents must fail rather than deploy nothing")
 	}
-	if _, _, err := f.Fetch(context.Background(), Source{Repo: "bob", Path: "profiles/mine"}); err == nil {
+	if _, err := f.Fetch(context.Background(), Source{Repo: "bob", Path: "profiles/mine"}); err == nil {
 		t.Error("accepted a repo that is not <owner>/<name>")
 	}
-	if _, _, err := NewFetcher().Fetch(context.Background(), Source{Path: "x"}); err == nil {
+	if _, err := NewFetcher().Fetch(context.Background(), Source{Path: "x"}); err == nil {
 		t.Error("accepted an empty repo")
 	}
 }
@@ -95,7 +95,7 @@ func TestFetchRejectsHTTPError(t *testing.T) {
 	defer srv.Close()
 	f := NewFetcher()
 	f.baseURL = srv.URL
-	if _, _, err := f.Fetch(context.Background(), Source{Repo: "k8sstormcenter/bob", Ref: "nope", Path: "p"}); err == nil {
+	if _, err := f.Fetch(context.Background(), Source{Repo: "k8sstormcenter/bob", Ref: "nope", Path: "p"}); err == nil {
 		t.Error("accepted a 404")
 	}
 }
@@ -110,7 +110,7 @@ func TestFetchReadsTheSuiteFromTheSameRef(t *testing.T) {
 	})
 	f := serve(t, body, "/repos/k8sstormcenter/bob/tarball/v1")
 
-	docs, suite, err := f.Fetch(context.Background(), Source{
+	res, err := f.Fetch(context.Background(), Source{
 		Repo:      "k8sstormcenter/bob",
 		Ref:       "v1",
 		Path:      "example/github-runner/sbobs",
@@ -119,12 +119,12 @@ func TestFetchReadsTheSuiteFromTheSameRef(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(docs) != 1 || docs[0].Name != "runner.yaml" {
-		t.Fatalf("docs: %v", docs)
+	if len(res.Documents) != 1 || res.Documents[0].Name != "runner.yaml" {
+		t.Fatalf("docs: %v", res.Documents)
 	}
 	// The named file, not the sibling that also matches the kind.
-	if suite != "kind: AttackSuite\n" {
-		t.Fatalf("suite: %q", suite)
+	if res.Suite != "kind: AttackSuite\n" {
+		t.Fatalf("suite: %q", res.Suite)
 	}
 }
 
@@ -137,7 +137,7 @@ func TestFetchRejectsAMissingSuite(t *testing.T) {
 	})
 	f := serve(t, body, "/repos/k8sstormcenter/bob/tarball/v1")
 
-	if _, _, err := f.Fetch(context.Background(), Source{
+	if _, err := f.Fetch(context.Background(), Source{
 		Repo:      "k8sstormcenter/bob",
 		Ref:       "v1",
 		Path:      "example/github-runner/sbobs",
@@ -153,11 +153,55 @@ func TestFetchWithoutASuite(t *testing.T) {
 	body := tarball(t, map[string]string{"p/a.yaml": "kind: A\n"})
 	f := serve(t, body, "/repos/k8sstormcenter/bob/tarball/v1")
 
-	docs, suite, err := f.Fetch(context.Background(), Source{Repo: "k8sstormcenter/bob", Ref: "v1", Path: "p"})
+	res, err := f.Fetch(context.Background(), Source{Repo: "k8sstormcenter/bob", Ref: "v1", Path: "p"})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(docs) != 1 || suite != "" {
-		t.Fatalf("docs %v suite %q", docs, suite)
+	if len(res.Documents) != 1 || res.Suite != "" {
+		t.Fatalf("docs %v suite %q", res.Documents, res.Suite)
+	}
+}
+
+// The rule set is read from the same tarball at the same ref as the profiles and the suite:
+// one ref, so the rules, the profiles and the attacks scored against them cannot drift.
+func TestFetchReadsTheRulesFromTheSameRef(t *testing.T) {
+	body := tarball(t, map[string]string{
+		"example/github-runner/sbobs/runner.yaml":        "kind: ContainerProfile\n",
+		"example/github-runner-attacks.yaml":             "kind: AttackSuite\n",
+		"example/github-runner/rules/default-rules.yaml": "kind: Rules\n",
+	})
+	f := serve(t, body, "/repos/k8sstormcenter/bob/tarball/v1")
+
+	res, err := f.Fetch(context.Background(), Source{
+		Repo:      "k8sstormcenter/bob",
+		Ref:       "v1",
+		Path:      "example/github-runner/sbobs",
+		SuitePath: "example/github-runner-attacks.yaml",
+		RulesPath: "example/github-runner/rules/default-rules.yaml",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	// All three out of one request, and the rules directory is NOT read as documents: it is
+	// a subdirectory of the profiles path's parent, not of the profiles path.
+	if len(res.Documents) != 1 || res.Suite != "kind: AttackSuite\n" || res.Rules != "kind: Rules\n" {
+		t.Fatalf("docs %v suite %q rules %q", res.Documents, res.Suite, res.Rules)
+	}
+}
+
+// The same rule as the suite and the directory. A missing rule set must not fall back to
+// the chart's inline default under a signed-off ref: the shoot would report the ref it was
+// told to run and run something else.
+func TestFetchRejectsMissingRules(t *testing.T) {
+	body := tarball(t, map[string]string{"p/a.yaml": "kind: A\n"})
+	f := serve(t, body, "/repos/k8sstormcenter/bob/tarball/v1")
+
+	if _, err := f.Fetch(context.Background(), Source{
+		Repo:      "k8sstormcenter/bob",
+		Ref:       "v1",
+		Path:      "p",
+		RulesPath: "p/rules/default-rules.yaml",
+	}); err == nil {
+		t.Fatal("a missing rule set must be an error")
 	}
 }

@@ -85,6 +85,12 @@ type Profiles struct {
 	// suite. One ref for both means the suite and the profiles it scores against cannot
 	// drift. Empty leaves the chart's bundled proof-suite.yaml in place.
 	SuitePath string `json:"suitePath,omitempty"`
+	// RulesPath is one file in the same repo, read at the same Ref, holding the signed-off
+	// kubescape Rules object. It REPLACES the chart's default-rules rather than joining it:
+	// the names in a rule set are not the rule set, so the tuning a review approved (opcode
+	// filters, dedup windows, per-rule supportPolicy) only reaches the sensor as the whole
+	// document. Empty leaves the chart's own rules in place.
+	RulesPath string `json:"rulesPath,omitempty"`
 	// TokenRef names the Shoot spec.resources[] entry holding a token for a private repo.
 	// A public repo needs none.
 	TokenRef *string `json:"tokenRef,omitempty"`

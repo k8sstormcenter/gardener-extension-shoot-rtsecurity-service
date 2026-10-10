@@ -1,4 +1,29 @@
 {{- if .Values.kubescape.enabled }}
+{{- if .Values.kubescape.rulesDocument }}
+{{/*
+The signed-off rule set, exactly as it is in git, REPLACING the inline default below rather
+than joining it: a rule set is not its names. The tuning a review approved — opcode
+filters, dedup windows, suffix lists, per-rule supportPolicy — exists only in the whole
+document, so rendering names alone would drop precisely what was signed off. Fetched by
+pkg/profiles from the same ref as the profiles and the attack suite.
+
+The guard is the one failure that is otherwise silent: if rulesPath names a file that is
+not a Rules object, the inline default is still suppressed and the shoot runs with NO rules
+at all, which looks exactly like a quiet cluster. Fail the render instead.
+*/}}
+{{- $r := fromYaml .Values.kubescape.rulesDocument }}
+{{- if $r.Error }}
+{{- fail (printf "profiles.rulesPath does not parse as YAML: %s. The inline default rule set is replaced by this document, so a shoot would run with no rules at all." $r.Error) }}
+{{- end }}
+{{- if ne (dig "kind" "" $r) "Rules" }}
+{{- fail (printf "profiles.rulesPath is a %q, not a Rules object. It replaces the inline default rule set, so a shoot would run with no rules at all." (dig "kind" "<none>" $r)) }}
+{{- end }}
+{{- if not (dig "spec" "rules" (list) $r) }}
+{{- fail "profiles.rulesPath is a Rules object with an empty spec.rules. It replaces the inline default rule set, so a shoot would run with no rules at all." }}
+{{- end }}
+---
+{{ .Values.kubescape.rulesDocument }}
+{{- else }}
 ---
 apiVersion: kubescape.io/v1
 kind: Rules
@@ -859,6 +884,9 @@ spec:
         - context:kubernetes
         - admission
         - exec
+{{- end }}
+# The binding stays ours either way: which rules fire on which namespaces is a per-shoot
+# decision, not part of the signed-off rule set.
 ---
 apiVersion: kubescape.io/v1
 kind: RuntimeRuleAlertBinding

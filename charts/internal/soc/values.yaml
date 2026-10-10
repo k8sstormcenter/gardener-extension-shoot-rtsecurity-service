@@ -218,6 +218,10 @@ kubescape:
     - traefik
     - cilium-secrets
     - external-dns
+  # The whole signed-off Rules document, fetched verbatim from git by the actuator when the
+  # Shoot's providerConfig names profiles.rulesPath. When set it REPLACES the inline rule set
+  # in templates/kubescape-rules.yaml; the binding below is rendered either way.
+  rulesDocument: ""
   # Rules bound to every workload; narrow the list per shoot.
   rules:
     - "Unexpected process launched"
