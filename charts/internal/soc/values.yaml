@@ -168,11 +168,12 @@ kubescape:
   # and was OOMKilled into CrashLoopBackOff, taking the aggregated APIService with it. A limit
   # is a ceiling, not a reservation, so raising it cannot cost more than the crash loop did.
   storageMemoryLimit: 4Gi
-  # Whether the sensor reports DNS lookups that fail to resolve. New in the duckling72
-  # chart, default false as upstream ships it. A knob rather than a literal so changing it
-  # does not need the vendored render touched again; it feeds the sensor config, so changing
-  # it rolls the sensor.
-  dnsReportFailures: false
+  # Whether the sensor reports DNS lookups that fail to resolve. Upstream ships false; this
+  # stack runs true, because a failed lookup is the only trace a name-based exfiltration
+  # leaves when the name never resolves, and without it that attack step is simply silent.
+  # A knob rather than a literal so changing it does not need the vendored render touched
+  # again; it feeds the sensor config, so changing it rolls the sensor.
+  dnsReportFailures: true
   # Suggester: the node-agent derives a candidate profile itself and writes it to the
   # cluster as a ContainerProfile labelled kubescape.io/profile-role=suggestion. That is
   # the input to the signoff loop, so it is on, and scope must be full: at scope network
@@ -248,6 +249,12 @@ kubescape:
   # Shoot's providerConfig names profiles.rulesPath. When set it REPLACES the inline rule set
   # in templates/kubescape-rules.yaml; the binding below is rendered either way.
   rulesDocument: ""
+  # Rules the set defines that are deliberately NOT bound. Every name here has to be a
+  # decision someone made, because the alternative is what happened twice: a rule arrives in
+  # a new signed-off set, nobody adds it to the binding, and it ships looking live while
+  # bound to nothing. The render refuses a defined rule that is in neither list, so a new
+  # rule forces a choice instead of defaulting to silence.
+  unboundRules: []
   # Rules bound to every workload; narrow the list per shoot. The render refuses a name the
   # effective rule set does not define, so this list cannot drift from the rule set again.
   # These are candidate-3's 31 names, which are exactly the names the chart's own

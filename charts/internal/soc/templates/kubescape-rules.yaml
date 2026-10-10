@@ -62,6 +62,21 @@ deliberate per-shoot choice and stays allowed.
 {{- if $unknown }}
 {{- fail (printf "kubescape.rules binds %v, which %s does not define. A bound name that nothing defines binds nothing: the rule looks live and can never fire. Defined names: %v" $unknown $from $defined) }}
 {{- end }}
+{{/*
+And the other direction. A defined rule nobody binds is allowed, but only on purpose: twice
+now a rule has arrived in a new rule set, gone unbound because nobody thought to add it, and
+shipped looking live while bound to nothing. A new rule therefore fails the render until it
+is either bound or listed as deliberately unbound.
+*/}}
+{{- $undecided := list }}
+{{- range $defined }}
+{{- if and (not (has . $.Values.kubescape.rules)) (not (has . $.Values.kubescape.unboundRules)) }}
+{{- $undecided = append $undecided . }}
+{{- end }}
+{{- end }}
+{{- if $undecided }}
+{{- fail (printf "%s defines %v, which kubescape.rules does not bind. An unbound rule ships looking live and can never fire. Bind it, or list it in kubescape.unboundRules to record that it is unbound on purpose." $from $undecided) }}
+{{- end }}
 ---
 {{ $doc }}
 # The binding stays ours either way: which rules fire on which namespaces is a per-shoot
