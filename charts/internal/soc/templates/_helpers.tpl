@@ -50,6 +50,7 @@ until there is a signed-off profile to judge it by.
     "hostProfileServiceEnabled": true,
     "hostProfileUpdateDataPeriod": {{ .Values.kubescape.learn.hostProfileUpdatePeriod | quote }},
     "directAlerts": {"enabled": true, "port": 50405, "jwtPublicKeyPath": "/etc/node-agent-direct/public.pem", "windowBytes": 67108864},
+    "dnsReportFailures": {{ .Values.kubescape.dnsReportFailures }},
     "networkServiceEnabled": true,
     "malwareDetectionEnabled": false,
     "hostMalwareSensorEnabled": false,
