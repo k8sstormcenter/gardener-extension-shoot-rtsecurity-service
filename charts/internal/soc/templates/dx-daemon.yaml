@@ -43,8 +43,26 @@ data:
 {{- $raw := .Values.dx.proofSuite | default (.Files.Get "files/proof-suite.yaml") }}
 {{- $parsed := fromYaml $raw }}
 {{- if and .Values.dx.proofSuite (not $parsed.Error) $parsed.target .Values.target.scaleSetName .Values.target.namespace }}
-{{- $_ := set $parsed.target "service" (printf "%s-runner-" .Values.target.scaleSetName) }}
 {{- $_ := set $parsed.target "namespace" .Values.target.namespace }}
+{{/*
+Only a key the suite already carries is rewritten; a key it does not carry is never added.
+The suite authored for this workload names the prefix as "pod", not "service", so writing
+"service" would introduce a field nothing reads and leave the real prefix pointing at the
+cluster the suite was authored against — dx scoring another cluster's pods, silently, which
+is the exact failure this override exists to prevent. Neither key present means nothing was
+retargeted, so that fails rather than shipping a suite aimed elsewhere.
+*/}}
+{{- $prefix := printf "%s-runner-" .Values.target.scaleSetName }}
+{{- $keyed := false }}
+{{- range $k := list "pod" "service" }}
+{{- if hasKey $parsed.target $k }}
+{{- $_ := set $parsed.target $k $prefix }}
+{{- $keyed = true }}
+{{- end }}
+{{- end }}
+{{- if not $keyed }}
+{{- fail (printf "the attack suite's target names no pod prefix (keys: %v). dx scores pods by prefix, so it cannot be retargeted at this cluster and would score the cluster it was authored against." (keys $parsed.target | sortAlpha)) }}
+{{- end }}
 {{- $raw = toYaml $parsed }}
 {{- end }}
 {{ $raw | indent 4 }}
