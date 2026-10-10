@@ -233,7 +233,13 @@ kubescape:
   # Shoot's providerConfig names profiles.rulesPath. When set it REPLACES the inline rule set
   # in templates/kubescape-rules.yaml; the binding below is rendered either way.
   rulesDocument: ""
-  # Rules bound to every workload; narrow the list per shoot.
+  # Rules bound to every workload; narrow the list per shoot. The render refuses a name the
+  # effective rule set does not define, so this list cannot drift from the rule set again.
+  # These are candidate-3's 31 names, which are exactly the names the chart's own
+  # files/default-rules.yaml defines: the two sets differ in tuning, not in membership.
+  # Binding all 31 is safe because each rule carries its own enabled flag (candidate-3
+  # disables R0003, R1003 and R1011), so the binding decides scope and the rule decides
+  # whether it fires.
   rules:
     - "Unexpected process launched"
     - "Unexpected process arguments"
@@ -243,27 +249,29 @@ kubescape:
     - "DNS Anomalies in container"
     - "Unexpected service account token access"
     - "Workload uses Kubernetes API unexpectedly"
-    - "Process executed from malicious source"
-    - "Process tries to load a kernel module"
-    - "Drifted process executed"
-    - "Disallowed ssh connection"
-    - "Fileless execution detected"
-    - "Crypto miner launched"
-    - "Process executed from mount"
-    - "Crypto Mining Related Port Communication"
-    - "Crypto Mining Domain Communication"
     - "Read Environment Variables from procfs"
     - "eBPF Program Load"
-    - "Soft link created over sensitive file"
     - "Unexpected Sensitive File Access"
-    - "Hard link created over sensitive file"
-    - "Exec to pod"
     - "Unexpected Egress Network Traffic"
     - "Unexpected Ingress Network Traffic"
+    - "Process executed from malicious source"
+    - "Drifted process executed"
+    - "Process tries to load a kernel module"
+    - "Disallowed ssh connection"
+    - "Process executed from mount"
+    - "Fileless execution detected"
+    - "Process tries to escape container"
+    - "Crypto miner launched"
+    - "Crypto Mining Domain Communication"
+    - "Crypto Mining Related Port Communication"
+    - "Soft link created over sensitive file"
+    - "ld_preload hooks technique detected"
+    - "Hard link created over sensitive file"
     - "Malicious Ptrace Usage"
     - "Unexpected io_uring Operation Detected"
     - "Kubelet TLS Exec Request Detected"
     - "Signed profile tampered"
+    - "Exec to pod"
 
 adaptiveExport:
   enabled: true
