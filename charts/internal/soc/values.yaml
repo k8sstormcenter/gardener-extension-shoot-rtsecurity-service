@@ -294,6 +294,7 @@ kubescape:
     - "Kubelet TLS Exec Request Detected"
     - "Signed profile tampered"
     - "Exec to pod"
+    - "DNS exfiltration attempt"
 
 adaptiveExport:
   enabled: true
