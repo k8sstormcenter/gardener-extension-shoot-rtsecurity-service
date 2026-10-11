@@ -74,6 +74,28 @@ is either bound or listed as deliberately unbound.
 {{- $undecided = append $undecided . }}
 {{- end }}
 {{- end }}
+{{/*
+nestedContainers.rules names rules by ID, which is a third list that can disagree with the
+rule set. An ID the set does not define evaluates nothing inside nested containers while
+reading as configured — the same silent shape as a binding naming an undefined rule, and on
+a docker-in-docker workload it would mean the inner container is ungoverned by a rule
+everyone believes covers it.
+*/}}
+{{- if .Values.kubescape.nestedContainers.enabled }}
+{{- $ids := list }}
+{{- range $spec }}
+{{- $ids = append $ids (dig "id" "" .) }}
+{{- end }}
+{{- $unknownIDs := list }}
+{{- range .Values.kubescape.nestedContainers.rules }}
+{{- if not (has . $ids) }}
+{{- $unknownIDs = append $unknownIDs . }}
+{{- end }}
+{{- end }}
+{{- if $unknownIDs }}
+{{- fail (printf "kubescape.nestedContainers.rules names %v, which %s does not define. Those rules would evaluate nothing inside nested containers while reading as configured, leaving the inner container of a dind workload ungoverned. Defined ids: %v" $unknownIDs $from $ids) }}
+{{- end }}
+{{- end }}
 {{- if $undecided }}
 {{- fail (printf "%s defines %v, which kubescape.rules does not bind. An unbound rule ships looking live and can never fire. Bind it, or list it in kubescape.unboundRules to record that it is unbound on purpose." $from $undecided) }}
 {{- end }}
