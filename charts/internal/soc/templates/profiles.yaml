@@ -61,9 +61,45 @@ real ContainerProfile with the name everyone expects, and the agent binds none o
 {{- end }}
 {{- end }}
 {{- end }}
+{{/*
+Only ContainerProfiles are rendered into the shoot.
+
+The directory is a delivery directory, not a pile of manifests: it also holds the
+kustomization.yaml that Flux points at in production, which has to stay there. Rendering it
+put a kustomize.config.k8s.io Kustomization into the ManagedResource, and GRM cannot apply
+a kind with no CRD, so the whole apply failed PARTWAY — the DaemonSets took their new
+images while the rule set and the profile ownership did not. A partial apply is worse than
+a refused one, because the cluster ends up in a combination the chart would never render.
+
+So a kustomize document is skipped, because it belongs there. Anything else that is not a
+ContainerProfile fails the render, because a stray object or a mistyped kind is an error
+and not an opt-out, and the shape guards above only ever examined documents that already
+claimed to be profiles.
+*/}}
+{{- $rendered := 0 }}
 {{- range .Values.profiles.documents }}
+{{- $doc := fromYaml .content }}
+{{- if $doc.Error }}
+{{- fail (printf "%s does not parse as YAML: %s" .name $doc.Error) }}
+{{- end }}
+{{- $kind := dig "kind" "" $doc }}
+{{- $api := dig "apiVersion" "" $doc }}
+{{- if hasPrefix "kustomize.config.k8s.io/" $api }}
+{{- /* a build file for the GitOps path, not a deliverable */}}
+{{- else if ne $kind "ContainerProfile" }}
+{{- fail (printf "%s is a %q, not a ContainerProfile. The profiles path delivers container profiles; an object of another kind is applied into the shoot as-is and fails the whole ManagedResource if its kind has no CRD, which leaves the stack partly applied." .name (default "<none>" $kind)) }}
+{{- else }}
+{{- $rendered = add1 $rendered }}
 ---
 # {{ .name }}
 {{ .content }}
+{{- end }}
+{{- end }}
+{{/*
+A directory holding only build files would otherwise render nothing while profiles.enabled
+is true: the stack would install, report success, and govern nothing.
+*/}}
+{{- if eq $rendered 0 }}
+{{- fail (printf "profiles.path delivered %d documents and none of them is a ContainerProfile. The workload would be left ungoverned by an install that reports success." (len .Values.profiles.documents)) }}
 {{- end }}
 {{- end }}
