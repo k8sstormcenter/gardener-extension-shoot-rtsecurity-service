@@ -51,8 +51,6 @@ until there is a signed-off profile to judge it by.
     "hostProfileUpdateDataPeriod": {{ .Values.kubescape.learn.hostProfileUpdatePeriod | quote }},
     "directAlerts": {"enabled": true, "port": 50405, "jwtPublicKeyPath": "/etc/node-agent-direct/public.pem", "windowBytes": 67108864},
     "dnsReportFailures": {{ .Values.kubescape.dnsReportFailures }},
-    "nestedContainersEnabled": {{ .Values.kubescape.nestedContainers.enabled }},
-    "nestedContainerRules": {{ .Values.kubescape.nestedContainers.rules | toJson }},
     "networkServiceEnabled": true,
     "malwareDetectionEnabled": false,
     "hostMalwareSensorEnabled": false,

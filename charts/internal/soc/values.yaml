@@ -20,7 +20,7 @@ images:
   # /usr/bin only — there is no /bin/sh in it, so a hardcoded shebang would not resolve.
   certgenKubectl: "quay.io/kubescape/kubectl:1.36.1@sha256:e2b97dde9666986c61c56d49aae85a714b89b69392baa531438e74ec34096fb4"
   # Digest-pinned: the tag moves during a pre-release line.
-  nodeAgent: "docker.io/entlein/duckling:v0.1.0-rogue87@sha256:ddae81fb36959747dac4514e84e5016a771e19d3b451e9e98d56009f83828ddc"
+  nodeAgent: "docker.io/entlein/duckling:v0.1.0-rogue85@sha256:6cdc09135250f97359d0b1e561d789a14d6f657b2c3e784e01f5957cdaa81902"
   # Needs kubectl AND a shell. Two wrong answers already: bitnami/kubectl was withdrawn
   # from docker.io and resolves to NotFound, and registry.k8s.io/kubectl is distroless, so
   # its pod dies on exec /bin/sh. This image declares /bin/sh as its own default command.
@@ -174,19 +174,6 @@ kubescape:
   # A knob rather than a literal so changing it does not need the vendored render touched
   # again; it feeds the sensor config, so changing it rolls the sensor.
   dnsReportFailures: true
-  # Whether the listed rules also evaluate inside nested containers. New in the duckling76
-  # chart, which ships it off. This stack runs it ON, because the workload it governs runs
-  # docker-in-docker: without it, anything a job does inside the inner container is outside
-  # every rule, which is the half of a runner that an attack would prefer.
-  #
-  # The rules are IDs, and an ID the rule set does not define is silently inert — the render
-  # refuses that, for the same reason the binding refuses a name nothing defines.
-  #
-  # It widens what can alert on a dind workload, so a measurement taken with it on is not
-  # comparable to one taken with it off.
-  nestedContainers:
-    enabled: true
-    rules: [R0010, R1002, R1004, R1005, R1006, R1015, R1032]
   # Suggester: the node-agent derives a candidate profile itself and writes it to the
   # cluster as a ContainerProfile labelled kubescape.io/profile-role=suggestion. That is
   # the input to the signoff loop, so it is on, and scope must be full: at scope network
