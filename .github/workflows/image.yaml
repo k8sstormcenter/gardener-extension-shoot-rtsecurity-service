@@ -98,8 +98,12 @@ jobs:
           case "$out" in
             private) echo "publish=true" >> "$GITHUB_OUTPUT" ;;
             public)
-              echo "::error::charts/soc is a PUBLIC package. It carries the vendored render, so the shoot chart is not published while it is public. Set the package private, then re-run." >&2
-              exit 1 ;;
+              # Loud, but it must not fail the job: the extension chart is pushed by the next
+              # step and SovereignSOC pins that artefact by sha, so failing here would stop
+              # every future pin over a decision about a different chart. Not publishing is
+              # already the safe outcome; the warning is what carries it to a human.
+              echo "::warning::charts/soc is a PUBLIC package, so the shoot chart was NOT published. Set the package private to publish it. The extension chart is unaffected."
+              echo "publish=false" >> "$GITHUB_OUTPUT" ;;
             *)
               echo "::notice::charts/soc is not published yet (or packages:read is unavailable), so the shoot chart is skipped. Push it once by hand, set the package private, then this gate takes over."
               echo "publish=false" >> "$GITHUB_OUTPUT" ;;
