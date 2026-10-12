@@ -76,38 +76,6 @@ jobs:
           echo "sha=${GITHUB_SHA::12}" >> "$GITHUB_OUTPUT"
       - name: Login
         run: echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io -u "${{ github.actor }}" --password-stdin
-      # The shoot chart carries the vendored render in full, so it is published only while its
-      # package is private. This is a gate and not a comment because the ordering is forced and
-      # easy to get wrong: visibility belongs to a PACKAGE, and a package does not exist until
-      # something pushes to it, so the first push necessarily lands at whatever the default is.
-      # This org's default is public - the extension image and chart are both anonymously
-      # pullable - and that is how a soc chart was once published in the open. Asking the API
-      # costs one call and turns "remember to set it private first" into something enforced.
-      #
-      # A missing package is not a failure: the first push has to come from somewhere, and it
-      # is meant to be a deliberate manual one so the visibility can be set before any build
-      # repeats it. So absent means skip, public means fail, private means publish.
-      - name: Is the shoot chart's package private
-        id: vis
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -uo pipefail
-          out=$(gh api "orgs/${{ github.repository_owner }}/packages/container/charts%2Fsoc" \
-                  --jq .visibility 2>/dev/null) || out=""
-          case "$out" in
-            private) echo "publish=true" >> "$GITHUB_OUTPUT" ;;
-            public)
-              # Loud, but it must not fail the job: the extension chart is pushed by the next
-              # step and SovereignSOC pins that artefact by sha, so failing here would stop
-              # every future pin over a decision about a different chart. Not publishing is
-              # already the safe outcome; the warning is what carries it to a human.
-              echo "::warning::charts/soc is a PUBLIC package, so the shoot chart was NOT published. Set the package private to publish it. The extension chart is unaffected."
-              echo "publish=false" >> "$GITHUB_OUTPUT" ;;
-            *)
-              echo "::notice::charts/soc is not published yet (or packages:read is unavailable), so the shoot chart is skipped. Push it once by hand, set the package private, then this gate takes over."
-              echo "publish=false" >> "$GITHUB_OUTPUT" ;;
-          esac
       - name: Package and push
         run: |
           set -euo pipefail
@@ -118,11 +86,9 @@ jobs:
           helm package "$CHART" --version "${{ steps.v.outputs.chart }}-${{ steps.v.outputs.sha }}" -d /tmp/out
           # The shoot-side chart belongs here too, so a GitOps cluster renders the artefact
           # this build renders rather than a copy of it, versioned with the EXTENSION's chart
-          # version and the sha so one artefact serves staging and prod. Guarded below: it is
-          # published only while the package is private, because it carries the vendored
-          # render in full.
-          if [ "${{ steps.vis.outputs.publish }}" = "true" ]; then
-            helm package charts/internal/soc \
-              --version "${{ steps.v.outputs.chart }}-${{ steps.v.outputs.sha }}" -d /tmp/out
-          fi
+          # version and the sha so one artefact serves staging and prod. Only the sha-suffixed
+          # tag, which never moves: a cluster pinning a tag that follows main is how the
+          # vendored copy drifted in a day.
+          helm package charts/internal/soc \
+            --version "${{ steps.v.outputs.chart }}-${{ steps.v.outputs.sha }}" -d /tmp/out
           for tgz in /tmp/out/*.tgz; do helm push "$tgz" "oci://ghcr.io/${{ github.repository_owner }}/charts"; done
