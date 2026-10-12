@@ -232,6 +232,32 @@ spec:
               fieldPath: metadata.namespace
         - name: DX_PPROF_ADDR
           value: 127.0.0.1:6060
+{{- if .Values.dx.podPrefix }}
+{{- /*
+One KPI document serves every cluster: it names ${RUNNER_PREFIX} where the pod prefix would
+be, and dx substitutes any DX_PROOF_VAR_<NAME> at load. The value is namespace-qualified
+because the document's scope.pod is, while dx.podPrefix is the bare prefix — the two forms
+differ by exactly this join, which is why the chart composes it rather than asking for it
+twice and letting them disagree.
+
+The name deliberately does not begin with POD. dx substitutes the bare $NAME form as well as
+${NAME}, so a variable called POD_PREFIX can have $POD replaced inside it, leaving the pod
+name followed by a stray "_PREFIX" — a prefix that matches nothing, reported as a KPI of
+zero. It ranges over a map to do it, so which of the two wins is not even stable between
+runs: the same document would score correctly on one load and nothing on the next.
+*/}}
+{{- $ns := "" }}
+{{- range fromJsonArray (include "soc.targets" .) }}
+{{- if and (not $ns) .namespace }}
+{{- $ns = .namespace }}
+{{- end }}
+{{- end }}
+{{- if not $ns }}
+{{- fail "dx.podPrefix is set but no target declares a namespace. The prefix dx scores on is namespace-qualified, so without one it would match nothing and report a KPI of zero." }}
+{{- end }}
+        - name: DX_PROOF_VAR_RUNNER_PREFIX
+          value: {{ printf "%s/%s" $ns .Values.dx.podPrefix | quote }}
+{{- end }}
         - name: DX_CAPTURE_POLICY
           value: adaptive_base
         - name: DX_RECEIVER_TLS

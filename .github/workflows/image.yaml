@@ -84,4 +84,11 @@ jobs:
           # prerelease that never moves. OCI tags cannot carry '+', so prerelease form.
           helm package "$CHART" --version "${{ steps.v.outputs.chart }}" -d /tmp/out
           helm package "$CHART" --version "${{ steps.v.outputs.chart }}-${{ steps.v.outputs.sha }}" -d /tmp/out
+          # The shoot-side chart, so a GitOps cluster renders the artefact this build renders
+          # rather than a copy of it. Versioned with the EXTENSION's chart version and not its
+          # own, so one artefact serves staging and prod and the version a cluster pins names
+          # the extension build behind it. Only the sha-suffixed tag, which never moves: a
+          # cluster pinning a tag that follows main is how the vendored copy drifted in a day.
+          helm package charts/internal/soc \
+            --version "${{ steps.v.outputs.chart }}-${{ steps.v.outputs.sha }}" -d /tmp/out
           for tgz in /tmp/out/*.tgz; do helm push "$tgz" "oci://ghcr.io/${{ github.repository_owner }}/charts"; done

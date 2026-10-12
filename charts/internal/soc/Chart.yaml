@@ -1,4 +1,8 @@
 apiVersion: v1
 name: soc
-version: 0.1.0
+# Placeholder. The publish job passes --version with the EXTENSION chart's version plus the
+# commit sha, so one artefact serves staging and prod and the version a cluster pins names the
+# extension build that renders it. A number of its own here would drift from that and mean
+# nothing, since nothing pulls this chart by it.
+version: 0.0.0
 description: SOC runtime-security stack rendered into a shoot by the rtsecurity extension.
