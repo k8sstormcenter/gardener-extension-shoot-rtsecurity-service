@@ -188,6 +188,8 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+        - name: DX_PPROF_ADDR
+          value: 127.0.0.1:6060
         - name: DX_CAPTURE_POLICY
           value: adaptive_base
         - name: DX_RECEIVER_TLS
@@ -259,7 +261,7 @@ spec:
         resources:
           limits:
             cpu: "2"
-            memory: 3Gi
+            memory: 4Gi
           requests:
             cpu: 50m
             memory: 1Gi

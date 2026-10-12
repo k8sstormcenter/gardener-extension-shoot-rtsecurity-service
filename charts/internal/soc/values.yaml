@@ -30,7 +30,7 @@ images:
   # and rejects a target naming neither. rc101 ignored the prefix and scored every pod in the
   # namespace, so the ARC controller and listener landed in the proof KPI alongside the
   # runners. Digest-pinned like the rest: this is a pre-release line, where the tag moves.
-  dxDaemon: "docker.io/tanzeee/dx-daemon:0.6.0-shadow-rc107@sha256:be6e6b8023b1f8de5780b2fd619fed3102bf2078c3a9eafb2b960cbe29466d79"
+  dxDaemon: "docker.io/tanzeee/dx-daemon:0.6.0-shadow-rc108@sha256:57dd02c9c9fdf94a8d90596dd173f0cc0074ec4dc159253ef8deeaf2c0c818fb"
 
 # Namespaces the stack occupies in the shoot. Kept as values because the shoot's
 # own policies may force different ones.
