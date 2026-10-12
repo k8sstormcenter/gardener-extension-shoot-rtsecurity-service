@@ -19,8 +19,6 @@ container. It composes nothing and does not read the kubescape.io/profile-fragme
 so a fragment is not bindable and a flat <label> profile for a multi-container workload
 binds nothing at all.
 */}}
-{{- $t := .Values.target }}
-{{- if and $t.enabled $t.profileName }}
 {{- $byName := dict }}
 {{- range .Values.profiles.documents }}
 {{- $doc := fromYaml .content }}
@@ -28,6 +26,13 @@ binds nothing at all.
 {{- $_ := set $byName (dig "metadata" "name" "" $doc) $doc }}
 {{- end }}
 {{- end }}
+{{/*
+Every guard runs per target. A cluster running the same workload under several labels has
+one profile set per label, and a delivery that satisfies one label says nothing about
+another: the containers can differ, and so can the namespace.
+*/}}
+{{- range $t := fromJsonArray (include "soc.targets" .) }}
+{{- if and $t.enabled $t.profileName }}
 {{/*
 A flat profile under the bare label is the failure that looks most like success: it is a
 real ContainerProfile with the name everyone expects, and the agent binds none of it.
@@ -58,6 +63,7 @@ real ContainerProfile with the name everyone expects, and the agent binds none o
 {{- $ns := dig "namespace" "" $md }}
 {{- if and $ns (ne $ns $t.namespace) }}
 {{- fail (printf "%s is namespaced %q but the workload runs in %q. A profile the agent cannot find in the pod's own namespace leaves the container unresolved." $want $ns $t.namespace) }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

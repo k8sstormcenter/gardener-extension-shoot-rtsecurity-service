@@ -42,8 +42,44 @@ data:
   suite.yaml: |
 {{- $raw := .Values.dx.proofSuite | default (.Files.Get "files/proof-suite.yaml") }}
 {{- $parsed := fromYaml $raw }}
-{{- if and .Values.dx.proofSuite (not $parsed.Error) $parsed.target .Values.target.scaleSetName .Values.target.namespace }}
-{{- $_ := set $parsed.target "namespace" .Values.target.namespace }}
+{{- $ts := fromJsonArray (include "soc.targets" .) }}
+{{- $ssn := list }}
+{{- $nss := list }}
+{{- range $ts }}
+{{- range .scaleSetNames }}
+{{- $ssn = append $ssn . }}
+{{- end }}
+{{- if .namespace }}
+{{- $nss = append $nss .namespace }}
+{{- end }}
+{{- end }}
+{{- $nss = uniq $nss }}
+{{- /*
+dx.podPrefix is the explicit pod-name prefix, for a cluster whose workload spans more than
+one scale set. It is a BARE prefix and never namespace-qualified: the suite carries the
+namespace in its own key, which this chart sets, so a value like "arc-systems/nnf-c-ubuntu-"
+would be composed with the namespace a second time and match nothing. That form is the KPI
+document's scope.pod, which is a different field in a different file.
+*/}}
+{{- if and .Values.dx.podPrefix (contains "/" .Values.dx.podPrefix) }}
+{{- fail (printf "dx.podPrefix is %q. It is the bare pod-name prefix and the namespace comes from the target, so a namespace-qualified value is composed twice and scores nothing. The qualified form belongs in the KPI document's scope.pod, not here." .Values.dx.podPrefix) }}
+{{- end }}
+{{- /*
+A suite with no "target" key is the pre-compiled form: it carries its own scope and this
+chart cannot retarget it, so a cluster declaring more than one scale set would ship a scope
+naming whichever cluster the document was authored against and score nothing on its own
+pods. That is the KPI-of-zero failure, and it reports no error, so it fails the render
+instead. Only the plural case fails: one scale set is the shape every current cluster has
+and its scope is already correct.
+*/}}
+{{- if and .Values.dx.proofSuite (not $parsed.Error) (not $parsed.target) (gt (len $ssn) 1) }}
+{{- fail (printf "the delivered suite carries no target key, so it is the pre-compiled form and this chart cannot retarget it, but %d scale sets are declared (%v). Its own scope would be whatever it was authored against. Deliver a suite whose scope already covers these pods, or deliver the AttackSuite form so the prefix can be rewritten." (len $ssn) $ssn) }}
+{{- end }}
+{{- if and .Values.dx.proofSuite (not $parsed.Error) $parsed.target (or .Values.dx.podPrefix $ssn) $nss }}
+{{- if gt (len $nss) 1 }}
+{{- fail (printf "the targets span %d namespaces (%v) but one suite carries one namespace, so whichever is written leaves the others scoring nothing. Deliver one suite per namespace, or declare one namespace." (len $nss) $nss) }}
+{{- end }}
+{{- $_ := set $parsed.target "namespace" (first $nss) }}
 {{/*
 Only a key the suite already carries is rewritten; a key it does not carry is never added.
 The suite authored for this workload names the prefix as "pod", not "service", so writing
@@ -52,7 +88,13 @@ cluster the suite was authored against — dx scoring another cluster's pods, si
 is the exact failure this override exists to prevent. Neither key present means nothing was
 retargeted, so that fails rather than shipping a suite aimed elsewhere.
 */}}
-{{- $prefix := printf "%s-runner-" .Values.target.scaleSetName }}
+{{- $prefix := .Values.dx.podPrefix }}
+{{- if not $prefix }}
+{{- if gt (len $ssn) 1 }}
+{{- fail (printf "the targets name %d scale sets (%v) and no dx.podPrefix is set. One suite carries one prefix, so deriving it from a scale set would score that one and silently ignore the rest. Set dx.podPrefix to the prefix they share." (len $ssn) $ssn) }}
+{{- end }}
+{{- $prefix = printf "%s-runner-" (first $ssn) }}
+{{- end }}
 {{- $keyed := false }}
 {{- range $k := list "pod" "service" }}
 {{- if hasKey $parsed.target $k }}

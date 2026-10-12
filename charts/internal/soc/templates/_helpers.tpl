@@ -113,3 +113,39 @@ until there is a signed-off profile to judge it by.
     }
 }
 {{- end }}
+
+{{/*
+soc.targets normalises the workload declaration to a list, so every guard and every
+consumer reads one shape.
+
+A cluster can run the same workload under several scale sets: nnf runs six, three per
+runner image, and the agent binds by LABEL, so the unit is one label and the profile set
+it names, not one scale set. Hence two levels: a target is one label, and it lists every
+scale set whose pods carry it.
+
+The singular `target` is still honoured and maps to exactly one entry, with its
+`scaleSetName` becoming a one-element `scaleSetNames`. A cluster declaring `target` renders
+byte-identically to before this field existed, which is what keeps k3s-2 off the critical
+path of a change made for prod.
+*/}}
+{{- define "soc.targets" -}}
+{{- $src := .Values.targets -}}
+{{- if not $src -}}
+{{- $src = list .Values.target -}}
+{{- end -}}
+{{- $out := list -}}
+{{- range $src -}}
+{{- $names := .scaleSetNames -}}
+{{- if and (not $names) .scaleSetName -}}
+{{- $names = list .scaleSetName -}}
+{{- end -}}
+{{- $out = append $out (dict
+    "enabled" (default false .enabled)
+    "namespace" (default "" .namespace)
+    "profileName" (default "" .profileName)
+    "scaleSetNames" (default (list) $names)
+    "containers" (default (list) .containers)
+    "initContainers" (default (list) .initContainers)) -}}
+{{- end -}}
+{{- $out | toJson -}}
+{{- end -}}

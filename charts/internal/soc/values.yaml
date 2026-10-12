@@ -117,6 +117,17 @@ clickhouse:
 # the sensor, because an ungoverned workload is treated as deny-all from its first event
 # and a scale set that bursts to hundreds of pods would emit an alert per distinct exec.
 # Once profiles arrive the exclusion lifts by itself, so the loop needs no second switch.
+# Workloads this cluster governs, one entry per PROFILE LABEL. Empty = use the singular
+# `target` below, which is one entry's worth and what k3s-2 declares.
+#
+# Two levels of plurality, because the agent binds by label: an entry is one label plus the
+# profile set it names, and it lists every scale set whose pods carry that label. nnf runs
+# six scale sets under two labels, three per runner image, so it is two entries and not six.
+# Each entry takes the same fields as `target`, with `scaleSetNames` in place of
+# `scaleSetName`, and every guard below runs per entry: a delivery that satisfies one label
+# says nothing about another, since the containers and the namespace can both differ.
+targets: []
+
 target:
   enabled: false
   namespace: arc-systems
@@ -303,3 +314,10 @@ dx:
   enabled: true
   # Attack suite for the proof KPI; empty = the bundled redis suite (files/proof-suite.yaml).
   proofSuite: ""
+  # The pod-name prefix dx scores on, for a cluster whose workload spans more than one
+  # scale set. Empty = derived from the single declared scale set, which is what k3s-2 does.
+  # BARE prefix, never namespace-qualified: the suite carries the namespace in its own key
+  # and this chart sets it, so a qualified value is composed twice and matches nothing. The
+  # qualified form ("<ns>/<prefix>") is the KPI document's scope.pod, a different field in a
+  # different file; the render fails on a "/" here rather than let that be silent.
+  podPrefix: ""
