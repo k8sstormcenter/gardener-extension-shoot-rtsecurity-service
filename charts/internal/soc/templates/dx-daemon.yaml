@@ -316,8 +316,18 @@ runs: the same document would score correctly on one load and nothing on the nex
         image: {{ .Values.images.dxDaemon }}
         name: dx-daemon
         ports:
+{{- /*
+The host binding is off by default. It existed so a node-local log shipper could post
+findings to $(HOST_IP):9099, and this stack no longer ships one: the findings path is the
+Service above, which is internalTrafficPolicy Local and so already node-local. Meanwhile
+hostPort 9099 collided with a CNI's own health port on a cluster running this chart and
+crashlooped that CNI's agent on every node, which takes the cluster down rather than
+degrading it. A host binding nothing in the chart dials is not worth that.
+*/}}
         - containerPort: 9099
-          hostPort: 9099
+{{- if .Values.dx.hostPort }}
+          hostPort: {{ .Values.dx.hostPort }}
+{{- end }}
           name: findings
         readinessProbe:
           httpGet:

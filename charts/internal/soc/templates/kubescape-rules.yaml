@@ -91,6 +91,7 @@ spec:
     matchExpressions:
       - key: kubernetes.io/metadata.name
         operator: NotIn
+{{- include "soc.kubescape.assertLearnOnly" . }}
         values: {{ include "soc.kubescape.bindingExcludeNamespaces" . }}
   rules:
 {{- range .Values.kubescape.rules }}

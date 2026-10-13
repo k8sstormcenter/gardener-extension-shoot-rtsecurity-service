@@ -37,7 +37,25 @@ until there is a signed-off profile to judge it by.
 {{- if and .Values.target.enabled (not .Values.profiles.enabled) -}}
 {{- $ns = append $ns .Values.target.namespace -}}
 {{- end -}}
+{{- range .Values.kubescape.learnOnlyNamespaces -}}
+{{- $ns = append $ns . -}}
+{{- end -}}
 {{- toJson ($ns | uniq) -}}
+{{- end }}
+
+{{/*
+learnOnlyNamespaces must not also appear in excludeNamespaces. The sensor's list wins over
+the binding's, so a namespace in both is skipped outright: nothing is learned and the
+operator is told it is in learn-only, which reads as working. The two lists have opposite
+meanings here and the overlap has none, so it fails the render.
+*/}}
+{{- define "soc.kubescape.assertLearnOnly" -}}
+{{- $ex := .Values.kubescape.excludeNamespaces -}}
+{{- range .Values.kubescape.learnOnlyNamespaces -}}
+{{- if has . $ex -}}
+{{- fail (printf "namespace %q is in both kubescape.excludeNamespaces and kubescape.learnOnlyNamespaces. The sensor skips what it excludes, so nothing there is learned and the binding's exclusion is moot: it would report as learn-only and produce no profile. Remove it from excludeNamespaces to learn it, or from learnOnlyNamespaces to keep it skipped." .) -}}
+{{- end -}}
+{{- end -}}
 {{- end }}
 
 {{- define "soc.kubescape.nodeAgentConfig" -}}

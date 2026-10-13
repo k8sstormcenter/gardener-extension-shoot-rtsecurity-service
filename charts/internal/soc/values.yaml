@@ -232,6 +232,12 @@ kubescape:
   # sensor skips produces no profiles at all, so rules bound there can never fire. The
   # sensor's list always wins, and keeping two of them is how a binding ends up promising
   # to watch something nothing watches.
+  # Namespaces the sensor WATCHES but the alert binding leaves out: learned, never judged.
+  # The same shape as the target's own treatment while it has no signed-off profile. For
+  # profiling a cluster's own system workloads, where a profile is wanted and alerts are
+  # not. These must NOT also appear in excludeNamespaces - the sensor's list wins, so the
+  # overlap learns nothing while reading as learn-only, and the render refuses it.
+  learnOnlyNamespaces: []
   excludeNamespaces:
     - kubescape
     - kube-system
@@ -314,6 +320,12 @@ dx:
   enabled: true
   # Attack suite for the proof KPI; empty = the bundled redis suite (files/proof-suite.yaml).
   proofSuite: ""
+  # Host binding for the findings receiver. Empty = none, which is the default: nothing in
+  # this chart dials it over the host, the Service is already node-local, and hostPort 9099
+  # collides with a CNI health port on at least one cluster running this chart, which
+  # crashloops that CNI's agent on every node. Set it only for an external node-local
+  # client, and then to a port the CNI does not use.
+  hostPort: ""
   # The pod-name prefix dx scores on, for a cluster whose workload spans more than one
   # scale set. Empty = derived from the single declared scale set, which is what k3s-2 does.
   # BARE prefix, never namespace-qualified: the suite carries the namespace in its own key

@@ -2536,7 +2536,10 @@ spec:
         # soc bounces the DaemonSet after applying its rules, because the agent reads them
         # at boot. GRM does not restart anything, so the equivalent is this: the pod
         # template changes when the rule set does, and the rollout follows.
-        checksum/soc-rules: {{ list .Values.kubescape.rules .Values.kubescape.excludeNamespaces .Values.kubescape.mode | toJson | sha256sum }}
+        # learnOnlyNamespaces joins the list only when it is set, so a cluster that does not
+        # use it keeps the checksum it had: the value exists to widen what is learned, and
+        # introducing it must not bounce every agent that never asked for it.
+        checksum/soc-rules: {{ $ck := list .Values.kubescape.rules .Values.kubescape.excludeNamespaces .Values.kubescape.mode }}{{ if .Values.kubescape.learnOnlyNamespaces }}{{ $ck = append $ck .Values.kubescape.learnOnlyNamespaces }}{{ end }}{{ $ck | toJson | sha256sum }}
         checksum/cloud-secret: ab0e4b4fec4517de035559fff94b5ab87a1d51eb691d34e420b766784f0c07d3
         checksum/cloud-config: 906dd07c0a2ed8648d18754f10a070f13f3aa3ccf2234b3ae0d3feb4d37f9382
       labels:
