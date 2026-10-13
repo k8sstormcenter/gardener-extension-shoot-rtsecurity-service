@@ -2700,7 +2700,7 @@ spec:
           - name: KUBELET_ROOT
             value: "/var/lib/kubelet"
           - name: AGENT_VERSION
-            value: "v0.1.0-rogue85"
+            value: {{ include "soc.kubescape.agentVersion" . | quote }}
           - name: NodeName
             valueFrom:
               fieldRef:

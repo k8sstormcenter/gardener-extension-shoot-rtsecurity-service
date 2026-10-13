@@ -167,3 +167,30 @@ path of a change made for prod.
 {{- end -}}
 {{- $out | toJson -}}
 {{- end -}}
+
+{{/*
+soc.kubescape.agentVersion is the sensor's own version, taken from the image reference so it
+cannot drift from the binary that reports it.
+
+It was a literal, and an image-only bump left it naming the previous release while the
+running binary was the next one: every alert payload then carried the wrong agentVersion,
+and the only way to notice was to compare a label against a digest. A value derived from
+the image is wrong only if the tag is wrong.
+
+The reference is <repo>:<tag>@<digest>, so the digest goes first and the tag is what follows
+the last colon. A reference pinned by digest alone has no tag to read, and guessing would
+reintroduce the same lie, so that fails the render.
+*/}}
+{{- define "soc.kubescape.agentVersion" -}}
+{{- $ref := .Values.images.nodeAgent -}}
+{{- $noDigest := first (splitList "@" $ref) -}}
+{{- $parts := splitList ":" $noDigest -}}
+{{- if lt (len $parts) 2 -}}
+{{- fail (printf "images.nodeAgent is %q, which carries no tag, so the agent version cannot be derived from it. The version is reported in every alert payload, so it is not defaulted: pin the image as <repo>:<tag>@<digest>." $ref) -}}
+{{- end -}}
+{{- $tag := last $parts -}}
+{{- if or (eq $tag "") (contains "/" $tag) -}}
+{{- fail (printf "images.nodeAgent is %q and the text after its last colon (%q) is not a tag. The agent version is reported in every alert payload, so a wrong one is worse than a failed render." $ref $tag) -}}
+{{- end -}}
+{{- $tag -}}
+{{- end }}
