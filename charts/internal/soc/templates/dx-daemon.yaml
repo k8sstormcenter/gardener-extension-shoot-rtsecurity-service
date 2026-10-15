@@ -71,8 +71,13 @@ naming whichever cluster the document was authored against and score nothing on 
 pods. That is the KPI-of-zero failure, and it reports no error, so it fails the render
 instead. Only the plural case fails: one scale set is the shape every current cluster has
 and its scope is already correct.
+
+A suite that names RUNNER_PREFIX is exempt: it does not need rewriting here because dx
+substitutes the variable from the environment at load, and the chart supplies it below. That
+is the only way one document serves clusters whose pods are named differently, so refusing it
+would block the arrangement it exists for.
 */}}
-{{- if and .Values.dx.proofSuite (not $parsed.Error) (not $parsed.target) (gt (len $ssn) 1) }}
+{{- if and .Values.dx.proofSuite (not $parsed.Error) (not $parsed.target) (gt (len $ssn) 1) (not (contains "RUNNER_PREFIX" .Values.dx.proofSuite)) }}
 {{- fail (printf "the delivered suite carries no target key, so it is the pre-compiled form and this chart cannot retarget it, but %d scale sets are declared (%v). Its own scope would be whatever it was authored against. Deliver a suite whose scope already covers these pods, or deliver the AttackSuite form so the prefix can be rewritten." (len $ssn) $ssn) }}
 {{- end }}
 {{- if and .Values.dx.proofSuite (not $parsed.Error) $parsed.target (or .Values.dx.podPrefix $ssn) $nss }}
@@ -232,13 +237,22 @@ spec:
               fieldPath: metadata.namespace
         - name: DX_PPROF_ADDR
           value: 127.0.0.1:6060
-{{- if .Values.dx.podPrefix }}
+{{- if .Values.dx.proofSuite }}
 {{- /*
 One KPI document serves every cluster: it names ${RUNNER_PREFIX} where the pod prefix would
 be, and dx substitutes any DX_PROOF_VAR_<NAME> at load. The value is namespace-qualified
 because the document's scope.pod is, while dx.podPrefix is the bare prefix — the two forms
 differ by exactly this join, which is why the chart composes it rather than asking for it
 twice and letting them disagree.
+
+With no dx.podPrefix the prefix is derived from the one declared scale set, the same way the
+attack-suite form is retargeted, so a cluster running a single scale set needs no second
+field saying what its pods are already called. More than one scale set and no podPrefix has
+no single answer, and one suite carries one prefix, so that fails rather than scoring one
+scale set and ignoring the rest.
+
+Only emitted when a suite is delivered. The bundled fallback names no variable, so a cluster
+without a suite needs no prefix and must not be failed for lacking one.
 
 The name deliberately does not begin with POD. dx substitutes the bare $NAME form as well as
 ${NAME}, so a variable called POD_PREFIX can have $POD replaced inside it, leaving the pod
@@ -247,16 +261,27 @@ zero. It ranges over a map to do it, so which of the two wins is not even stable
 runs: the same document would score correctly on one load and nothing on the next.
 */}}
 {{- $ns := "" }}
+{{- $names := list }}
 {{- range fromJsonArray (include "soc.targets" .) }}
 {{- if and (not $ns) .namespace }}
 {{- $ns = .namespace }}
 {{- end }}
+{{- range .scaleSetNames }}
+{{- $names = append $names . }}
+{{- end }}
+{{- end }}
+{{- $bare := .Values.dx.podPrefix }}
+{{- if not $bare }}
+{{- if ne (len $names) 1 }}
+{{- fail (printf "a suite is delivered but dx.podPrefix is empty and %d scale sets are declared (%v), so the prefix dx scores on cannot be derived. One suite carries one prefix: set dx.podPrefix to the prefix they share." (len $names) $names) }}
+{{- end }}
+{{- $bare = printf "%s-runner-" (first $names) }}
 {{- end }}
 {{- if not $ns }}
-{{- fail "dx.podPrefix is set but no target declares a namespace. The prefix dx scores on is namespace-qualified, so without one it would match nothing and report a KPI of zero." }}
+{{- fail "a suite is delivered but no target declares a namespace. The prefix dx scores on is namespace-qualified, so without one it would match nothing and report a KPI of zero." }}
 {{- end }}
         - name: DX_PROOF_VAR_RUNNER_PREFIX
-          value: {{ printf "%s/%s" $ns .Values.dx.podPrefix | quote }}
+          value: {{ printf "%s/%s" $ns $bare | quote }}
 {{- end }}
         - name: DX_CAPTURE_POLICY
           value: adaptive_base
