@@ -194,3 +194,45 @@ reintroduce the same lie, so that fails the render.
 {{- end -}}
 {{- $tag -}}
 {{- end }}
+
+{{/*
+soc.kubescape.goMemLimit is the sensor's Go heap target.
+
+It belongs below the cgroup limit, never at or above it: Go only starts reclaiming as it
+approaches this figure, so a target at the limit means the kernel kills the process before
+the runtime has reason to act, and a target above it means the setting does nothing at all.
+Both read as "configured" and neither reports an error.
+
+Left empty it is derived at 80% of the limit, so raising the limit alone cannot leave the
+target behind — the mistake this chart has already made once with a version literal. The
+derivation understands a whole number of Mi or Gi, which is what a limit is written as here;
+anything else fails rather than guessing, because a silently wrong target is the failure it
+exists to prevent. Note the units differ by design: Kubernetes writes Mi, Go writes MiB.
+*/}}
+{{- define "soc.kubescape.memMiB" -}}
+{{- $q := . -}}
+{{- if hasSuffix "Mi" $q -}}
+{{- trimSuffix "Mi" $q | atoi -}}
+{{- else if hasSuffix "Gi" $q -}}
+{{- mul (trimSuffix "Gi" $q | atoi) 1024 -}}
+{{- else -}}
+0
+{{- end -}}
+{{- end }}
+
+{{- define "soc.kubescape.goMemLimit" -}}
+{{- $m := .Values.kubescape.nodeAgent.memory -}}
+{{- $limMiB := include "soc.kubescape.memMiB" $m.limit | atoi -}}
+{{- if $m.goMemLimit -}}
+{{- $gotMiB := include "soc.kubescape.memMiB" (trimSuffix "B" $m.goMemLimit) | atoi -}}
+{{- if and (gt $limMiB 0) (gt $gotMiB 0) (ge $gotMiB $limMiB) -}}
+{{- fail (printf "kubescape.nodeAgent.memory.goMemLimit is %s and the limit is %s. A heap target at or above the cgroup limit means the kernel kills the sensor before the runtime has any reason to reclaim, so the setting does nothing except hide that." $m.goMemLimit $m.limit) -}}
+{{- end -}}
+{{- $m.goMemLimit -}}
+{{- else -}}
+{{- if le $limMiB 0 -}}
+{{- fail (printf "kubescape.nodeAgent.memory.limit is %q, which is not a whole number of Mi or Gi, so the heap target cannot be derived from it. Set kubescape.nodeAgent.memory.goMemLimit explicitly." $m.limit) -}}
+{{- end -}}
+{{- printf "%dMiB" (div (mul $limMiB 8) 10) -}}
+{{- end -}}
+{{- end }}

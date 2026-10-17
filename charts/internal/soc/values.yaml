@@ -232,6 +232,19 @@ kubescape:
   # sensor skips produces no profiles at all, so rules bound there can never fire. The
   # sensor's list always wins, and keeping two of them is how a binding ends up promising
   # to watch something nothing watches.
+  # The sensor's memory envelope. Exposed because it is the one figure that has to move per
+  # cluster: a node cycling hundreds of short-lived containers holds far more profile state
+  # than a quiet one, and until now raising it meant editing the vendored chart.
+  nodeAgent:
+    memory:
+      limit: 1400Mi
+      request: 180Mi
+      # The Go heap target, which belongs BELOW the limit. Empty derives it at 80% of the
+      # limit so raising one cannot leave the other behind; the render fails if an explicit
+      # value sits at or above the limit, because then the kernel kills the sensor before the
+      # runtime reclaims and the setting only looks configured. Kubernetes writes Mi, Go
+      # writes MiB - the difference is real, not a typo.
+      goMemLimit: 1120MiB
   # Namespaces the sensor WATCHES but the alert binding leaves out: learned, never judged.
   # The same shape as the target's own treatment while it has no signed-off profile. For
   # profiling a cluster's own system workloads, where a profile is wanted and alerts are

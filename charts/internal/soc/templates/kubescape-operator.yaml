@@ -2671,14 +2671,14 @@ spec:
           
           limits:
             cpu: 500m
-            memory: 1400Mi
+            memory: {{ .Values.kubescape.nodeAgent.memory.limit }}
           requests:
             cpu: 100m
-            memory: 180Mi
+            memory: {{ .Values.kubescape.nodeAgent.memory.request }}
         env:
           
           - name: GOMEMLIMIT
-            value: "1120MiB"
+            value: {{ include "soc.kubescape.goMemLimit" . | quote }}
           - name: HOST_ROOT
             value: "/host"
           - name: KS_LOGGER_LEVEL
