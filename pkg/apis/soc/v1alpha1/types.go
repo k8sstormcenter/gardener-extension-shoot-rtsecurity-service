@@ -57,6 +57,16 @@ type Detection struct {
 	// ExcludeNamespaces replaces the namespaces the sensor ignores, which is also what the
 	// alert binding leaves out: rules bound where the sensor does not look cannot fire.
 	ExcludeNamespaces []string `json:"excludeNamespaces,omitempty"`
+
+	// LearnOnlyNamespaces names namespaces the sensor watches and the alert binding leaves
+	// out: learned, never judged. It is how a cluster profiles its own system workloads
+	// without alerting on them.
+	//
+	// It sits here rather than under a kubescape section of its own because it only has
+	// meaning against ExcludeNamespaces above, and the chart subtracts these names from
+	// that list. A caller therefore does not have to know what the chart's default
+	// exclusion contains in order to take one name out of it.
+	LearnOnlyNamespaces []string `json:"learnOnlyNamespaces,omitempty"`
 }
 
 type Components struct {

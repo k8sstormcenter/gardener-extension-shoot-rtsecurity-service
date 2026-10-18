@@ -82,6 +82,9 @@ func (c *SOCConfig) Values() map[string]any {
 		if d.ExcludeNamespaces != nil {
 			set("kubescape", "excludeNamespaces", d.ExcludeNamespaces)
 		}
+		if d.LearnOnlyNamespaces != nil {
+			set("kubescape", "learnOnlyNamespaces", d.LearnOnlyNamespaces)
+		}
 	}
 	if t := c.Target; t != nil {
 		if t.Enabled != nil {

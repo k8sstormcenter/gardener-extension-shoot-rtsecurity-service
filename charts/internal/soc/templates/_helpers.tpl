@@ -18,7 +18,13 @@ before it has a profile: an ignored namespace produces no profiles either, and t
 from ungoverned runs is exactly what the signoff loop needs as input.
 */}}
 {{- define "soc.kubescape.excludeNamespaces" -}}
-{{- .Values.kubescape.excludeNamespaces | uniq | join "," -}}
+{{- $out := list -}}
+{{- range .Values.kubescape.excludeNamespaces -}}
+{{- if not (has . $.Values.kubescape.learnOnlyNamespaces) -}}
+{{- $out = append $out . -}}
+{{- end -}}
+{{- end -}}
+{{- $out | uniq | join "," -}}
 {{- end }}
 {{/*
 Namespaces the alert binding leaves out: the same list the sensor ignores, plus the
@@ -44,16 +50,26 @@ until there is a signed-off profile to judge it by.
 {{- end }}
 
 {{/*
-learnOnlyNamespaces must not also appear in excludeNamespaces. The sensor's list wins over
-the binding's, so a namespace in both is skipped outright: nothing is learned and the
-operator is told it is in learn-only, which reads as working. The two lists have opposite
-meanings here and the overlap has none, so it fails the render.
+learnOnlyNamespaces is SUBTRACTED from the sensor's exclusion above rather than having to be
+removed from it by hand. The sensor's list always wins over the binding's, so a namespace in
+both would be skipped outright — nothing learned, while the operator is told it is in
+learn-only. Earlier this failed the render; subtracting is better, because the chart owns the
+24-entry default and is the only place that can take a name out of it. A caller naming a
+system namespace no longer has to know what the default contains.
+
+What the render still refuses is a namespace belonging to this stack. The names come from
+.Values.namespaces, so the check cannot drift from what the chart actually installs. Letting
+the stack learn itself gives the sensor its own profile to govern, and then its own activity
+alerts against it: the loop looks like detection and is an artefact.
 */}}
 {{- define "soc.kubescape.assertLearnOnly" -}}
-{{- $ex := .Values.kubescape.excludeNamespaces -}}
+{{- $own := list "kubescape" -}}
+{{- range $k, $v := .Values.namespaces -}}
+{{- $own = append $own $v -}}
+{{- end -}}
 {{- range .Values.kubescape.learnOnlyNamespaces -}}
-{{- if has . $ex -}}
-{{- fail (printf "namespace %q is in both kubescape.excludeNamespaces and kubescape.learnOnlyNamespaces. The sensor skips what it excludes, so nothing there is learned and the binding's exclusion is moot: it would report as learn-only and produce no profile. Remove it from excludeNamespaces to learn it, or from learnOnlyNamespaces to keep it skipped." .) -}}
+{{- if has . $own -}}
+{{- fail (printf "kubescape.learnOnlyNamespaces names %q, which is one of this stack's own namespaces (%v). Learning the stack gives the sensor a profile of itself and then alerts on its own activity against it, which reads as detection and is an artefact. Name only workload namespaces." . $own) -}}
 {{- end -}}
 {{- end -}}
 {{- end }}
