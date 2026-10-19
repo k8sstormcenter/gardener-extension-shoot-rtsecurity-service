@@ -9,6 +9,9 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: {{ .Values.namespaces.clickhouse }}
+spec:
+  finalizers:
+  - kubernetes
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -592,6 +595,9 @@ metadata:
     meta.helm.sh/release-name: clickhouse-operator
     meta.helm.sh/release-namespace: {{ .Values.namespaces.clickhouse }}
 spec:
+  type: ClusterIP
+  sessionAffinity: None
+  ipFamilyPolicy: SingleStack
   ports:
   - port: 8888
     name: ch-metrics

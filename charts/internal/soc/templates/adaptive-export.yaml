@@ -105,6 +105,9 @@ metadata:
   name: adaptive-export-control
   namespace: {{ .Values.namespaces.pixie }}
 spec:
+  type: ClusterIP
+  sessionAffinity: None
+  ipFamilyPolicy: SingleStack
   internalTrafficPolicy: Local
   ports:
   - name: control

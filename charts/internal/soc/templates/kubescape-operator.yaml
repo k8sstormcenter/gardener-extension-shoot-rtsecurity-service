@@ -12,6 +12,9 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: {{ .Values.namespaces.honey }}
+spec:
+  finalizers:
+  - kubernetes
 ---
 # Source: kubescape-operator/crds/cluster-security-exception.crd.yaml
 apiVersion: apiextensions.k8s.io/v1
@@ -19,11 +22,14 @@ kind: CustomResourceDefinition
 metadata:
   name: clustersecurityexceptions.kubescape.io
 spec:
+  conversion:
+    strategy: None
   group: kubescape.io
   names:
     plural: clustersecurityexceptions
     singular: clustersecurityexception
     kind: ClusterSecurityException
+    listKind: ClusterSecurityExceptionList
     shortNames:
       - cse
   scope: Cluster
@@ -154,11 +160,14 @@ kind: CustomResourceDefinition
 metadata:
   name: operatorcommands.kubescape.io
 spec:
+  conversion:
+    strategy: None
   group: kubescape.io
   names:
     plural: operatorcommands
     singular: operatorcommand
     kind: OperatorCommand
+    listKind: OperatorCommandList
     shortNames:
       - opcmd
   scope: Namespaced
@@ -247,6 +256,8 @@ kind: CustomResourceDefinition
 metadata:
   name: rules.kubescape.io
 spec:
+  conversion:
+    strategy: None
   group: kubescape.io
   names:
     kind: Rules
@@ -375,11 +386,14 @@ kind: CustomResourceDefinition
 metadata:
   name: securityexceptions.kubescape.io
 spec:
+  conversion:
+    strategy: None
   group: kubescape.io
   names:
     plural: securityexceptions
     singular: securityexception
     kind: SecurityException
+    listKind: SecurityExceptionList
     shortNames:
       - se
   scope: Namespaced
@@ -507,9 +521,12 @@ kind: CustomResourceDefinition
 metadata:
   name: servicesscanresults.kubescape.io
 spec:
+  conversion:
+    strategy: None
   group: kubescape.io
   names:
     kind: ServiceScanResult
+    listKind: ServiceScanResultList
     plural: servicesscanresults
     shortNames:
     - kssa
@@ -553,9 +570,12 @@ kind: CustomResourceDefinition
 metadata:
   name: runtimerulealertbindings.kubescape.io
 spec:
+  conversion:
+    strategy: None
   group: kubescape.io
   names:
     kind: RuntimeRuleAlertBinding
+    listKind: RuntimeRuleAlertBindingList
     plural: runtimerulealertbindings
     shortNames:
     - rab
@@ -668,6 +688,7 @@ metadata:
 value: 1.000001e+08
 globalDefault: false
 description: "This priority class is for node-agent daemonset pods"
+preemptionPolicy: PreemptLowerPriority
 ---
 # Source: kubescape-operator/templates/node-agent/serviceaccount.yaml
 apiVersion: v1
@@ -1356,6 +1377,8 @@ kind: CustomResourceDefinition
 metadata:
   name: cloudproviderinfos.hostdata.kubescape.cloud
 spec:
+  conversion:
+    strategy: None
   group: hostdata.kubescape.cloud
   names:
     kind: CloudProviderInfo
@@ -1391,6 +1414,8 @@ kind: CustomResourceDefinition
 metadata:
   name: cniinfos.hostdata.kubescape.cloud
 spec:
+  conversion:
+    strategy: None
   group: hostdata.kubescape.cloud
   names:
     kind: CNIInfo
@@ -1426,6 +1451,8 @@ kind: CustomResourceDefinition
 metadata:
   name: controlplaneinfos.hostdata.kubescape.cloud
 spec:
+  conversion:
+    strategy: None
   group: hostdata.kubescape.cloud
   names:
     kind: ControlPlaneInfo
@@ -1461,6 +1488,8 @@ kind: CustomResourceDefinition
 metadata:
   name: kernelversions.hostdata.kubescape.cloud
 spec:
+  conversion:
+    strategy: None
   group: hostdata.kubescape.cloud
   names:
     kind: KernelVersion
@@ -1496,6 +1525,8 @@ kind: CustomResourceDefinition
 metadata:
   name: kubeletinfos.hostdata.kubescape.cloud
 spec:
+  conversion:
+    strategy: None
   group: hostdata.kubescape.cloud
   names:
     kind: KubeletInfo
@@ -1531,6 +1562,8 @@ kind: CustomResourceDefinition
 metadata:
   name: kubeproxyinfos.hostdata.kubescape.cloud
 spec:
+  conversion:
+    strategy: None
   group: hostdata.kubescape.cloud
   names:
     kind: KubeProxyInfo
@@ -1566,6 +1599,8 @@ kind: CustomResourceDefinition
 metadata:
   name: linuxkernelvariables.hostdata.kubescape.cloud
 spec:
+  conversion:
+    strategy: None
   group: hostdata.kubescape.cloud
   names:
     kind: LinuxKernelVariables
@@ -1601,6 +1636,8 @@ kind: CustomResourceDefinition
 metadata:
   name: linuxsecurityhardeningstatuses.hostdata.kubescape.cloud
 spec:
+  conversion:
+    strategy: None
   group: hostdata.kubescape.cloud
   names:
     kind: LinuxSecurityHardeningStatus
@@ -1636,6 +1673,8 @@ kind: CustomResourceDefinition
 metadata:
   name: openportslists.hostdata.kubescape.cloud
 spec:
+  conversion:
+    strategy: None
   group: hostdata.kubescape.cloud
   names:
     kind: OpenPortsList
@@ -1673,6 +1712,8 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.11.1
 spec:
+  conversion:
+    strategy: None
   group: hostdata.kubescape.cloud
   names:
     kind: OsReleaseFile
@@ -1748,6 +1789,8 @@ metadata:
     tier: ks-control-plane
     kubescape.io/ignore: "true"
 spec:
+  conversion:
+    strategy: None
   group: kubescape.io
   names:
     plural: seccompprofiles
@@ -2430,6 +2473,9 @@ metadata:
     tier: ks-control-plane
     kubescape.io/ignore: "true"
 spec:
+  type: ClusterIP
+  sessionAffinity: None
+  ipFamilyPolicy: SingleStack
   ports:
   - name: prometheus
     port: 8080
@@ -2460,6 +2506,8 @@ metadata:
     tier: ks-control-plane
     kubescape.io/ignore: "true"
 spec:
+  sessionAffinity: None
+  ipFamilyPolicy: SingleStack
   type: ClusterIP
   ports:
     - port: 4002
@@ -2490,6 +2538,8 @@ metadata:
     tier: ks-control-plane
     kubescape.io/ignore: "true"
 spec:
+  sessionAffinity: None
+  ipFamilyPolicy: SingleStack
   type: ClusterIP
   ports:
   - port: 443
@@ -3673,6 +3723,7 @@ metadata:
   name: node-agent-direct-keygen
   namespace: {{ .Values.namespaces.honey }}
   annotations:
+    resources.gardener.cloud/mode: Ignore
     
   labels:
     helm.sh/chart: kubescape-operator-1.41.0-duckling73

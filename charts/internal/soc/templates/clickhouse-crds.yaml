@@ -12,10 +12,13 @@ metadata:
   labels:
     clickhouse.altinity.com/chop: 0.26.0
 spec:
+  conversion:
+    strategy: None
   group: clickhouse.altinity.com
   scope: Namespaced
   names:
     kind: ClickHouseInstallation
+    listKind: ClickHouseInstallationList
     singular: clickhouseinstallation
     plural: clickhouseinstallations
     shortNames:
@@ -2167,10 +2170,13 @@ metadata:
   labels:
     clickhouse.altinity.com/chop: 0.26.0
 spec:
+  conversion:
+    strategy: None
   group: clickhouse.altinity.com
   scope: Namespaced
   names:
     kind: ClickHouseInstallationTemplate
+    listKind: ClickHouseInstallationTemplateList
     singular: clickhouseinstallationtemplate
     plural: clickhouseinstallationtemplates
     shortNames:
@@ -4322,10 +4328,13 @@ metadata:
   labels:
     clickhouse-keeper.altinity.com/chop: 0.26.0
 spec:
+  conversion:
+    strategy: None
   group: clickhouse-keeper.altinity.com
   scope: Namespaced
   names:
     kind: ClickHouseKeeperInstallation
+    listKind: ClickHouseKeeperInstallationList
     singular: clickhousekeeperinstallation
     plural: clickhousekeeperinstallations
     shortNames:
@@ -5448,10 +5457,13 @@ metadata:
   labels:
     clickhouse.altinity.com/chop: 0.26.0
 spec:
+  conversion:
+    strategy: None
   group: clickhouse.altinity.com
   scope: Namespaced
   names:
     kind: ClickHouseOperatorConfiguration
+    listKind: ClickHouseOperatorConfigurationList
     singular: clickhouseoperatorconfiguration
     plural: clickhouseoperatorconfigurations
     shortNames:

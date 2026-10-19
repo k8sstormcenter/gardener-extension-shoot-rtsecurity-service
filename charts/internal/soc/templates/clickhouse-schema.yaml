@@ -156,6 +156,13 @@ data:
 apiVersion: batch/v1
 kind: Job
 metadata:
+  annotations:
+    # Not the selector: GRM already preserves a Job's spec.selector and merges the
+    # controller-uid labels, because both are immutable. What still differs every sync is
+    # the defaulted pod template, and a one-shot Job that has already completed has nothing
+    # for reconciliation to achieve either way. The churn was reaching the datastore and
+    # starving the sensor of its own writes, which is the only reason to care.
+    resources.gardener.cloud/mode: Ignore
   name: soc-clickhouse-schema
   namespace: {{ .Values.namespaces.clickhouse }}
 spec:

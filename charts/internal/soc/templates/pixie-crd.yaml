@@ -7,6 +7,8 @@ metadata:
     controller-gen.kubebuilder.io/version: v0.17.2
   name: viziers.px.dev
 spec:
+  conversion:
+    strategy: None
   group: px.dev
   names:
     kind: Vizier

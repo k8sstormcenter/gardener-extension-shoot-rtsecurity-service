@@ -197,6 +197,9 @@ metadata:
   name: dx-daemon
   namespace: {{ .Values.namespaces.honey }}
 spec:
+  type: ClusterIP
+  sessionAffinity: None
+  ipFamilyPolicy: SingleStack
   internalTrafficPolicy: Local
   ports:
   - name: findings
