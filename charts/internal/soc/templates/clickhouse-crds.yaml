@@ -8,6 +8,17 @@
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
+  annotations:
+    # Excluded from reconciliation: these four kept differing every sync after the
+    # defaulted fields were emitted, and nothing in the rendered object distinguishes
+    # them from the eighteen that converged - same scope, same version count, same
+    # status subresource, and not the four largest. What they do have in common is an
+    # operator of their own that also writes them, so the likely shape is two writers
+    # rather than a field we omit. Reconciliation is given up here rather than won.
+    #
+    # The cost: a definition changed by a re-vendor will NOT be applied. Remove this
+    # annotation for one sync when the vendored version bumps.
+    resources.gardener.cloud/mode: Ignore
   name: clickhouseinstallations.clickhouse.altinity.com
   labels:
     clickhouse.altinity.com/chop: 0.26.0
@@ -2166,6 +2177,17 @@ spec:
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
+  annotations:
+    # Excluded from reconciliation: these four kept differing every sync after the
+    # defaulted fields were emitted, and nothing in the rendered object distinguishes
+    # them from the eighteen that converged - same scope, same version count, same
+    # status subresource, and not the four largest. What they do have in common is an
+    # operator of their own that also writes them, so the likely shape is two writers
+    # rather than a field we omit. Reconciliation is given up here rather than won.
+    #
+    # The cost: a definition changed by a re-vendor will NOT be applied. Remove this
+    # annotation for one sync when the vendored version bumps.
+    resources.gardener.cloud/mode: Ignore
   name: clickhouseinstallationtemplates.clickhouse.altinity.com
   labels:
     clickhouse.altinity.com/chop: 0.26.0
@@ -4324,6 +4346,17 @@ spec:
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
+  annotations:
+    # Excluded from reconciliation: these four kept differing every sync after the
+    # defaulted fields were emitted, and nothing in the rendered object distinguishes
+    # them from the eighteen that converged - same scope, same version count, same
+    # status subresource, and not the four largest. What they do have in common is an
+    # operator of their own that also writes them, so the likely shape is two writers
+    # rather than a field we omit. Reconciliation is given up here rather than won.
+    #
+    # The cost: a definition changed by a re-vendor will NOT be applied. Remove this
+    # annotation for one sync when the vendored version bumps.
+    resources.gardener.cloud/mode: Ignore
   name: clickhousekeeperinstallations.clickhouse-keeper.altinity.com
   labels:
     clickhouse-keeper.altinity.com/chop: 0.26.0

@@ -254,6 +254,17 @@ spec:
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
+  annotations:
+    # Excluded from reconciliation: these four kept differing every sync after the
+    # defaulted fields were emitted, and nothing in the rendered object distinguishes
+    # them from the eighteen that converged - same scope, same version count, same
+    # status subresource, and not the four largest. What they do have in common is an
+    # operator of their own that also writes them, so the likely shape is two writers
+    # rather than a field we omit. Reconciliation is given up here rather than won.
+    #
+    # The cost: a definition changed by a re-vendor will NOT be applied. Remove this
+    # annotation for one sync when the vendored version bumps.
+    resources.gardener.cloud/mode: Ignore
   name: rules.kubescape.io
 spec:
   conversion:
@@ -685,8 +696,7 @@ metadata:
     app: kubescape-critical
     tier: ks-control-plane
     kubescape.io/ignore: "true"
-value: 1.000001e+08
-globalDefault: false
+value: 100000100
 description: "This priority class is for node-agent daemonset pods"
 preemptionPolicy: PreemptLowerPriority
 ---
