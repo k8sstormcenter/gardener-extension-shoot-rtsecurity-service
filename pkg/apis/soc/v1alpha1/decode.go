@@ -95,6 +95,11 @@ func (c *SOCConfig) Values() map[string]any {
 				set("target", k, *v)
 			}
 		}
+		// Declared under target because it overrides target.scaleSetName, but it is dx that
+		// scores on it, so it lands in the dx section of the values.
+		if t.PodPrefix != nil {
+			set("dx", "podPrefix", *t.PodPrefix)
+		}
 		// Replaced rather than merged, and an explicitly empty list is honoured: the delivery
 		// for this workload ships no init-container profiles, and naming one that is not
 		// delivered has to stay a render failure rather than become a cluster failure.

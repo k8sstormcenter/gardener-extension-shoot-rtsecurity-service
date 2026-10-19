@@ -102,6 +102,17 @@ type Target struct {
 	// ScaleSetName is the workload's own name, which is the prefix its pods are named with.
 	// dx scores pods matching "<namespace>/<scaleSetName>-runner-%".
 	ScaleSetName *string `json:"scaleSetName,omitempty"`
+
+	// PodPrefix is the pod-name prefix dx scores on, stated outright instead of being derived
+	// from ScaleSetName above. It belongs here because it overrides exactly that field: the
+	// chart derives the prefix from the declared scale set, and a cluster running the workload
+	// under several scale sets has no single name to derive from.
+	//
+	// dx matches it as SQL LIKE, so "%" spans the part that varies between them. Bare, never
+	// namespace-qualified: the namespace comes from Namespace above and the chart joins the
+	// two, so a qualified value would be composed twice and match nothing. The render refuses
+	// one that contains "/".
+	PodPrefix *string `json:"podPrefix,omitempty"`
 	// Containers and InitContainers are every container its pods run. A container no
 	// delivered profile names is unresolved, which the sensor treats as deny-all, so the
 	// render refuses a delivery that does not cover each one.
