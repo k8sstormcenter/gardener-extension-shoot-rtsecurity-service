@@ -82,6 +82,20 @@ ContainerProfile fails the render, because a stray object or a mistyped kind is 
 and not an opt-out, and the shape guards above only ever examined documents that already
 claimed to be profiles.
 */}}
+{{/*
+renderObjects is false for a consumer that applies the profiles itself rather than through this
+release. It exists because a Helm release cannot hold both the datastore Deployment and objects
+served by that datastore's aggregated API: Helm applies the Deployment before custom resources,
+so its lookup of the profiles lands in the API-down window the same upgrade just opened, the
+upgrade fails, and remediation rolls the datastore again and reopens the window. The extension
+path does not have this problem, because the resource manager retries instead of rolling back,
+so the default renders the objects and that path is unchanged.
+
+The guards above still run. They validate the delivery, not the rendering, and a consumer that
+applies the documents elsewhere needs them checked here just as much — more so, since nothing
+downstream of it looks at the target's container list.
+*/}}
+{{- if ne .Values.profiles.renderObjects false }}
 {{- $rendered := 0 }}
 {{- range .Values.profiles.documents }}
 {{- $doc := fromYaml .content }}
@@ -107,5 +121,6 @@ is true: the stack would install, report success, and govern nothing.
 */}}
 {{- if eq $rendered 0 }}
 {{- fail (printf "profiles.path delivered %d documents and none of them is a ContainerProfile. The workload would be left ungoverned by an install that reports success." (len .Values.profiles.documents)) }}
+{{- end }}
 {{- end }}
 {{- end }}

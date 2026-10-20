@@ -170,6 +170,15 @@ target:
 profiles:
   enabled: false
   documents: []
+  # Whether this release renders the profile objects themselves. It is NOT the same question as
+  # enabled: enabled states that profiles exist for the target, which the rule-binding exclusion
+  # reads to decide whether to govern the namespace, so a consumer that turns enabled off to move
+  # the objects elsewhere also excludes the workload from the rule set and governs nothing.
+  #
+  # Set it false only on a consumer that applies the documents by another route, and point that
+  # route at the delivery directory's own kustomization.yaml. A Helm release cannot hold both the
+  # datastore Deployment and objects served by that datastore's aggregated API.
+  renderObjects: true
 
 # Kubescape rules are data, not code: the rule set and its binding are rendered from the
 # values below rather than taken from the upstream chart's defaults.
