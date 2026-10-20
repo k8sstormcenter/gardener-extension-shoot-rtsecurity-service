@@ -179,6 +179,16 @@ profiles:
   # route at the delivery directory's own kustomization.yaml. A Helm release cannot hold both the
   # datastore Deployment and objects served by that datastore's aggregated API.
   renderObjects: true
+  # Adds helm.sh/resource-policy: keep to each rendered profile, so a later release that stops
+  # rendering them leaves the live objects alone. Helm decides that from the annotation in the
+  # PREVIOUS release's manifest, not from who owns the object now, so the annotation has to be
+  # in place one release BEFORE renderObjects is turned off; another owner adopting the objects
+  # does not save them. Without it the objects are deleted on the flip and every governed
+  # container is unresolved until the new owner recreates them, which is deny-all.
+  #
+  # It renders the document from its parsed form rather than verbatim, so it is off by default:
+  # the default path applies the reviewed bytes exactly as signed off.
+  keepOnRemoval: false
 
 # Kubescape rules are data, not code: the rule set and its binding are rendered from the
 # values below rather than taken from the upstream chart's defaults.

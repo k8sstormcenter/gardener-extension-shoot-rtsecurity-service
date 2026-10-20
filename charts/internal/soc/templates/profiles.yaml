@@ -112,7 +112,16 @@ downstream of it looks at the target's container list.
 {{- $rendered = add1 $rendered }}
 ---
 # {{ .name }}
+{{- if $.Values.profiles.keepOnRemoval }}
+{{- $md := dig "metadata" (dict) $doc }}
+{{- $ann := dig "annotations" (dict) $md }}
+{{- $_ := set $ann "helm.sh/resource-policy" "keep" }}
+{{- $_ := set $md "annotations" $ann }}
+{{- $_ := set $doc "metadata" $md }}
+{{ toYaml $doc }}
+{{- else }}
 {{ .content }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{/*
