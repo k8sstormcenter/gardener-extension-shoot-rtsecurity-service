@@ -20,7 +20,7 @@ images:
   # /usr/bin only — there is no /bin/sh in it, so a hardcoded shebang would not resolve.
   certgenKubectl: "quay.io/kubescape/kubectl:1.36.1@sha256:e2b97dde9666986c61c56d49aae85a714b89b69392baa531438e74ec34096fb4"
   # Digest-pinned: the tag moves during a pre-release line.
-  nodeAgent: "docker.io/entlein/duckling:v0.1.0-rogue90@sha256:8429668f121b179c52c8c99ff581c96180fe9ba1327ad1ef4f13cc995e7b1d91"
+  nodeAgent: "docker.io/entlein/duckling:v0.1.0-rogue89@sha256:1e0d0e214035758572f366251ae983a968b1c29811d04f2cecf1eef52b256774"
   # Needs kubectl AND a shell. Two wrong answers already: bitnami/kubectl was withdrawn
   # from docker.io and resolves to NotFound, and registry.k8s.io/kubectl is distroless, so
   # its pod dies on exec /bin/sh. This image declares /bin/sh as its own default command.
