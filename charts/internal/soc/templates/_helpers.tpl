@@ -120,7 +120,7 @@ alerts against it: the loop looks like detection and is an artefact.
         "ruleCooldownMaxSize": 20000
     },
     "alertDeduplication": {
-        "bypass": false
+        "bypass": true
     },
     "scanFailureReporting": false,
     "suggester": {
