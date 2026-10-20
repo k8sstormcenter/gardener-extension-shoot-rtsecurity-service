@@ -19,8 +19,70 @@ container. It composes nothing and does not read the kubescape.io/profile-fragme
 so a fragment is not bindable and a flat <label> profile for a multi-container workload
 binds nothing at all.
 */}}
+{{/*
+documents arrives in one of two shapes and both are normalised here, because the guards and the
+rendering below must agree on one list.
+
+A map keyed by filename is the shape a Flux consumer needs: Helm deep-merges maps across several
+valuesFrom sources but REPLACES a list, so a delivery split over three ConfigMaps to stay under the
+1 MiB object limit keeps only whichever source Helm applies last. The extension still emits a list
+(pkg/values/socvalues.go builds a slice), so both are accepted rather than one being migrated.
+
+Map iteration is sorted by key and the extension sorts its documents by name, so the two shapes
+render in the same order and neither depends on map ordering.
+
+Anything else fails here. The failure this guards against is an empty document set that looks like
+a successful install: the stack would come up and govern nothing.
+*/}}
+{{- $src := .Values.profiles.documents }}
+{{- $docs := list }}
+{{- if not $src }}
+{{- /* absent or empty in either shape; the count check below reports it */}}
+{{- else if kindIs "slice" $src }}
+{{- range $i, $d := $src }}
+{{- if or (not (kindIs "map" $d)) (not (hasKey $d "name")) (not (hasKey $d "content")) }}
+{{- fail (printf "profiles.documents[%d] is not a {name, content} pair. The list form carries one entry per delivered file; an entry without both keys would be skipped and the profile it holds would never reach the cluster." $i) }}
+{{- end }}
+{{- $docs = append $docs (dict "name" $d.name "content" $d.content) }}
+{{- end }}
+{{- else if kindIs "map" $src }}
+{{- range $name := (keys $src | sortAlpha) }}
+{{- $c := get $src $name }}
+{{- if not (kindIs "string" $c) }}
+{{- fail (printf "profiles.documents[%q] is a %s, not the file's text. The map form is keyed by filename with the document itself as the value." $name (kindOf $c)) }}
+{{- end }}
+{{- $docs = append $docs (dict "name" $name "content" $c) }}
+{{- end }}
+{{- else }}
+{{- fail (printf "profiles.documents is a %s. It is either a list of {name, content} pairs or a map keyed by filename; anything else delivers no profiles while the install reports success." (kindOf $src)) }}
+{{- end }}
+{{- if eq (len $docs) 0 }}
+{{- fail "profiles.enabled is true and profiles.documents is empty. Nothing would be delivered and the install would report success, leaving every governed container unresolved, which the sensor treats as deny-all. A delivery that merges several valuesFrom sources into a list rather than a map produces exactly this." }}
+{{- end }}
+{{/*
+The budget is checked against the documents rather than the rendered objects, because the documents
+are what sits in values, and values count against the release whether or not renderObjects is on.
+A Helm release stores the documents twice, once in values and once in the manifest, and gzip's
+window is 32 KB so the two copies do not compress each other away: the limit is reached at roughly
+half of what the compression ratio alone suggests. Measured on these profiles, the text gzips about
+11x, which puts the usable total near 3.1 MB before the release Secret's 1 MiB is exceeded.
+
+Off by default, because the number depends on the consumer: the extension path carries the same
+documents in a ManagedResource rather than a release Secret, and a default tuned for Helm would
+fail a render that is fine. A consumer that installs by Helm should set it.
+*/}}
+{{- $budget := int (default 0 .Values.profiles.maxDocumentBytes) }}
+{{- if gt $budget 0 }}
+{{- $total := 0 }}
+{{- range $docs }}
+{{- $total = add $total (len .content) }}
+{{- end }}
+{{- if gt $total $budget }}
+{{- fail (printf "the delivered profiles total %d bytes, over the %d byte budget in profiles.maxDocumentBytes. A Helm release holds them twice, in values and in the manifest, so this fails here rather than when the release Secret exceeds 1 MiB and the upgrade stops being possible. Either raise the budget deliberately or move the documents out of the release with profiles.renderObjects." $total $budget) }}
+{{- end }}
+{{- end }}
 {{- $byName := dict }}
-{{- range .Values.profiles.documents }}
+{{- range $docs }}
 {{- $doc := fromYaml .content }}
 {{- if and (not $doc.Error) (eq (dig "kind" "" $doc) "ContainerProfile") }}
 {{- $_ := set $byName (dig "metadata" "name" "" $doc) $doc }}
@@ -97,7 +159,7 @@ downstream of it looks at the target's container list.
 */}}
 {{- if ne .Values.profiles.renderObjects false }}
 {{- $rendered := 0 }}
-{{- range .Values.profiles.documents }}
+{{- range $docs }}
 {{- $doc := fromYaml .content }}
 {{- if $doc.Error }}
 {{- fail (printf "%s does not parse as YAML: %s" .name $doc.Error) }}
@@ -129,7 +191,7 @@ A directory holding only build files would otherwise render nothing while profil
 is true: the stack would install, report success, and govern nothing.
 */}}
 {{- if eq $rendered 0 }}
-{{- fail (printf "profiles.path delivered %d documents and none of them is a ContainerProfile. The workload would be left ungoverned by an install that reports success." (len .Values.profiles.documents)) }}
+{{- fail (printf "profiles.path delivered %d documents and none of them is a ContainerProfile. The workload would be left ungoverned by an install that reports success." (len $docs)) }}
 {{- end }}
 {{- end }}
 {{- end }}

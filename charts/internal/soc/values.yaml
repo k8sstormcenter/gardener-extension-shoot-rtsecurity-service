@@ -169,7 +169,22 @@ target:
 # are whole YAML, not values, so nothing here describes their shape.
 profiles:
   enabled: false
-  documents: []
+  # Either a list of {name, content} pairs, which is what the extension emits, or a map keyed by
+  # filename with the document as the value. The map form exists because Helm deep-merges maps
+  # across several valuesFrom sources but REPLACES a list: a delivery too large for one 1 MiB
+  # ConfigMap has to arrive as a map, or only the last source survives and the guards below fail
+  # on every profile that went missing. Both shapes render in the same order.
+  #
+  # Deliberately absent rather than defaulted to [] or {}: a default of either shape is coalesced
+  # against the other and Helm prints "destination for profiles.documents is a table, ignoring
+  # non-table value" on every render by the consumer using the shape the default is not. Absent
+  # coalesces with both, and an absent value while enabled is caught by the render instead.
+  # Fail the render when the delivered documents exceed this many bytes. 0 disables it. A Helm
+  # release stores them twice, in values and in the manifest, so the ceiling is lower than the
+  # compression ratio suggests; around 3.1 MB of profiles for a release that must stay under the
+  # 1 MiB Secret limit. Off by default because the extension path has no release Secret and a
+  # Helm-tuned number would fail a render that is fine.
+  maxDocumentBytes: 0
   # Whether this release renders the profile objects themselves. It is NOT the same question as
   # enabled: enabled states that profiles exist for the target, which the rule-binding exclusion
   # reads to decide whether to govern the namespace, so a consumer that turns enabled off to move
