@@ -14,7 +14,7 @@ images:
   clickhouseKeeper: "clickhouse/clickhouse-keeper:24.3@sha256:163a91f5fec55376205437d9449dfe23d89ce8ef381e027b7fbbdbc872b0c2f0"
   clickhouseServer: "clickhouse/clickhouse-server:24.8"
   kubescapeOperator: "quay.io/kubescape/operator:v0.2.162"
-  kubescapeStorage: "ghcr.io/k8sstormcenter/storage:rc-rogue27@sha256:63946e866aad05b7584f540b9bc2fd6bef627b3b8a67d8617bfbc414f68c1a21"
+  kubescapeStorage: "ghcr.io/k8sstormcenter/storage:rc-rogue-presave-08355ab4@sha256:f7195423f37c625c36538ed843045f7f5870c97ebcbe487bd2d9cf86cc319776"
   # Runs the two certgen init containers on storage. Pinned by digest like every other image:
   # the scripts have a /usr/bin/env bash shebang, and this image carries bash, env and sh under
   # /usr/bin only — there is no /bin/sh in it, so a hardcoded shebang would not resolve.
