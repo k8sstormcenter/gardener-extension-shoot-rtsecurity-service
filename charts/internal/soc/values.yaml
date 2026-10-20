@@ -14,7 +14,7 @@ images:
   clickhouseKeeper: "clickhouse/clickhouse-keeper:24.3@sha256:163a91f5fec55376205437d9449dfe23d89ce8ef381e027b7fbbdbc872b0c2f0"
   clickhouseServer: "clickhouse/clickhouse-server:24.8"
   kubescapeOperator: "quay.io/kubescape/operator:v0.2.162"
-  kubescapeStorage: "ghcr.io/k8sstormcenter/storage:rc-rogue-presave-08355ab4@sha256:f7195423f37c625c36538ed843045f7f5870c97ebcbe487bd2d9cf86cc319776"
+  kubescapeStorage: "ghcr.io/k8sstormcenter/storage:rc-rogue-presave-3-c97d944b@sha256:e9cabbf439ca05b3c2cddf921fef31aa360a79216c6be499938fd90191e201b8"
   # Runs the two certgen init containers on storage. Pinned by digest like every other image:
   # the scripts have a /usr/bin/env bash shebang, and this image carries bash, env and sh under
   # /usr/bin only — there is no /bin/sh in it, so a hardcoded shebang would not resolve.
@@ -153,11 +153,15 @@ target:
   # Listing them here lets the chart refuse a delivery that would leave one out, instead of
   # finding out at the first burst.
   containers: [runner, dind]
-  # Empty, and not an oversight. The signed-off delivery binds the two containers above and
-  # ships no profile for the init containers (chowner, init-dind-externals), so naming them
-  # here would fail the render. Whether they need profiles at all is an open question for
-  # whoever owns detection; listing them without delivering the documents would only move
-  # the failure from the render to the cluster.
+  # Init containers are bound the same way and governed on the same terms: one that no
+  # delivered document names is unresolved for the whole of its run. The guard checks the
+  # union of this list and containers above by name, so it does not matter which list a
+  # name sits in; a native sidecar may be declared in either.
+  #
+  # Empty here means "do not check", not "none exist", and a target that leaves it empty
+  # while running an init container is ungoverned without saying so. It is empty only
+  # because a chart-wide default cannot name a workload's containers: every target states
+  # its own. A shoot that omits the field gets no check, which is the residual hole.
   initContainers: []
 
 # Signed-off profiles and rules, fetched from git by the actuator and rendered verbatim.
