@@ -14,13 +14,13 @@ images:
   clickhouseKeeper: "clickhouse/clickhouse-keeper:24.3@sha256:163a91f5fec55376205437d9449dfe23d89ce8ef381e027b7fbbdbc872b0c2f0"
   clickhouseServer: "clickhouse/clickhouse-server:24.8"
   kubescapeOperator: "quay.io/kubescape/operator:v0.2.162"
-  kubescapeStorage: "ghcr.io/k8sstormcenter/storage:rc-rogue-presave-5-a40eba97@sha256:8269dbb710b60e6f884414c13f40ffb86af7cd1b5a3b469a307d4a6a4d64737e"
+  kubescapeStorage: "ghcr.io/k8sstormcenter/storage:rc-rogue-presave-6-241aeb65@sha256:9d95d8b135cad662f7779fa24202c7f3978a420adcffa8714a80453c70940d36"
   # Runs the two certgen init containers on storage. Pinned by digest like every other image:
   # the scripts have a /usr/bin/env bash shebang, and this image carries bash, env and sh under
   # /usr/bin only — there is no /bin/sh in it, so a hardcoded shebang would not resolve.
   certgenKubectl: "quay.io/kubescape/kubectl:1.36.1@sha256:e2b97dde9666986c61c56d49aae85a714b89b69392baa531438e74ec34096fb4"
   # Digest-pinned: the tag moves during a pre-release line.
-  nodeAgent: "docker.io/entlein/duckling:v0.1.0-rogue93@sha256:9624fcf2531a85c51f8ecb743e3c5d4e21a6a08cdbbbcf3306e1ab029d1d6b2a"
+  nodeAgent: "docker.io/entlein/duckling:v0.1.0-rogue89@sha256:1e0d0e214035758572f366251ae983a968b1c29811d04f2cecf1eef52b256774"
   # Needs kubectl AND a shell. Two wrong answers already: bitnami/kubectl was withdrawn
   # from docker.io and resolves to NotFound, and registry.k8s.io/kubectl is distroless, so
   # its pod dies on exec /bin/sh. This image declares /bin/sh as its own default command.
