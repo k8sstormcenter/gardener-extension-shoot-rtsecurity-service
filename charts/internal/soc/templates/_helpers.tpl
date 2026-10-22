@@ -122,6 +122,17 @@ alerts against it: the loop looks like detection and is an artefact.
     "alertDeduplication": {
         "bypass": true
     },
+    {{- $hw := .Values.kubescape.nodeAgent.config.holdWhileLoading }}
+    {{- if not $hw.wait }}
+    {{- fail "kubescape.nodeAgent.config.holdWhileLoading.wait is empty. It renders into config.json as a Go duration string, so an empty value is a parse error in the sensor rather than a fallback. Give a duration such as 10s, or remove the block to take the binary's own default." }}
+    {{- end }}
+    {{- if lt (int $hw.maxEvents) 1 }}
+    {{- fail "kubescape.nodeAgent.config.holdWhileLoading.maxEvents is below 1. The sensor would hold no event while its profiles load, so everything arriving during load is judged against an absent profile. Give a positive count, or remove the block to take the binary's own default of 512." }}
+    {{- end }}
+    "holdWhileLoading": {
+        "maxEvents": {{ int $hw.maxEvents }},
+        "wait": {{ $hw.wait | quote }}
+    },
     {{- $nc := .Values.kubescape.nodeAgent.config.nestedContainers }}
     {{- if and $nc.enabled (not $nc.rules) }}
     {{- fail "kubescape.nodeAgent.config.nestedContainers.enabled is true with an empty rules list. The list is the whole input: the sensor would watch nested containers and judge nothing, which reads as enabled and detects nothing. Name the rule ids, or set enabled to false." }}

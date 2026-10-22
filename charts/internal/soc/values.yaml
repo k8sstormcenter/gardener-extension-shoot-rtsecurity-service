@@ -20,7 +20,7 @@ images:
   # /usr/bin only — there is no /bin/sh in it, so a hardcoded shebang would not resolve.
   certgenKubectl: "quay.io/kubescape/kubectl:1.36.1@sha256:e2b97dde9666986c61c56d49aae85a714b89b69392baa531438e74ec34096fb4"
   # Digest-pinned: the tag moves during a pre-release line.
-  nodeAgent: "docker.io/entlein/duckling:v0.1.0-rogue97@sha256:72e83b9c08ac255efba61760abd1ad921cfc3958362b47a4fe02fb13c612ded9"
+  nodeAgent: "docker.io/entlein/duckling:v0.1.0-rogue98@sha256:afa60403262180ae357d2bcd852c698490ca831f7616a93b36e279f7771ca1c3"
   # Needs kubectl AND a shell. Two wrong answers already: bitnami/kubectl was withdrawn
   # from docker.io and resolves to NotFound, and registry.k8s.io/kubectl is distroless, so
   # its pod dies on exec /bin/sh. This image declares /bin/sh as its own default command.
@@ -284,6 +284,9 @@ kubescape:
       # writes MiB - the difference is real, not a typo.
       goMemLimit: 1120MiB
     config:
+      holdWhileLoading:
+        maxEvents: 3072
+        wait: 10s
       nestedContainers:
         enabled: true
         rules:
