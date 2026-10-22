@@ -283,6 +283,17 @@ kubescape:
       # runtime reclaims and the setting only looks configured. Kubernetes writes Mi, Go
       # writes MiB - the difference is real, not a typo.
       goMemLimit: 1120MiB
+    config:
+      nestedContainers:
+        enabled: true
+        rules:
+          - R0010
+          - R1002
+          - R1004
+          - R1005
+          - R1006
+          - R1015
+          - R1032
   # Namespaces the sensor WATCHES but the alert binding leaves out: learned, never judged.
   # The same shape as the target's own treatment while it has no signed-off profile. For
   # profiling a cluster's own system workloads, where a profile is wanted and alerts are

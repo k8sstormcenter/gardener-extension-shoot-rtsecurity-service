@@ -122,6 +122,12 @@ alerts against it: the loop looks like detection and is an artefact.
     "alertDeduplication": {
         "bypass": true
     },
+    {{- $nc := .Values.kubescape.nodeAgent.config.nestedContainers }}
+    {{- if and $nc.enabled (not $nc.rules) }}
+    {{- fail "kubescape.nodeAgent.config.nestedContainers.enabled is true with an empty rules list. The list is the whole input: the sensor would watch nested containers and judge nothing, which reads as enabled and detects nothing. Name the rule ids, or set enabled to false." }}
+    {{- end }}
+    "nestedContainersEnabled": {{ $nc.enabled }},
+    "nestedContainerRules": {{ $nc.rules | toJson }},
     "scanFailureReporting": false,
     "suggester": {
         "enabled": {{ .Values.kubescape.suggester.enabled }},
