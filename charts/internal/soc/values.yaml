@@ -20,7 +20,7 @@ images:
   # /usr/bin only — there is no /bin/sh in it, so a hardcoded shebang would not resolve.
   certgenKubectl: "quay.io/kubescape/kubectl:1.36.1@sha256:e2b97dde9666986c61c56d49aae85a714b89b69392baa531438e74ec34096fb4"
   # Digest-pinned: the tag moves during a pre-release line.
-  nodeAgent: "docker.io/entlein/duckling:v0.1.0-rogue102@sha256:1f1d038c0414bdf3afa1ac0db6fa97f933fb32677e409058f4b164670f4e5869"
+  nodeAgent: "docker.io/entlein/duckling:v0.1.0-rogue103@sha256:64714c0a6743ada2f1b08e91d933b2f3489a5af4710c0442ae97b858e5a8c78f"
   # Needs kubectl AND a shell. Two wrong answers already: bitnami/kubectl was withdrawn
   # from docker.io and resolves to NotFound, and registry.k8s.io/kubectl is distroless, so
   # its pod dies on exec /bin/sh. This image declares /bin/sh as its own default command.
@@ -30,7 +30,7 @@ images:
   # and rejects a target naming neither. rc101 ignored the prefix and scored every pod in the
   # namespace, so the ARC controller and listener landed in the proof KPI alongside the
   # runners. Digest-pinned like the rest: this is a pre-release line, where the tag moves.
-  dxDaemon: "docker.io/tanzeee/dx-daemon:0.6.0-shadow-rc114@sha256:2590cc88403460740e85a934affc1fc80626db28973c9bc3760616d130e7a184"
+  dxDaemon: "docker.io/tanzeee/dx-daemon:0.6.0-shadow-rc113@sha256:016d289d10a01d96b2dae87b97617b9acf34b2b0decb5ae891f3df3717a91696"
 
 # Namespaces the stack occupies in the shoot. Kept as values because the shoot's
 # own policies may force different ones.
