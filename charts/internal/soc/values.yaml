@@ -14,7 +14,7 @@ images:
   clickhouseKeeper: "clickhouse/clickhouse-keeper:24.3@sha256:163a91f5fec55376205437d9449dfe23d89ce8ef381e027b7fbbdbc872b0c2f0"
   clickhouseServer: "clickhouse/clickhouse-server:24.8"
   kubescapeOperator: "quay.io/kubescape/operator:v0.2.162"
-  kubescapeStorage: "ghcr.io/k8sstormcenter/storage:rc-rogue-rebase-b1a6e1f2@sha256:66afe9a85bc661bc61cd1c82d3d9e6afb143b3d3101b3042406d695fbdc013ea"
+  kubescapeStorage: "ghcr.io/k8sstormcenter/storage:rc-rogue-presave-6-241aeb65@sha256:9d95d8b135cad662f7779fa24202c7f3978a420adcffa8714a80453c70940d36"
   # Runs the two certgen init containers on storage. Pinned by digest like every other image:
   # the scripts have a /usr/bin/env bash shebang, and this image carries bash, env and sh under
   # /usr/bin only — there is no /bin/sh in it, so a hardcoded shebang would not resolve.
@@ -30,7 +30,7 @@ images:
   # and rejects a target naming neither. rc101 ignored the prefix and scored every pod in the
   # namespace, so the ARC controller and listener landed in the proof KPI alongside the
   # runners. Digest-pinned like the rest: this is a pre-release line, where the tag moves.
-  dxDaemon: "docker.io/tanzeee/dx-daemon:0.6.0-shadow-rc113@sha256:016d289d10a01d96b2dae87b97617b9acf34b2b0decb5ae891f3df3717a91696"
+  dxDaemon: "docker.io/tanzeee/dx-daemon:0.6.0-shadow-rc114@sha256:2590cc88403460740e85a934affc1fc80626db28973c9bc3760616d130e7a184"
 
 # Namespaces the stack occupies in the shoot. Kept as values because the shoot's
 # own policies may force different ones.
