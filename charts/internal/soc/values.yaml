@@ -25,12 +25,12 @@ images:
   # from docker.io and resolves to NotFound, and registry.k8s.io/kubectl is distroless, so
   # its pod dies on exec /bin/sh. This image declares /bin/sh as its own default command.
   kubectl: "alpine/k8s:1.34.4"
-  adaptiveExport: "docker.io/tanzeee/adaptive-export:0.16.55-5072482@sha256:866a8d73e96737d3dedbfee0224de5db12fda1b82edb1717ad66d645ac6520aa"
+  adaptiveExport: "docker.io/tanzeee/adaptive-export:0.16.56-16ad782@sha256:783bb9d854bbcb9ae7442f5878460356368f1c91feafa4338a3a756ae1d141eb"
   # rc102 reads the attack suite's target.pod as the pod prefix, with service as a fallback,
   # and rejects a target naming neither. rc101 ignored the prefix and scored every pod in the
   # namespace, so the ARC controller and listener landed in the proof KPI alongside the
   # runners. Digest-pinned like the rest: this is a pre-release line, where the tag moves.
-  dxDaemon: "docker.io/tanzeee/dx-daemon:0.6.0-shadow-rc115@sha256:b55b25ba5aaca42bb4fc8827e46dd1c3d9cf18ccb28c1d105c9164fdf8ca943a"
+  dxDaemon: "docker.io/tanzeee/dx-daemon:0.6.0-shadow-rc116@sha256:141e51073bc6dc34e6af7290bd7ecd8774096f3ad07987762de599b3423bf9bf"
 
 # Namespaces the stack occupies in the shoot. Kept as values because the shoot's
 # own policies may force different ones.
