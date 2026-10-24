@@ -118,6 +118,51 @@ data:
     \ BY event_date ORDER BY event_time TTL event_date + interval 30 day</engine>\n\
     \        <flush_interval_milliseconds>7500</flush_interval_milliseconds>\n   \
     \ </trace_log>\n</yandex>"
+  01-clickhouse-06-processors_profile_log.xml: |
+    <yandex>
+        <processors_profile_log replace="1">
+            <database>system</database>
+            <table>processors_profile_log</table>
+            <engine>Engine = MergeTree PARTITION BY event_date ORDER BY (event_date, event_time) TTL event_date + interval 3 day</engine>
+            <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+        </processors_profile_log>
+    </yandex>
+  01-clickhouse-07-asynchronous_metric_log.xml: |
+    <yandex>
+        <asynchronous_metric_log replace="1">
+            <database>system</database>
+            <table>asynchronous_metric_log</table>
+            <engine>Engine = MergeTree PARTITION BY event_date ORDER BY (metric, event_date, event_time) TTL event_date + interval 3 day</engine>
+            <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+        </asynchronous_metric_log>
+    </yandex>
+  01-clickhouse-08-metric_log.xml: |
+    <yandex>
+        <metric_log replace="1">
+            <database>system</database>
+            <table>metric_log</table>
+            <engine>Engine = MergeTree PARTITION BY event_date ORDER BY (event_date, event_time) TTL event_date + interval 3 day</engine>
+            <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+        </metric_log>
+    </yandex>
+  01-clickhouse-09-text_log.xml: |
+    <yandex>
+        <text_log replace="1">
+            <database>system</database>
+            <table>text_log</table>
+            <engine>Engine = MergeTree PARTITION BY event_date ORDER BY (event_date, event_time) TTL event_date + interval 3 day</engine>
+            <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+        </text_log>
+    </yandex>
+  01-clickhouse-10-error_log.xml: |
+    <yandex>
+        <error_log replace="1">
+            <database>system</database>
+            <table>error_log</table>
+            <engine>Engine = MergeTree PARTITION BY event_date ORDER BY (event_date, event_time) TTL event_date + interval 3 day</engine>
+            <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+        </error_log>
+    </yandex>
 ---
 apiVersion: v1
 kind: ConfigMap

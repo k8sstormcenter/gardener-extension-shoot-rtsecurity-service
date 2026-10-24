@@ -37,19 +37,6 @@ spec:
       # the Live UI runs one query per widget, dx views have up to ~25 widgets
       max_concurrent_queries: "32"
 
-      # ClickHouse self-telemetry retention, 3 days. These five logs shipped with NO
-      # TTL and grew unbounded (~660 MiB/day on the 5Gi NNF volume). The TTL lives inside
-      # the ENGINE clause: a standalone <table>/ttl fails metadata load (BAD_ARGUMENTS 36)
-      # and the server never starts. Engines are verbatim from SHOW CREATE on 24.8 with
-      # the TTL slotted before SETTINGS. query_log/part_log/trace_log already carry the
-      # operator's 30d and are left as they are. Changing an engine string renames the
-      # existing table aside (<log>_0) at the next restart; drop those once settled.
-      processors_profile_log/engine: "ENGINE = MergeTree PARTITION BY toYYYYMM(event_date) ORDER BY (event_date, event_time) TTL event_date + INTERVAL 3 DAY DELETE SETTINGS index_granularity = 8192"
-      asynchronous_metric_log/engine: "ENGINE = MergeTree PARTITION BY toYYYYMM(event_date) ORDER BY (metric, event_date, event_time) TTL event_date + INTERVAL 3 DAY DELETE SETTINGS index_granularity = 8192"
-      metric_log/engine: "ENGINE = MergeTree PARTITION BY toYYYYMM(event_date) ORDER BY (event_date, event_time) TTL event_date + INTERVAL 3 DAY DELETE SETTINGS index_granularity = 8192"
-      text_log/engine: "ENGINE = MergeTree PARTITION BY toYYYYMM(event_date) ORDER BY (event_date, event_time) TTL event_date + INTERVAL 3 DAY DELETE SETTINGS index_granularity = 8192"
-      error_log/engine: "ENGINE = MergeTree PARTITION BY toYYYYMM(event_date) ORDER BY (event_date, event_time) TTL event_date + INTERVAL 3 DAY DELETE SETTINGS index_granularity = 8192"
-
     profiles:
       # Default profile: user-level session settings
       default/async_insert: "1"
