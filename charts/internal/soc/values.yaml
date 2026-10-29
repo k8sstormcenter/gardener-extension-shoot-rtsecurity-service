@@ -304,6 +304,11 @@ kubescape:
   # not. These must NOT also appear in excludeNamespaces - the sensor's list wins, so the
   # overlap learns nothing while reading as learn-only, and the render refuses it.
   learnOnlyNamespaces: []
+  # Alertmanager endpoints the sensor posts every alert to, as host:port without a scheme
+  # (e.g. kube-prometheus-stack-alertmanager.monitoring.svc.cluster.local:9093). Empty = none.
+  # R1017 (rogue artefact) is raised for every container without a profile, learn-only
+  # namespaces included, so route or inhibit it in Alertmanager before setting this.
+  alertManagerUrls: []
   excludeNamespaces:
     - kubescape
     - kube-system
