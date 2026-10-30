@@ -108,7 +108,7 @@ alerts against it: the loop looks like detection and is an artefact.
     "excludeNamespaces": {{ include "soc.kubescape.excludeNamespaces" . | quote }},
     "excludeLabels":null,
     "exporters": {
-      "alertManagerExporterUrls":[],
+      "alertManagerExporterUrls":{{ .Values.kubescape.alertManagerUrls | default list | toJson }},
       "stdoutExporter":true,
       "syslogExporterURL": ""
     },

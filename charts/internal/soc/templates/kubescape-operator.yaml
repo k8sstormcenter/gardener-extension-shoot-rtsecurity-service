@@ -1334,6 +1334,7 @@ data:
   config.json: |
     {
       "cleanupInterval": "6h",
+      "maxSniffingTimePerContainer": {{ .Values.kubescape.learn.maxSniffingTime | quote }},
       "disableVirtualCRDs": false,
       "disableSeccompProfileEndpoint": true,
       "excludeJsonPaths": null,
@@ -2258,6 +2259,9 @@ rules:
 - apiGroups: [""]
   resources: ["namespaces", "pods", "services"]
   verbs: [ "get", "watch", "list" ]
+- apiGroups: [""]
+  resources: ["nodes"]
+  verbs: ["get", "list"]
 - apiGroups: [ "admissionregistration.k8s.io" ]
   resources: [ "mutatingwebhookconfigurations", "validatingwebhookconfigurations" ]
   verbs: [ "get", "watch", "list" ]
@@ -2739,6 +2743,10 @@ spec:
           
           - name: GOMEMLIMIT
             value: {{ include "soc.kubescape.goMemLimit" . | quote }}
+          {{- if .Values.kubescape.nodeAgent.profiler }}
+          - name: ENABLE_PROFILER
+            value: "1"
+          {{- end }}
           - name: HOST_ROOT
             value: "/host"
           - name: KS_LOGGER_LEVEL
