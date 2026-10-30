@@ -1334,6 +1334,7 @@ data:
   config.json: |
     {
       "cleanupInterval": "6h",
+      "maxSniffingTimePerContainer": {{ .Values.kubescape.learn.maxSniffingTime | quote }},
       "disableVirtualCRDs": false,
       "disableSeccompProfileEndpoint": true,
       "excludeJsonPaths": null,
