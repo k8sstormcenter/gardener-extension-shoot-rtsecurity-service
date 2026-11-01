@@ -3736,7 +3736,7 @@ metadata:
   name: node-agent-direct-keygen
   namespace: {{ .Values.namespaces.honey }}
   annotations:
-    resources.gardener.cloud/mode: Ignore
+    resources.gardener.cloud/ignore: "true"
     
   labels:
     helm.sh/chart: kubescape-operator-1.41.0-duckling73
