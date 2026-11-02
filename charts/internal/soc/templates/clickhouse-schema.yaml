@@ -66,7 +66,7 @@ data:
     ) ENGINE = MergeTree()
       PARTITION BY toYYYYMM(timestamp)
       ORDER BY (timestamp, severity, namespace, rule_id)
-      TTL toDateTime(timestamp) + INTERVAL {{ .Values.clickhouse.retentionHours }} HOUR DELETE
+      TTL toDateTime(timestamp) + INTERVAL {{ .Values.clickhouse.alertRetentionDays }} DAY DELETE
       SETTINGS index_granularity = 8192, ttl_only_drop_parts = 1;
     
     -- Kubescape raw logs — columns match infer_flat.json exactly.
@@ -99,7 +99,7 @@ data:
       -- which ClickHouse rejects in a TTL expression (BAD_TTL_EXPRESSION). toYYYYMM
       -- accepts DateTime64, so PARTITION BY needs no wrapper.
       PARTITION BY toYYYYMM(fromUnixTimestamp64Nano(event_time))
-      TTL toDateTime(fromUnixTimestamp64Nano(event_time)) + INTERVAL {{ .Values.clickhouse.retentionHours }} HOUR DELETE
+      TTL toDateTime(fromUnixTimestamp64Nano(event_time)) + INTERVAL {{ .Values.clickhouse.alertRetentionDays }} DAY DELETE
       SETTINGS index_granularity = 8192;
     
     -- Governance tables. ks-sync (tree/ks-sync) also creates these IF NOT EXISTS on
