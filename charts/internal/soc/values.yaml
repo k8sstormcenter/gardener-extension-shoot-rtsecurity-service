@@ -92,6 +92,7 @@ credentials:
 clickhouse:
   mode: local # local | central
   retentionHours: 24
+  alertRetentionDays: 30
   shards: 1
   replicas: 1
   storage: 5Gi
